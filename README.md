@@ -1,49 +1,60 @@
-# The Voidrice (Luke Smith <https://lukesmith.xyz>'s dotfiles)
+# The Voidrice (SARBS <https://sarbs.sergius.xyz/>'s Dotfiles)
+ist ein Fork von Luke Smith unter einbehaltung der Philosophie und als Community projekt für Deutschsprachige Nutzer.
 
-These are the dotfiles deployed by [LARBS](https://larbs.xyz) and as seen on
-[my YouTube channel](https://youtube.com/c/lukesmithxyz).
+SARBS wird zwar auf GitHub entwickelt und hier findet die kolaboration stadt aber bereitgestellt wird es auf meinen Server unter https://sarbs.sergius.xyz
 
-- Very useful scripts are in `~/.local/bin/`
-- Settings for:
-	- vim/nvim (text editor)
+In diesem Repo sind die Konfigurations und Skriptdateien die in [SARBS](https://sarbs.sergius.xyz) mitgeliefert werden.
+
+- Sehr nützliche Skripte in `~/.local/bin/`
+- Einstellungen für:
+	- vim/nvim (text Editor)
 	- zsh (shell)
-	- lf (file manager)
-	- mpd/ncmpcpp (music)
-	- nsxiv (image/gif viewer)
-	- mpv (video player)
-	- other stuff like xdg default programs, inputrc and more, etc.
-- I try to minimize what's directly in `~` so:
-	- All configs that can be in `~/.config/` are.
-	- Some environmental variables have been set in `~/.zprofile` to move configs into `~/.config/`
-- Bookmarks in text files used by various scripts (like `~/.local/bin/shortcuts`)
-	- File bookmarks in `~/.config/shell/bm-files`
-	- Directory bookmarks in `~/.config/shell/bm-dirs`
+	- lf (Datei Manager)
+	- mpd/ncmpcpp (Musik)
+	- nsxiv (image/gif Viewer)
+	- mpv (Video Player)
+	- anderes zeug wie `xdg` standard tools, inputrc und mehr...
+- Was möglich ist wird im `~` (HOME Verzeichniss) optimiert/konfiguriert:
+	- Konfigurationsdateien sind in: `~/.config/`
+	- Einige Umgebungsvariablen sind in `~/.zprofile` gesetzt um diese nach `~/.config/` zu verschieben
+- Bookmarks in Textfiles werden von verschiedenen Skripten benutzt (z.B: `~/.local/bin/shortcuts`)
+	- Datein bookmarks in `~/.config/shell/bm-files`
+	- Verzeichnisse bookmarks in `~/.config/shell/bm-dirs`
 
-## Usage
+## Nutzung
 
-These dotfiles are intended to go with numerous suckless programs I use:
+Diese Konfigurationsdateien funktionieren unabhängig mit verschiedenen Suckless Tools die in SARBS intergriert sind, dennoch empfehle ich SARBS als Ganzes zu nutzen, und GitHub als reine Kollaborations- und Entwicklungs-platform zu betrachten.
 
 - [dwm](https://github.com/lukesmithxyz/dwm) (window manager)
 - [dwmblocks](https://github.com/lukesmithxyz/dwmblocks) (statusbar)
 - [st](https://github.com/lukesmithxyz/st) (terminal emulator)
 
-I also recommend trying out
+_I also recommend trying out
 [mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), which additionally
 works with this setup. It gives you an easy-to-install terminal-based email
 client regardless of your email provider. It is integrated into these dotfiles
-as well.
+as well._
 
-## Install these dotfiles and all dependencies
+## Installation von SARBS
 
-Use [LARBS](https://larbs.xyz) to autoinstall everything:
+Benutze [SARBS](https://sarbs.sergius.xyz) um alles automatisch zu instalieren:
+
+auf eiene frisch instalierte Arch oder Artix folgende befehle ausführen:
 
 ```
-curl -LO larbs.xyz/larbs.sh
+curl -LO sarbs.sergius.xyz/larbs.sh
 ```
 
-or clone the repo files directly to your home directory and install the
-[dependencies](https://github.com/LukeSmithxyz/LARBS/blob/master/static/progs.csv).
+```
+sh sarbs.sh
+```
 
-## Default Desktop Artwork
+SARBS fürht dich durch den installationsprozess und legt einen neuen benutzer dabei an.
+
+
+_or clone the repo files directly to your home directory and install the
+[dependencies](https://github.com/LukeSmithxyz/LARBS/blob/master/static/progs.csv)._
+
+## Standard Desktop Hintergrund
 
 Thomas Thiemeyer's *The Road to Samarkand* ([fb](https://www.facebook.com/t.thiemeyer/), [insta](https://www.instagram.com/tthiemeyer/), [shop](https://www.redbubble.com/de/people/TThiemeyer/shop))

@@ -42,7 +42,7 @@ Benutze [SARBS](https://sarbs.sergius.xyz) um alles automatisch zu instalieren:
 auf eiene frisch instalierte Arch oder Artix folgende befehle ausführen:
 
 ```
-curl -LO https://sarbs.sergius.xyz/larbs.sh
+curl -LO https://sarbs.sergius.xyz/sarbs.sh
 ```
 
 ```
@@ -51,6 +51,7 @@ sh sarbs.sh
 
 SARBS fürht dich durch den installationsprozess und legt einen neuen benutzer dabei an.
 
+mit `MOD`+`F!` kannst ein Hilfe-Dokument aufrufen. Enjoy ;-)
 
 _or clone the repo files directly to your home directory and install the
 [dependencies](https://github.com/LukeSmithxyz/LARBS/blob/master/static/progs.csv)._

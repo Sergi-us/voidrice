@@ -51,7 +51,7 @@ sh sarbs.sh
 
 SARBS fürht dich durch den installationsprozess und legt einen neuen benutzer dabei an.
 
-mit `MOD`+`F!` kannst ein Hilfe-Dokument aufrufen. Enjoy ;-)
+wenn der Installationsprozell abgeschlossen ist, kannst du dein System neu starten und dich einloggen, mit `MOD`+`F1` kannst ein Hilfe-Dokument aufrufen. Enjoy ;-)
 
 _or clone the repo files directly to your home directory and install the
 [dependencies](https://github.com/LukeSmithxyz/LARBS/blob/master/static/progs.csv)._

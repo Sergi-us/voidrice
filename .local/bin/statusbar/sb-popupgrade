@@ -1,9 +1,9 @@
 #!/bin/sh
-
-printf "Beginning upgrade.\\n"
+# SARBS 07.07.2024
+printf "Beginne mit Upgrade.\\n"
 
 yay -Syu
 pkill -RTMIN+8 "${STATUSBAR:-dwmblocks}"
 
-printf "\\nUpgrade complete.\\nPress <Enter> to exit window.\\n\\n"
+printf "\\nUpgrade komplett.\\ndrücke <Enter> um Fenster zu verlassen.\\n\\n"
 read -r _

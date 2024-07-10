@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# Sergius
 # Show a Doppler RADAR of a user's preferred location.
 
 secs=600 # Download a new doppler radar if one hasn't been downloaded in $secs seconds.
@@ -249,7 +249,7 @@ continentcode=${chosen%%:*}
 radarcode=${chosen#* } radarcode=${radarcode%:*}
 
 # Print codes to $radarloc file.
- printf "%s,%s\\n" "$continentcode" "$radarcode" > "$radarloc" ;}
+ printf "|%s,%s\\n" "$continentcode" "$radarcode" > "$radarloc" ;}
 
 getdoppler() {
 	cont=$(cut -c -2 "$radarloc")
@@ -277,4 +277,4 @@ After $secs seconds, new clicks will also automatically update the doppler RADAR
 	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-echo 🌅
+echo "|"

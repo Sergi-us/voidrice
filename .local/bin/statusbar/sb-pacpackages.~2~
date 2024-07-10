@@ -1,0 +1,48 @@
+#!/bin/sh
+# SARBS 07.07.2024
+# Zeigt die Anzahl der aktualisierbaren Pakete für Pacman und YAY an.
+# Damit dies funktioniert, sollte der Befehl `pacman -Sy` regelmäßig im
+# Hintergrund als Cronjob vom Root-User ausgeführt werden.
+# Dieses Skript liest dann diese Pakete.
+# Bei einem Klick wird ein Upgrade über Pacman durchgeführt.
+#
+# Füge den folgenden Text als Datei in /usr/share/libalpm/hooks/statusbar.hook hinzu:
+#
+# [Trigger]
+# Operation = Upgrade
+# Type = Package
+# Target = *
+#
+# [Action]
+# Description = Statusleiste aktualisieren...
+# When = PostTransaction
+# Exec = /usr/bin/pkill -RTMIN+8 dwmblocks # Oder i3blocks, wenn i3 verwendet wird.
+
+
+# Check Pacman packages
+pacman_updates=$(pacman -Qu | grep -Fcv "[ignored]")
+
+# Check YAY packages
+yay_updates=$(yay -Qu | grep -Fcv "[ignored]")
+
+# Display results with different symbols
+pacman_display=$(echo "$pacman_updates" | sed "s/^//;s/^0$//g")
+yay_display=$(echo "$yay_updates" | sed "s/^//;s/^0$//g")
+
+# Combine displays
+if [ -n "$pacman_display" ] && [ -n "$yay_display" ]; then
+  echo "$pacman_display $yay_display"
+elif [ -n "$pacman_display" ]; then
+  echo "$pacman_display"
+elif [ -n "$yay_display" ]; then
+  echo "$yay_display"
+fi
+
+case $BLOCK_BUTTON in
+	1) setsid -f "$TERMINAL" -e sb-popupgrade ;;
+	2) notify-send "$(/usr/bin/pacman -Qu)" ;;
+	3) notify-send "🎁 Upgrade module" " : number of upgradable packages
+- Left click to upgrade packages
+- Middle click to show upgradable packages" ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac

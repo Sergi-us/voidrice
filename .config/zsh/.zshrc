@@ -1,8 +1,14 @@
-# Luke's config for the Zoomer Shell
-
+# Sergius 10.07.2024
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+
+PS1='%B%F{cyan}┌─[%D]─[%F{magenta}%n%F{cyan}@%F{yellow}%m%F{cyan}]─[%F{green}%~%F{cyan}]%f%b
+%B%F{cyan}└─[%F{blue}%*%F{cyan}]─➤ %f%b'
+
+#PS1='%B%F{cyan}┌─[%D]─[%F{magenta}%n%F{cyan}@%F{yellow}%m%F{cyan}]─[%F{green}%~%F{cyan}]%f%b
+#%B%F{cyan}└─[%F{blue}%*%F{cyan}]─➤ %f%b '
+
+# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -78,4 +84,9 @@ bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[P' vi-delete
 
 # Load syntax highlighting; should be last.
-source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# luke's version
+# source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+
+# Enable auto-suggestions (you need to install zsh-autosuggestions)
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

@@ -1,6 +1,6 @@
 #!/bin/sh
-
-# This script is the SUDO_ASKPASS variable, meaning that it will be used as a
-# password prompt if needed.
+# SARBS 07.07.2024
+# Dieses Skript ist die SUDO_ASKPASS-Variable, was bedeutet, dass es als
+# Passwortabfrage verwendet wird, wenn nötig.
 
 dmenu -fn Monospace-18 -P -p "$1" <&- && echo

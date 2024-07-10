@@ -1,8 +1,8 @@
 #!/bin/sh
-
-# A UI for detecting and selecting all displays. Probes xrandr for connected
-# displays and lets user select one to use. User may also select "manual
-# selection" which opens arandr.
+# SARBS 07.07.2024
+# Eine Benutzeroberfläche zum Erkennen und Auswählen aller Bildschirme.
+# Prüft mit xrandr verbundene Bildschirme und lässt den Benutzer einen zur Verwendung auswählen.
+# Der Benutzer kann auch "manuelle Auswahl" wählen, was arandr öffnet.
 
 twoscreen() { # If multi-monitor is selected and there are two screens.
 

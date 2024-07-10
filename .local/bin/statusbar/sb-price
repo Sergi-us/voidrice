@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# Usage:
-#	price <currency-base currency> <name of currency> <icon> <signal>
+# SARBS 07.07.2024
+# Verwendung:
+#	price <Basiswährung> <Name der Währung> <Icon> <Signal>
 #	price bat-btc "Basic Attention Token" 🦁 24
-#	This will give the price of BAT denominated in BTC and will update on
-#	signal 24.
-# When the name of the currency is multi-word, put it in quotes.
+#	Dies gibt den Preis von BAT in BTC an und wird bei Signal 24 aktualisiert.
+# Wenn der Name der Währung mehrere Wörter enthält, setze ihn in Anführungszeichen.
 
 [ -z "$1" ] && exit 1
 

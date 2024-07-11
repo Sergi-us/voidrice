@@ -1,0 +1,29 @@
+#!/bin/bash
+# Sergius 09.07.2024
+# Wechsle in das Projektverzeichnis (Passe den Pfad entsprechend an)
+cd "$(pwd)"
+
+# Überprüfe, ob wir im lokalen Branch sind
+current_branch=$(git branch --show-current)
+if [ "$current_branch" != "master" ]; then
+  echo "Du bist nicht im lokalen Branch. Bitte wechsle in den Branch 'lokal'."
+  exit 1
+fi
+
+# Füge alle Änderungen zur Staging-Area hinzu
+git add .
+
+# Prüfe, ob es Änderungen gibt, die committet werden müssen
+if git diff-index --quiet HEAD --; then
+  echo "Keine Änderungen zum Committen."
+else
+  # Committe die Änderungen mit der angegebenen Nachricht
+  read -p "Gib eine Commit-Nachricht ein: " commit_message
+  git commit -m "$commit_message"
+fi
+
+# Pushe den master-Branch zu GitHub
+git push origin master
+
+# Zeige den Status der Branches an
+git branch -a

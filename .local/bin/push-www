@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Lokales Verzeichnis, das hochgeladen werden soll
+local_dir="$HOME/www/www/"
+
+# Hostname des Servers
+hostname="london"
+
+# Zielverzeichnis auf dem Server
+remote_dir="/var/www/www/"
+
+# rsync-Befehl zum Hochladen des Verzeichnisses
+rsync -uvrP --delete-after --exclude=".git" --chmod=744 --chown=root:www-data -e ssh $local_dir $hostname:$remote_dir

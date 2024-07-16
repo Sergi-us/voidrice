@@ -1,12 +1,13 @@
 #!/bin/sh
+# SARBS
+# Ein Wrapper für den arkenfox-updater, der diesen für alle vorhandenen
+# Arkenfox user.js-Dateien auf dem Rechner ausführt.
 
-# A wrapper for the arkenfox-updater that runs it on all pre-existing Arkenfox
-# user.js files on the machine.
+# Bei der Installation von SARBS wird diese Datei nach /usr/local/lib/ kopiert,
+# wo sie durch einen pacman-Hook ausgeführt wird. Der Benutzer sollte dies nicht
+# manuell ausführen müssen.
 
-# On installation of LARBS, this file is copied to /usr/local/lib/ where it is
-# run by a pacman hook set up. The user should not have to run this manually.
-
-# Search for all Firefox and Librewolf profiles using Arkenfox.
+# Suche nach allen Firefox- und Librewolf-Profilen, die Arkenfox verwenden.
 profiles="$(grep -sH "arkenfox user.js" \
 	/home/*/.librewolf/*.default-release/user.js \
 	/home/*/.mozilla/firefox/*.default-release/user.js)"
@@ -14,7 +15,7 @@ profiles="$(grep -sH "arkenfox user.js" \
 IFS='
 '
 
-# Update each found profile.
+# Aktualisiere jedes gefundene Profil.
 for profile in $profiles; do
 	userjs=${profile%%/user.js*}
 	user=$(stat -c '%U' "$userjs") || continue

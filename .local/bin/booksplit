@@ -1,24 +1,24 @@
 #!/bin/sh
 
-# Requires ffmpeg
+# Benötigt ffmpeg
 
-[ ! -f "$2" ] && printf "The first file should be the audio, the second should be the timecodes.\\n" && exit
+[ ! -f "$2" ] && printf "Die erste Datei sollte die Audiodatei sein, die zweite sollte die Zeitstempel enthalten.\\n" && exit
 
-echo "Enter the album/book title:"; read -r booktitle
-echo "Enter the artist/author:"; read -r author
-echo "Enter the publication year:"; read -r year
+echo "Gib den Album/Buchtitel ein:"; read -r booktitle
+echo "Gib den Künstler/Autor ein:"; read -r author
+echo "Gib das Veröffentlichungsjahr ein:"; read -r year
 
 inputaudio="$1"
 ext="${1##*.}"
 
-# Get a safe file name from the book.
+# Erstelle einen sicheren Dateinamen aus dem Buchtitel.
 escbook="$(echo "$booktitle" | iconv -c -f UTF-8 -t ASCII//TRANSLIT | tr -d '[:punct:]' | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed "s/-\+/-/g;s/\(^-\|-\$\)//g")"
 
 ! mkdir -p "$escbook" &&
-    echo "Do you have write access in this directory?" &&
+    echo "Hast du Schreibzugriff in diesem Verzeichnis?" &&
     exit 1
 
-# Get the total number of tracks from the number of lines.
+# Hole die Gesamtanzahl der Tracks aus der Anzahl der Zeilen.
 total="$(wc -l < "$2")"
 
 cmd="ffmpeg -i \"$inputaudio\" -nostdin -y"
@@ -36,7 +36,7 @@ do
     start="$end"
 done < "$2"
 
-# Last track must be added out of the loop.
+# Der letzte Track muss außerhalb der Schleife hinzugefügt werden.
 file="$escbook/$(printf "%.2d" "$track")-$esctitle.$ext"
 cmd="$cmd -metadata artist=\"$author\" -metadata title=\"$title\" -metadata album=\"$booktitle\" -metadata year=\"$year\" -metadata track=\"$track\" -ss \"$start\" -vn -c copy \"$file\""
 

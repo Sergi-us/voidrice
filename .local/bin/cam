@@ -25,10 +25,9 @@ else
     # Starte MPV mit Effekten und Crop
     mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency \
         --input-conf=/dev/null --title=webcam \
-        --vf='hue=s=0,crop=720:720,scale=720:720,vflip' \
         $DEVICE
 fi
-
+#        --vf='hue=s=0,crop=720:720,scale=720:720,vflip' \
 
 # Weitere mpv Filter
 # vflip         Spiegelt das Video vertikal

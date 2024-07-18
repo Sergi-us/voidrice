@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Some optional functions in LARBS require programs not installed by default. I
-# use this little script to check to see if a command exists and if it doesn't
-# it informs the user that they need that command to continue. This is used in
-# various other scripts for clarity's sake.
+# Einige optionale Funktionen in LARBS erfordern Programme, die nicht standardmäßig installiert sind. Ich
+# verwende dieses kleine Skript, um zu überprüfen, ob ein Befehl existiert, und wenn nicht,
+# informiert es den Benutzer darüber, dass dieser Befehl benötigt wird, um fortzufahren. Dies wird in
+# verschiedenen anderen Skripten zur Klarheit verwendet.
 
 for x in "$@"; do
 	if ! which "$x" >/dev/null 2>&1 && ! pacman -Qq "$x" >/dev/null 2>&1; then
- 		notify-send "📦 $x" "must be installed for this function." && exit 1 ;
+ 		notify-send "📦 $x" "muss für diese Funktion installiert sein." && exit 1 ;
 	fi
 done

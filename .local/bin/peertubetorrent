@@ -1,6 +1,6 @@
 #!/bin/sh
-# torrent peertube videos, requires the transadd script
-# first argument is the video link, second is the quality (360, 480 or 1080)
+# Torrent Peertube Videos, erfordert das transadd Skript
+# Das erste Argument ist der Videolink, das zweite ist die Qualität (360, 480 oder 1080)
 # 13/07/20 - Arthur Bais
 
 instance=$(echo "$1" | sed "s|/w.\+||")

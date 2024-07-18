@@ -1,12 +1,16 @@
 #!/bin/sh
 
-# $1 is a url; $2 is a command
+# Dieses Skript dient dazu, eine URL (z.B. ein Video) in eine Warteschlange zu stellen
+# und einen bestimmten Befehl darauf auszuführen, wie z.B. das Herunterladen eines Videos
+# mit yt-dlp. Es sendet Benachrichtigungen, wenn der Prozess gestartet und abgeschlossen ist.
+
+# $1 ist eine URL; $2 ist ein Befehl
 [ -z "$1" ] && exit
 base="$(basename "$1")"
-notify-send "⏳ Queuing $base..."
+notify-send "⏳ $base wird in die Warteschlange gestellt..."
 cmd="$2"
 [ -z "$cmd" ] && cmd="yt-dlp --embed-metadata -ic"
 idnum="$(tsp $cmd "$1")"
 realname="$(echo "$base" | sed "s/?\(source\|dest\).*//;s/%20/ /g")"
 tsp -D "$idnum" mv "$base" "$realname"
-tsp -D "$idnum" notify-send "👍 $realname done."
+tsp -D "$idnum" notify-send "👍 $realname fertig."

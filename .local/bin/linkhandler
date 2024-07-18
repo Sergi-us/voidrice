@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# Feed script a url or file location.
-# If an image, it will view in nsxiv,
-# if a video or gif, it will view in mpv
-# if a music file or pdf, it will download,
-# otherwise it opens link in browser.
+# Skript übergibt eine URL oder Dateipfad.
+# Wenn es ein Bild ist, wird es in nsxiv angezeigt,
+# wenn es ein Video oder GIF ist, wird es in mpv angezeigt,
+# wenn es eine Musikdatei oder ein PDF ist, wird es heruntergeladen,
+# andernfalls wird der Link im Browser geöffnet.
 
 if [ -z "$1" ]; then
 	url="$(xclip -o)"

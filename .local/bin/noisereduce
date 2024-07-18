@@ -1,14 +1,17 @@
 #!/usr/bin/sh
 
+# Das Skript noisereduce reduziert das Rauschen in einer Video- oder Audiodatei. Es verwendet ffmpeg zur Verarbeitung von Video- und Audiodateien und sox zur Rauschunterdrückung. Das Skript extrahiert den Audio-Teil einer Datei, erstellt ein Rauschprofil und reinigt das Audio. Wenn es sich um ein Video handelt, kombiniert es die gereinigte Audiospur wieder mit der Videospur.
+
+
 usage ()
 {
-    printf "Usage : noisereduce <input video file> <output video file>\n"
+    printf "Verwendung : noisereduce <Eingabe-Videodatei> <Ausgabe-Videodatei>\n"
     exit
 }
 
-# Tests for requirements
-ifinstalled ffmpeg || { echo >&2 "We require 'ffmpeg' but it's not installed."; exit 1; }
-ifinstalled sox || { echo >&2 "We require 'ffmpeg' but it's not installed."; exit 1; }
+# Testet auf erforderliche Programme
+ifinstalled ffmpeg || { echo >&2 "Wir benötigen 'ffmpeg', aber es ist nicht installiert."; exit 1; }
+ifinstalled sox || { echo >&2 "Wir benötigen 'sox', aber es ist nicht installiert."; exit 1; }
 
 if [ "$#" -ne 2 ]
 then
@@ -17,13 +20,13 @@ fi
 
 if [ ! -e "$1" ]
 then
-    printf "File not found: %s\n" "$1"
+    printf "Datei nicht gefunden: %s\n" "$1"
     exit
 fi
 
 if [ -e "$2" ]
 then
-    printf "File %s already exists, overwrite? [y/N]\n: " "$2"
+    printf "Datei %s existiert bereits, überschreiben? [y/N]\n: " "$2"
     read -r yn
     case $yn in
         [Yy]* ) ;;
@@ -38,22 +41,21 @@ isVideoStr=$(ffprobe -v warning -show_streams "$1" | grep codec_type=video)
 if [ -n "$isVideoStr" ]
 then
     isVideo=1
-    printf "Detected %s as a video file\n" "$inBasename"
+    printf "Erkannte %s als Videodatei\n" "$inBasename"
 else
     isVideo=0
-    printf "Detected %s as an audio file\n" "$inBasename"
+    printf "Erkannte %s als Audiodatei\n" "$inBasename"
 fi
 
-printf "Sample noise start time [00:00:00]: "
+printf "Rauschprobe Startzeit [00:00:00]: "
 read -r sampleStart
 if [ -z "$sampleStart" ] ; then sampleStart="00:00:00"; fi
-printf "Sample noise end time [00:00:00.900]: "
+printf "Rauschprobe Endzeit [00:00:00.900]: "
 read -r sampleEnd
 if [ -z "$sampleEnd" ] ; then sampleEnd="00:00:00.900"; fi
-printf "Noise reduction amount [0.21]: "
+printf "Rauschunterdrückungsmenge [0.21]: "
 read -r sensitivity
 if [ -z "$sensitivity" ] ; then sensitivity="0.21"; fi
-
 
 tmpVidFile="/tmp/noiseclean_tmpvid.$inExt"
 tmpAudFile="/tmp/noiseclean_tmpaud.wav"
@@ -61,7 +63,7 @@ noiseAudFile="/tmp/noiseclean_noiseaud.wav"
 noiseProfFile="/tmp/noiseclean_noise.prof"
 tmpAudCleanFile="/tmp/noiseclean_tmpaud-clean.wav"
 
-printf "Cleaning noise on %s...\n" "$1"
+printf "Rauschen in %s wird entfernt...\n" "$1"
 
 if [ $isVideo -eq "1" ]; then
     ffmpeg -v warning -y -i "$1" -qscale:v 0 -vcodec copy -an "$tmpVidFile"
@@ -78,4 +80,4 @@ else
     cp "$tmpAudCleanFile" "$2"
 fi
 
-printf "Done"
+printf "Fertig\n"

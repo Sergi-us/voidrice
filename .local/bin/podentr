@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# entr command to run `queueandnotify` when newsboat queue is changed
+# entr-Befehl, um `queueandnotify` auszuführen, wenn die Newsboat-Warteschlange geändert wird
 
 [ "$(pgrep -x "$(basename "$0")" | wc -l)" -gt 2 ] && exit
 

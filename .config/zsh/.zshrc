@@ -83,6 +83,17 @@ bindkey -M vicmd '^[[P' vi-delete-char
 bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[P' vi-delete
 
+# Funktion um die Bash-Historie mit fzf zu durchsuchen
+fzf-history-widget() {
+  BUFFER=$(fc -l -n 1 | awk '!x[$0]++' | fzf +s +m -e)
+  CURSOR=$#BUFFER
+  zle redisplay
+}
+
+# Strg+r an fzf-history-widget binden
+zle -N fzf-history-widget
+bindkey '^r' fzf-history-widget
+
 # Load syntax highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # luke's version

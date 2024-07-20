@@ -1,10 +1,12 @@
 #!/bin/sh
 # SARBS 09.07.2024
 # Zeigt die Anzahl der aktualisierbaren Pakete für Pacman und YAY an.
-# Damit dies funktioniert, sollte der Befehl `pacman -Sy` regelmäßig im
-# Hintergrund als Cronjob vom Root-User ausgeführt werden.
-# Dieses Skript liest dann diese Pakete.
-# Bei einem Klick wird ein Upgrade über Pacman durchgeführt.
+#!/bin/sh
+
+# Zeigt die Anzahl der aktualisierbaren Pakete an.
+# Damit dies funktioniert, muss ein `pacman -Sy`-Befehl regelmäßig als
+# Cronjob im Hintergrund als root ausgeführt werden. Dieses Script liest dann diese Pakete.
+# Bei einem Klick wird ein Upgrade via pacman durchgeführt.
 #
 # Füge den folgenden Text als Datei in /usr/share/libalpm/hooks/statusbar.hook hinzu:
 #
@@ -16,24 +18,15 @@
 # [Action]
 # Description = Statusleiste aktualisieren...
 # When = PostTransaction
-# Exec = /usr/bin/pkill -RTMIN+8 dwmblocks # Oder i3blocks, wenn i3 verwendet wird.
-
-
-# Check YAY packages and set default display value
-yay_updates=$(yay -Qu | grep -Fcv "[ignored]")
-yay_display="0"
-if [ "$yay_updates" -ne 0 ]; then
-  yay_display="$yay_updates"
-fi
-
-# Display YAY updates only
-echo "$yay_display"
+# Exec = /usr/bin/pkill -RTMIN+8 dwmblocks # Oder i3blocks, falls i3 verwendet wird.
 
 case $BLOCK_BUTTON in
-  1) setsid -f "$TERMINAL" -e sb-popupgrade ;;  # Linksklick: Öffne ein Terminal und führe das Skript 'sb-popupgrade' aus
-  2) notify-send "$(yay -Qu)" ;;    # Mittelklick: Zeige eine Benachrichtigung mit der Ausgabe von 'yay -Qu'
-  3) notify-send "🎁 Upgrade module" " : anzahl von Updatefähigen Packeten
-- links um Packete zu aktualisieren
-- mittel um Aktualierbare Packete anzuzeigen" ;;  # Rechtsklick: Zeige eine Benachrichtigung mit einer Erklärung der Klickaktionen
-  6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;; # Sechster Maustasten-Klick: Öffne das Skript im Editor
+	1) setsid -f "$TERMINAL" -e sb-popupgrade ;; # Linksklick zum Upgraden
+	2) notify-send "$(/usr/bin/pacman -Qu)" ;; # Mittelklick zeigt aktualisierbare Pakete
+	3) notify-send "🎁 Upgrade-Modul" "📦: Anzahl der aktualisierbaren Pakete
+- Linksklick, um Pakete zu aktualisieren
+- Mittelklick, um aktualisierbare Pakete anzuzeigen" ;; # Rechtsklick für Hilfe
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;; # Strg + Rechtsklick zum Bearbeiten
 esac
+
+pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦/;s/^📦0$//g"

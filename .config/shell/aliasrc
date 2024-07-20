@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# SARBS 2024-07-18
 # Use neovim for vim if present.
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
@@ -24,12 +24,15 @@ alias \
 	mv="mv -iv" \
 	rm="rm -vI" \
 	bc="bc -ql" \
+	df="df -h" \
+	free="free -m" \
 	rsync="rsync -vrPlu" \
 	mkd="mkdir -pv" \
 	yt="yt-dlp --embed-metadata -i" \
 	yta="yt -x -f bestaudio/best" \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner" \
+	neofetch="fastfetch --load-config examples/2.jsonc"
 	neo="neo-matrix -D -a -b 0 -m SARBS"
 
 # Colorize commands when possible.

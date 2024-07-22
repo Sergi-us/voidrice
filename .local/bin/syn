@@ -1,0 +1,91 @@
+#!/bin/sh
+# SARBS Backup Script 0.2
+# Backup-Skript für die Synchronisation von Verzeichnissen auf einen USB-Stick
+
+# Automatisch den Benutzernamen ermitteln
+CLIENT_USER=$(whoami)
+
+# Pfad zum USB-Stick eintragen
+USB_MOUNT_POINT="/mnt/usb"
+
+# Pfad zum Backup-Verzeichnis auf dem USB-Stick
+USB_BACKUP_DIR="$USB_MOUNT_POINT/BACKUP"
+
+# Liste der zu synchronisierenden Verzeichnisse
+
+SYNK_LISTE=(
+    "/home/$CLIENT_USER/.config/newsboat/urls"
+    "/home/$CLIENT_USER/.config/abook/"
+    "/home/$CLIENT_USER/.local/share/nvim/vimwiki/"
+    "/home/$CLIENT_USER/Dokumente/"
+    "/home/$CLIENT_USER/Downloads/"
+    "/home/$CLIENT_USER/GitHub/"
+    "/home/$CLIENT_USER/Musik/"
+    "/home/$CLIENT_USER/Filme/"
+    "/home/$CLIENT_USER/Videos/"
+    # "/home/$CLIENT_USER/####/"
+    )
+
+# Funktion zum Löschen leerer Verzeichnisse auf dem USB-Stick
+delete_empty_directories() {
+    echo "Lösche leere Verzeichnisse auf dem USB-Stick..."
+    find "$USB_BACKUP_DIR" -depth -type d -empty -exec rmdir {} \;
+    echo "Leere Verzeichnisse gelöscht."
+}
+
+# Funktion zum Erstellen der Verzeichnisstruktur auf dem USB-Stick
+create_directories() {
+    echo "Erstelle Verzeichnisstruktur auf dem USB-Stick..."
+    for item in "${SYNK_LISTE[@]}"; do
+        if [ -d "$item" ]; then
+            find "$item" -type d | while read -r dir; do
+                target_dir="$USB_BACKUP_DIR${dir#/home/$CLIENT_USER}"
+                mkdir -p "$target_dir"
+                echo "Verzeichnis erstellt: $target_dir"
+            done
+        fi
+    done
+    echo "Verzeichnisstruktur erstellt."
+}
+
+# Funktion zum Durchführen des Backups
+perform_backup() {
+    echo "Backup wird durchgeführt..."
+    for item in "${SYNK_LISTE[@]}"; do
+        rsync -av --delete "$item" "$USB_BACKUP_DIR${item#/home/$CLIENT_USER}"
+        echo "Synchronisiert: $item"
+    done
+    echo "Backup abgeschlossen."
+}
+
+# Überprüfen, ob der USB-Stick gemountet ist
+check_mount() {
+    if mount | grep "$USB_MOUNT_POINT" > /dev/null; then
+        echo "USB-Stick ist gemountet."
+        return 0
+    else
+        echo "USB-Stick ist nicht gemountet. Bitte mounten und erneut versuchen."
+        return 1
+    fi
+}
+
+case $1 in
+    --delete)
+        check_mount && delete_empty_directories ;;
+    --create)
+        check_mount && create_directories ;;
+    --backup)
+        check_mount && perform_backup ;;
+    --all)
+        check_mount && delete_empty_directories && create_directories && perform_backup ;;
+    *)
+        echo "Usage: $0 {--delete|--create|--backup|--all}"
+        echo "  --delete   Löscht leere Verzeichnisse auf dem USB-Stick"
+        echo "  --create   Erstellt die Verzeichnisstruktur auf dem USB-Stick"
+        echo "  --backup   Führt das Backup der angegebenen Verzeichnisse durch"
+        echo "  --all      Führt alle oben genannten Schritte durch"
+        ;;
+esac
+
+# Am Ende eine Bestätigung einfügen
+read -p "Drücke Enter, um das Terminal zu schließen..."

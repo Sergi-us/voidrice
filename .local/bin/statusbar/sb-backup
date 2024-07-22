@@ -1,0 +1,20 @@
+#!/bin/sh
+# SARBS V0.2
+# Skript zum Anzeigen des Syn Backup's
+# Handling von Mausklicks
+
+case $BLOCK_BUTTON in
+    1) setsid "$TERMINAL" -e $HOME/.local/bin/syn --all ;; # Linksklick führt das Backup-Skript aus und hält das Terminal offen
+    3) notify-send "Backup-Modul" "\Linksklick startet das Backup-Skript" ;; # Mittelklick zeigt eine Benachrichtigung
+    6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;; # Rechtsklick öffnet das Skript im Editor
+esac
+
+# Überprüfe, ob der USB-Stick gemountet ist
+if mount | grep -q "/mnt/usb"; then
+    STATUS="|"
+else
+    STATUS="|"
+fi
+
+# Status und Symbol anzeigen
+printf "$STATUS"

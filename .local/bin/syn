@@ -16,19 +16,17 @@ USB_BACKUP_DIR="$USB_MOUNT_POINT/BACKUP"
 SYNK_LISTE=(
     "/home/$CLIENT_USER/.config/newsboat/urls"
     "/home/$CLIENT_USER/.config/abook/"
+    "/home/$CLIENT_USER/.config/zsh/.zsh_history"
     "/home/$CLIENT_USER/.local/share/nvim/vimwiki/"
-    "/home/$CLIENT_USER/.local/share/calcurse/"
-    "/home/$CLIENT_USER/.local/share/larbs/snippets"
-    "/home/$CLIENT_USER/.ssh/config"
-    "/home/$CLIENT_USER/.ssh/authorized_keys"
     "/home/$CLIENT_USER/Dokumente/"
     "/home/$CLIENT_USER/Downloads/"
     "/home/$CLIENT_USER/GitHub/"
     "/home/$CLIENT_USER/Musik/"
-    "/home/$CLIENT_USER/Filme/"
+    "/home/$CLIENT_USER/Sergi-us/"
     "/home/$CLIENT_USER/Videos/"
-    # "/home/$CLIENT_USER/####/"
+    "/home/$CLIENT_USER/.gitconfig"
     )
+
 
 # Funktion zum Löschen leerer Verzeichnisse auf dem USB-Stick
 delete_empty_directories() {

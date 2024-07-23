@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Abfrage der öffentlichen IP-Adresse mit curl und einer öffentlichen API
+ip=$(curl -s https://api.ipify.org)
+
+# Ausgabe der IP-Adresse
+echo "Aktuelle öffentliche IP-Adresse: $ip"

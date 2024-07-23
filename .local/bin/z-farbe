@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Farbeingabe vom Benutzer anfordern
+echo "Bitte gib den Farbcode ein (z.B. #1B1C1C00):"
+read color
+
+# Dateiname basierend auf dem Farbcode
+filename="${color}.png"
+
+# Bild in der angegebenen Farbe erstellen
+convert -size 100x100 xc:"$color" "$filename"
+
+echo "Bild in Farbe $color als $filename gespeichert."

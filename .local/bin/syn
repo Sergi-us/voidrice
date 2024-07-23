@@ -1,9 +1,10 @@
 #!/bin/sh
-# SARBS Backup Script 0.2
-# Backup-Skript für die Synchronisation von Verzeichnissen auf einen USB-Stick
+# SARBS Backup Script 0.3
+# Backup-Skript für die Synchronisation von Verzeichnissen auf einen USB-Stick und Wiederherstellung ins Home-Verzeichnis
 
-# Automatisch den Benutzernamen ermitteln
+# Automatisch den Benutzernamen und die Gruppe ermitteln
 CLIENT_USER=$(whoami)
+CLIENT_GROUP=$(id -gn $CLIENT_USER)
 
 # Pfad zum USB-Stick eintragen
 USB_MOUNT_POINT="/mnt/usb"
@@ -11,22 +12,26 @@ USB_MOUNT_POINT="/mnt/usb"
 # Pfad zum Backup-Verzeichnis auf dem USB-Stick
 USB_BACKUP_DIR="$USB_MOUNT_POINT/BACKUP"
 
-# Liste der zu synchronisierenden Verzeichnisse
+# Liste der zu synchronisierenden Verzeichnisse und Dateien (relative Pfade)
+DIR_LIST=(
+    ".ssh/"
+    ".config/abook/"
+    ".local/share/nvim/vimwiki/"
+    ".local/share/calcurse/"
+    "Dokumente/"
+    "Downloads/"
+    "GitHub/"
+    "Musik/"
+    "Sergi-us/"
+    "Videos/"
+)
 
-SYNK_LISTE=(
-    "/home/$CLIENT_USER/.config/newsboat/urls"
-    "/home/$CLIENT_USER/.config/abook/"
-    "/home/$CLIENT_USER/.config/zsh/.zsh_history"
-    "/home/$CLIENT_USER/.local/share/nvim/vimwiki/"
-    "/home/$CLIENT_USER/Dokumente/"
-    "/home/$CLIENT_USER/Downloads/"
-    "/home/$CLIENT_USER/GitHub/"
-    "/home/$CLIENT_USER/Musik/"
-    "/home/$CLIENT_USER/Sergi-us/"
-    "/home/$CLIENT_USER/Videos/"
-    "/home/$CLIENT_USER/.gitconfig"
-    )
-
+FILE_LIST=(
+    ".config/newsboat/urls"
+    ".gitconfig"
+    ".local/share/larbs/snippets"
+    ".local/bin/syn"
+)
 
 # Funktion zum Löschen leerer Verzeichnisse auf dem USB-Stick
 delete_empty_directories() {
@@ -38,26 +43,91 @@ delete_empty_directories() {
 # Funktion zum Erstellen der Verzeichnisstruktur auf dem USB-Stick
 create_directories() {
     echo "Erstelle Verzeichnisstruktur auf dem USB-Stick..."
-    for item in "${SYNK_LISTE[@]}"; do
-        if [ -d "$item" ]; then
-            find "$item" -type d | while read -r dir; do
+    for item in "${DIR_LIST[@]}"; do
+        source_dir="/home/$CLIENT_USER/$item"
+        if [ -d "$source_dir" ]; then
+            find "$source_dir" -type d | while read -r dir; do
                 target_dir="$USB_BACKUP_DIR${dir#/home/$CLIENT_USER}"
                 mkdir -p "$target_dir"
                 echo "Verzeichnis erstellt: $target_dir"
             done
         fi
     done
+
+    for item in "${FILE_LIST[@]}"; do
+        target_dir="$USB_BACKUP_DIR/$(dirname "$item")"
+        mkdir -p "$target_dir"
+        echo "Verzeichnis erstellt: $target_dir"
+    done
+
     echo "Verzeichnisstruktur erstellt."
 }
 
 # Funktion zum Durchführen des Backups
 perform_backup() {
     echo "Backup wird durchgeführt..."
-    for item in "${SYNK_LISTE[@]}"; do
-        rsync -av --delete "$item" "$USB_BACKUP_DIR${item#/home/$CLIENT_USER}"
+    for item in "${DIR_LIST[@]}"; do
+        rsync -av "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
         echo "Synchronisiert: $item"
     done
+
+    for item in "${FILE_LIST[@]}"; do
+        rsync -av "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
+        echo "Synchronisiert: $item"
+    done
+
     echo "Backup abgeschlossen."
+}
+
+# Funktion zum Erstellen der Verzeichnisstruktur im Home-Verzeichnis vom USB-Stick
+create_home_directories_from_usb() {
+    echo "Erstelle Verzeichnisstruktur im Home-Verzeichnis vom USB-Stick..."
+    for item in "${DIR_LIST[@]}"; do
+        usb_item="$USB_BACKUP_DIR/$item"
+        if [ -d "$usb_item" ]; then
+            find "$usb_item" -type d | while read -r dir; do
+                target_dir="/home/$CLIENT_USER${dir#$USB_BACKUP_DIR}"
+                sudo mkdir -p "$target_dir"
+                sudo chown "$CLIENT_USER:$CLIENT_GROUP" "$target_dir"
+                echo "Verzeichnis erstellt: $target_dir"
+            done
+        fi
+    done
+
+    for item in "${FILE_LIST[@]}"; do
+        target_dir="/home/$CLIENT_USER/$(dirname "$item")"
+        sudo mkdir -p "$target_dir"
+        sudo chown "$CLIENT_USER:$CLIENT_GROUP" "$target_dir"
+        echo "Verzeichnis erstellt: $target_dir"
+    done
+
+    echo "Verzeichnisstruktur im Home-Verzeichnis erstellt."
+}
+
+# Funktion zur Wiederherstellung der Dateien vom USB-Stick ins Home-Verzeichnis
+perform_restore() {
+    echo "Wiederherstellung wird durchgeführt..."
+    for item in "${DIR_LIST[@]}"; do
+        source="$USB_BACKUP_DIR/$item"
+        if [ -e "$source" ]; then
+            sudo rsync -av "$source" "/home/$CLIENT_USER/$item"
+            echo "Wiederhergestellt: $item"
+        else
+            echo "Warnung: $source existiert nicht auf dem USB-Stick und wird übersprungen."
+        fi
+    done
+
+    for item in "${FILE_LIST[@]}"; do
+        source="$USB_BACKUP_DIR/$item"
+        if [ -e "$source" ]; then
+            sudo rsync -av "$source" "/home/$CLIENT_USER/$item"
+            echo "Wiederhergestellt: $item"
+        else
+            echo "Warnung: $source existiert nicht auf dem USB-Stick und wird übersprungen."
+        fi
+    done
+
+    echo "Wiederherstellung abgeschlossen."
 }
 
 # Überprüfen, ob der USB-Stick gemountet ist
@@ -78,13 +148,19 @@ case $1 in
         check_mount && create_directories ;;
     --backup)
         check_mount && perform_backup ;;
+    --restore)
+        if check_mount; then
+            create_home_directories_from_usb
+            perform_restore
+        fi ;;
     --all)
         check_mount && delete_empty_directories && create_directories && perform_backup ;;
     *)
-        echo "Usage: $0 {--delete|--create|--backup|--all}"
+        echo "Usage: $0 {--delete|--create|--backup|--restore|--all}"
         echo "  --delete   Löscht leere Verzeichnisse auf dem USB-Stick"
         echo "  --create   Erstellt die Verzeichnisstruktur auf dem USB-Stick"
         echo "  --backup   Führt das Backup der angegebenen Verzeichnisse durch"
+        echo "  --restore  Führt die Wiederherstellung der angegebenen Verzeichnisse vom USB-Stick durch"
         echo "  --all      Führt alle oben genannten Schritte durch"
         ;;
 esac

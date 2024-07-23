@@ -1,5 +1,6 @@
 #!/bin/bash
-# Testversion
+# SARBS
+# Testversion 0.5
 # Dieses Skript mountet Android-Telefone und USB-Laufwerke (verschlüsselt oder nicht). Dieses Skript ersetzt das ältere `dmenumount`, das zusätzliche Schritte erforderte und keine verschlüsselten Laufwerke handhaben konnte.
 # TODO: Versuche, Laufwerke in crypttab zu entschlüsseln
 # TODO: Unterstützung für das Anschließen von iPhones hinzufügen (obwohl sie nervig sind).
@@ -70,18 +71,33 @@ getmount() {
 
 attemptmount() {
     # Versuch, ohne Mountpunkt zu mounten, um zu sehen, ob das Laufwerk in fstab ist.
-    sudo -A mount "$chosen" || return 1
-    notify-send "💾Laufwerk gemountet." "$chosen gemountet."
-    exit
+    echo "Versuche, $chosen ohne spezifischen Mountpunkt zu mounten..." | tee -a /tmp/mount.log
+    if sudo -A mount "$chosen"; then
+        notify-send "💾Laufwerk gemountet." "$chosen gemountet."
+        echo "$chosen erfolgreich gemountet." | tee -a /tmp/mount.log
+        exit
+    else
+        echo "Mount ohne spezifischen Mountpunkt fehlgeschlagen." | tee -a /tmp/mount.log
+        return 1
+    fi
 }
 
 case "$chosen" in
     💾*)
         chosen="${chosen%% *}"
         chosen="${chosen:1}"  # Dies ist ein Bashismus.
-        attemptmount || getmount
-        sudo -A mount "$chosen" "$mp" -o uid="$(id -u)", gid="$(id -g)"
-        notify-send "💾Laufwerk gemountet." "$chosen zu $mp gemountet."
+        if attemptmount; then
+            notify-send "💾Laufwerk gemountet." "$chosen gemountet."
+        else
+            getmount
+            echo "Versuche, $chosen zu $mp zu mounten..." | tee -a /tmp/mount.log
+            sudo -A mount "$chosen" "$mp" -o uid="$(id -u)",gid="$(id -g)" || {
+                echo "Manuelles Mounten von $chosen zu $mp fehlgeschlagen." | tee -a /tmp/mount.log
+                exit 1
+            }
+            notify-send "💾Laufwerk gemountet." "$chosen zu $mp gemountet."
+            echo "$chosen zu $mp erfolgreich gemountet." | tee -a /tmp/mount.log
+        fi
         ;;
 
     🔒*)
@@ -94,17 +110,22 @@ case "$chosen" in
             num="$(printf "%02d" "$((num + 1))")"
         done
 
-        # Entschlüsseln in einem Terminalfenster
-        ${TERMINAL:-st} -n floatterm -g 60x1 -e sudo cryptsetup open "$chosen" "usb$num"
+        # Entschlüsseln in einem Terminalfenster mit angepasster Größe und Schriftgröße
+        ${TERMINAL:-st} -n floatterm -g 70x2 -f "Liberation Mono:size=16" -e sudo cryptsetup open "$chosen" "usb$num"
         # Überprüfen, ob jetzt entschlüsselt.
         if ! test -b "/dev/mapper/usb$num"; then
             notify-send "Fehler" "Entschlüsselung von $chosen fehlgeschlagen."
+            echo "Entschlüsselung von $chosen fehlgeschlagen." | tee -a /tmp/mount.log
             exit 1
         fi
 
-        attemptmount || getmount
-        sudo -A mount "/dev/mapper/usb$num" "$mp" -o uid="$(id -u)", gid="$(id -g)"
-        notify-send "🔓Entschlüsseltes Laufwerk gemountet." "$chosen entschlüsselt und zu $mp gemountet."
+        echo "Versuche, entschlüsseltes Laufwerk $chosen zu mounten..." | tee -a /tmp/mount.log
+        sudo mount "/dev/mapper/usb$num" /mnt/usb || {
+            echo "Manuelles Mounten von entschlüsseltem Laufwerk $chosen zu /mnt/usb fehlgeschlagen." | tee -a /tmp/mount.log
+            exit 1
+        }
+        notify-send "🔓Entschlüsseltes Laufwerk gemountet." "$chosen entschlüsselt und zu /mnt/usb gemountet."
+        echo "Entschlüsseltes Laufwerk $chosen zu /mnt/usb erfolgreich gemountet." | tee -a /tmp/mount.log
         ;;
 
     📱*)
@@ -114,5 +135,6 @@ case "$chosen" in
         number="${chosen:1}"  # Dies ist ein Bashismus.
         sudo -A simple-mtpfs -o allow_other -o fsname="simple-mtpfs-$(escape "$chosen")" --device "$number" "$mp"
         notify-send "🤖 Android gemountet." "Android-Gerät zu $mp gemountet."
+        echo "Android-Gerät $chosen zu $mp erfolgreich gemountet." | tee -a /tmp/mount.log
         ;;
 esac

@@ -31,6 +31,7 @@ FILE_LIST=(
     ".gitconfig"
     ".local/share/larbs/snippets"
     ".local/bin/syn"
+    "~"
 )
 
 # Funktion zum Löschen leerer Verzeichnisse auf dem USB-Stick
@@ -63,21 +64,28 @@ create_directories() {
     echo "Verzeichnisstruktur erstellt."
 }
 
+
 # Funktion zum Durchführen des Backups
 perform_backup() {
     echo "Backup wird durchgeführt..."
     for item in "${DIR_LIST[@]}"; do
-        rsync -av "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
+        rsync -av --delete "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
         echo "Synchronisiert: $item"
     done
 
     for item in "${FILE_LIST[@]}"; do
-        rsync -av "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
-        echo "Synchronisiert: $item"
+        if [ "$item" = "~" ]; then
+            rsync -av --delete --exclude '.*' "/home/$CLIENT_USER/" "$USB_BACKUP_DIR/"
+            echo "Synchronisiert: nicht versteckte Dateien im Home-Verzeichnis"
+        else
+            rsync -av --delete "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
+            echo "Synchronisiert: $item"
+        fi
     done
 
     echo "Backup abgeschlossen."
 }
+
 
 # Funktion zum Erstellen der Verzeichnisstruktur im Home-Verzeichnis vom USB-Stick
 create_home_directories_from_usb() {
@@ -110,7 +118,7 @@ perform_restore() {
     for item in "${DIR_LIST[@]}"; do
         source="$USB_BACKUP_DIR/$item"
         if [ -e "$source" ]; then
-            sudo rsync -av "$source" "/home/$CLIENT_USER/$item"
+            sudo rsync -av --exclude '.*' "$source" "/home/$CLIENT_USER/$item"
             echo "Wiederhergestellt: $item"
         else
             echo "Warnung: $source existiert nicht auf dem USB-Stick und wird übersprungen."
@@ -120,7 +128,7 @@ perform_restore() {
     for item in "${FILE_LIST[@]}"; do
         source="$USB_BACKUP_DIR/$item"
         if [ -e "$source" ]; then
-            sudo rsync -av "$source" "/home/$CLIENT_USER/$item"
+            sudo rsync -av --exclude '.*' "$source" "/home/$CLIENT_USER/$item"
             echo "Wiederhergestellt: $item"
         else
             echo "Warnung: $source existiert nicht auf dem USB-Stick und wird übersprungen."

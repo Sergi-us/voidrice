@@ -1,9 +1,24 @@
 #!/bin/sh
-
-# Unmount USB drives or Android phones. Replaces the older `dmenuumount`. Fewer
-# prompt and also de-decrypts LUKS drives that are unmounted.
+# TODO Testversion des unmount Skript's welches enutzte Geräte erkennen und deaktivieren soll
+# USB-Laufwerke oder Android-Telefone aushängen. Ersetzt das ältere `dmenuumount`. Weniger
+# Eingabeaufforderungen und entschlüsselt auch LUKS-Laufwerke, die ausgehängt werden.
 
 set -e
+
+# Überprüfen und Beenden von Prozessen, die das Zielverzeichnis verwenden
+kill_processes_using_directory() {
+    directory=$1
+    process_list=$(lsof +D "$directory" | awk 'NR>1 {print $2}')
+
+    if [ -n "$process_list" ]; then
+        echo "Folgende Prozesse verwenden $directory und werden beendet:"
+        echo "$process_list"
+        echo "$process_list" | xargs sudo kill -9
+        echo "Prozesse beendet."
+    else
+        echo "Keine Prozesse verwenden $directory."
+    fi
+}
 
 mounteddroids="$(grep simple-mtpfs /etc/mtab | awk '{print "📱" $2}')"
 lsblkoutput="$(lsblk -nrpo "name,type,size,mountpoint")"
@@ -13,16 +28,24 @@ allunmountable="$(echo "$mounteddroids
 $mounteddrives" | sed "/^$/d;s/ *$//")"
 test -n "$allunmountable"
 
-chosen="$(echo "$allunmountable" | dmenu -i -p "Unmount which drive?")"
+chosen="$(echo "$allunmountable" | dmenu -i -p "Welches Laufwerk aushängen?")"
 chosen="${chosen%% *}"
 test -n "$chosen"
 
-sudo -A umount -l "/${chosen#*/}"
-notify-send "Device unmounted." "$chosen has been unmounted."
+# Verzeichnispfad extrahieren
+mountpoint="/${chosen#*/}"
 
-# Close the chosen drive if decrypted.
+# Prozesse beenden, die das Zielverzeichnis verwenden
+kill_processes_using_directory "$mountpoint"
+
+# Laufwerk aushängen
+sudo -A umount -l "$mountpoint"
+notify-send "Gerät ausgehängt." "$chosen wurde ausgehängt."
+
+# Schließt das ausgewählte Laufwerk, wenn es entschlüsselt ist.
 cryptid="$(echo "$lsblkoutput" | grep "/${chosen#*/}$")"
 cryptid="${cryptid%% *}"
-test -b /dev/mapper/"${cryptid##*/}"
-sudo -A cryptsetup close "$cryptid"
-notify-send "🔒Device dencryption closed." "Drive is now securely locked again."
+if [ -b /dev/mapper/"${cryptid##*/}" ]; then
+    sudo -A cryptsetup close "$cryptid"
+    notify-send "🔒Geräteverschlüsselung geschlossen." "Laufwerk ist jetzt wieder sicher verschlossen."
+fi

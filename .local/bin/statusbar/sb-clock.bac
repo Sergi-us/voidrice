@@ -21,7 +21,7 @@ case "$clock" in
 esac
 
 case $BLOCK_BUTTON in
-	1) notify-send "Dieser Monat" "$(cal | sed "s/\<$(date +'%e'|tr -d ' ')\>/<b><span color='red'>&<\/span><\/b>/")" && notify-send "Termine" "$(calcurse -d3)" ;;
+	1) notify-send "Dieser Monat" "$(cal | sed "s/\<$(date +'%e'|sed 's/ //g')\>/<b><span color='red'>&<\/span><\/b>/")" && notify-send "Termine" "$(calcurse -d3)" ;;
 	2) setsid -f "$TERMINAL" -e calcurse ;;
 	3) notify-send "📅 Zeit-/Datumsmodul" "\- Linksklick, um bevorstehende Termine für die nächsten drei Tage mit \`calcurse -d3\` anzuzeigen und den Monat mit \`cal\` anzuzeigen
 - Mittelklick öffnet calcurse, falls installiert" ;;

@@ -4,6 +4,7 @@
 local_dir="$HOME/www/www/"
 
 # Hostname des Servers
+# aus der ~/.ssh/config übernehmen
 hostname="london"
 
 # Zielverzeichnis auf dem Server

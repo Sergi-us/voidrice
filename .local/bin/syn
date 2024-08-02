@@ -18,7 +18,9 @@ DIR_LIST=(
     ".config/abook/"
     ".local/share/nvim/vimwiki/"
     ".local/share/calcurse/"
+    ".local/share/nvim/tutor/"
     "Dokumente/"
+    ".local/bin/"
     "Downloads/"
     "GitHub/"
     "Musik/"
@@ -28,9 +30,15 @@ DIR_LIST=(
 
 FILE_LIST=(
     ".config/newsboat/urls"
+    ".config/zsh/.zshrc"
     ".gitconfig"
     ".local/share/larbs/snippets"
     ".local/bin/syn"
+    ".local/bin/dmenurecord"
+    ".local/bin/push-www"
+    ".local/bin/push-github"
+    ".local/bin/cam"
+    ".config/zsh/.zsh_history"
     "~"
 )
 

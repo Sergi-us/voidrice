@@ -1,21 +1,21 @@
-# Luke's lf settings
+# Lukes lf-Einstellungen (übersetzt von Sergius)
 
 
-# Note on Image Previews
-# For those wanting image previews, like this system, there are four steps to
-# set it up. These are done automatically for LARBS users, but I will state
-# them here for others doing it manually.
+# Hinweis zu Bildvorschauen
+# Für diejenigen, die Bildvorschauen wünschen, wie dieses System, gibt es vier Schritte zur
+# Einrichtung. Diese werden für LARBS-Benutzer automatisch durchgeführt, aber ich werde sie
+# hier für andere erwähnen, die es manuell einrichten.
 #
-# 1. ueberzug must be installed.
-# 2. The scope file (~/.config/lf/scope for me), must have a command similar to
-#    mine to generate ueberzug images.
-# 3. A `set cleaner` line as below is a cleaner script.
-# 4. lf should be started through a wrapper script (~/.local/bin/lfub for me)
-#    that creates the environment for ueberzug. This command can be be aliased
-#    in your shellrc (`alias lf="lfub") or if set to a binding, should be
-#    called directly instead of normal lf.
+# 1. ueberzug muss installiert sein.
+# 2. Die Scope-Datei (~/.config/lf/scope für mich) muss einen Befehl ähnlich
+#    meinem enthalten, um ueberzug-Bilder zu generieren.
+# 3. Eine `set cleaner`-Zeile wie unten ist ein Cleaner-Skript.
+# 4. lf sollte über ein Wrapper-Skript (~/.local/bin/lfub für mich) gestartet werden,
+#    das die Umgebung für ueberzug erstellt. Dieser Befehl kann in Ihrer shellrc
+#    als Alias gesetzt werden (`alias lf="lfub") oder, wenn er an eine Taste gebunden ist,
+#    sollte er direkt anstelle des normalen lf aufgerufen werden.
 
-# Basic vars
+# Grundlegende Variablen
 set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
@@ -26,7 +26,7 @@ set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
 set autoquit true
 
-# cmds/functions
+# Befehle/Funktionen
 cmd open ${{
     case $(file --mime-type "$(readlink -f $f)" -b) in
 	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) localc $fx ;;
@@ -62,7 +62,7 @@ cmd extract ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	printf "%s\n\t" "$fx"
-	printf "extract?[y/N]"
+	printf "Extrahieren?[y/N]"
 	read ans
 	[ $ans = "y" ] && {
 		case $fx in
@@ -86,7 +86,7 @@ cmd delete ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	printf "%s\n\t" "$fx"
-	printf "delete?[y/N]"
+	printf "Löschen?[y/N]"
 	read ans
 	[ $ans = "y" ] && rm -rf -- $fx
 }}
@@ -94,23 +94,23 @@ cmd delete ${{
 cmd moveto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
-	clear; echo "Move to where?"
+	clear; echo "Wohin verschieben?"
 	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf | sed 's|~|$HOME|')" &&
 	for x in $fx; do
 		eval mv -iv \"$x\" \"$dest\"
 	done &&
-	notify-send "🚚 File(s) moved." "File(s) moved to $dest."
+	notify-send "🚚 Datei(en) verschoben." "Datei(en) wurden nach $dest verschoben."
 }}
 
 cmd copyto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
-	clear; echo "Copy to where?"
+	clear; echo "Wohin kopieren?"
 	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf | sed 's|~|$HOME|')" &&
 	for x in $fx; do
 		eval cp -ivr \"$x\" \"$dest\"
 	done &&
-	notify-send "📋 File(s) copied." "File(s) copies to $dest."
+	notify-send "📋 Datei(en) kopiert." "Datei(en) wurden nach $dest kopiert."
 }}
 
 cmd setbg "$1"
@@ -136,7 +136,7 @@ cmd bulkrename ${{
     lf -remote "send $id unselect"
 }}
 
-# Bindings
+# Tastenbelegungen
 map <c-f> $lf -remote "send $id select \"$(fzf)\""
 map J $lf -remote "send $id cd $(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
 map H cd ~
@@ -154,11 +154,11 @@ map X !$f
 map o &mimeopen "$f"
 map O $mimeopen --ask "$f"
 
-map A :rename; cmd-end # at the very end
-map c push A<c-u> # new rename
-map I :rename; cmd-home # at the very beginning
-map i :rename # before extension
-map a :rename; cmd-right # after extension
+map A :rename; cmd-end 		# ganz am Ende
+map c push A<c-u> 		# neue Umbenennung
+map I :rename; cmd-home 	# ganz am Anfang
+map i :rename 			# vor der Erweiterung
+map a :rename; cmd-right 	# nach der Erweiterung
 map B bulkrename
 map b $setbg $f
 
@@ -172,10 +172,10 @@ map U $printf "%s" "$fx" | xclip -selection clipboard
 map u $printf "%s" "$fx" | sed 's/.*\///' | xclip -selection clipboard
 map . $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/www.youtube.com\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
 map <gt> $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/piped.video\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
-map T $sxiv -t "$(pwd)" # opens thumbnail mode
+map T $sxiv -t "$(pwd)" 	# öffnet den Thumbnailmodus
 map <c-l> unselect
 
 
 
-# Source Bookmarks
+# Lesezeichen einbinden
 source "~/.config/lf/shortcutrc"

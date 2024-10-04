@@ -1,12 +1,17 @@
 #!/bin/bash
-# Sergius 09.07.2024
+# Sergius 04.11.2024
+
 # Wechsle in das Projektverzeichnis (Passe den Pfad entsprechend an)
 cd "$(pwd)"
 
-# Überprüfe, ob wir im lokalen Branch sind
+# Überprüfe den aktuellen Branch
 current_branch=$(git branch --show-current)
-if [ "$current_branch" != "master" ]; then
-  echo "Du bist nicht im lokalen Branch. Bitte wechsle in den Branch 'lokal'."
+echo "Aktueller Branch: $current_branch"
+
+# Frage den Benutzer, ob er im richtigen Branch ist
+read -p "Bist du im richtigen Branch? (j/n): " answer
+if [[ $answer != "j" ]]; then
+  echo "Bitte wechsle in den richtigen Branch und versuche es erneut."
   exit 1
 fi
 
@@ -20,10 +25,11 @@ else
   # Committe die Änderungen mit der angegebenen Nachricht
   read -p "Gib eine Commit-Nachricht ein: " commit_message
   git commit -m "$commit_message"
-fi
 
-# Pushe den master-Branch zu GitHub
-git push origin master
+  # Pushe den aktuellen Branch zu GitHub
+  git push origin $current_branch
+  echo "Änderungen wurden zu GitHub gepusht."
+fi
 
 # Zeige den Status der Branches an
 git branch -a

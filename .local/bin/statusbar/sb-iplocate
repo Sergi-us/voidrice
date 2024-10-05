@@ -1,15 +1,30 @@
 #!/bin/sh
 
-# Gets your public ip address checks which country you are in and
-# displays that information in the statusbar
-#
-# https://www.maketecheasier.com/ip-address-geolocation-lookups-linux/
+# Ermittelt Ihre öffentliche IP-Adresse (IPv4 oder IPv6), prüft, in welchem Land Sie sich befinden,
+# und zeigt diese Information in der Statusleiste an
 
 set -e
-
 ifinstalled "geoip"
-addr="$(geoiplookup "$(curl -sfm 1 ifconfig.me 2>/dev/null)")"
+
+# IP-Adresse abrufen (unterstützt sowohl IPv4 als auch IPv6)
+ip=$(curl -s ifconfig.me)
+
+# Prüfen, ob es sich um eine IPv6-Adresse handelt
+if echo "$ip" | grep -q ':'; then
+    # IPv6
+    addr=$(geoiplookup6 -f /usr/share/GeoIP/GeoIPv6.dat "$ip" 2>/dev/null)
+else
+    # IPv4
+    addr=$(geoiplookup -f /usr/share/GeoIP/GeoIP.dat "$ip" 2>/dev/null)
+fi
+
+# Extrahieren des Ländernamens
 name="${addr##*, }"
-flag="$(grep "flag: $name" "${XDG_DATA_HOME:-$HOME/.local/share}/larbs/emoji")"
+
+# Suche nach der Flagge für das Land
+flag=$(grep "flag: $name" "${XDG_DATA_HOME:-$HOME/.local/share}/larbs/emoji")
 flag="${flag%% *}"
-printf "%s %s\\n" "$flag" "$name"
+
+# Ausgabe
+# printf "%s %s\\n" "$flag" "$name"
+printf "%s %s\\n" "$flag"

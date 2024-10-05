@@ -19,40 +19,55 @@ Plug 'preservim/nerdtree'
 Plug 'junegunn/goyo.vim'
 Plug 'jreybert/vimagit'
 Plug 'vimwiki/vimwiki'
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline',
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
 
-set title
-set bg=light
-set go=a
-set mouse=a
-set nohlsearch
-set clipboard+=unnamedplus
-set noshowmode
-set noruler
-set laststatus=0
-set noshowcmd
-colorscheme vim
-
-" Some basics:
+" Setzt den Fenstertitel (nützlich für Terminalemulator-Tabs)
+	set title
+" (light dark) Setzt den Hintergrund auf 'hell' oder dunkel.
+	set bg=dark
+" Aktiviert alle GUI-Optionen (für gVim/Neovim-GUI)
+	set go=a
+" Aktiviert Mausunterstützung in allen Modi
+	set mouse=a
+" Deaktiviert die Hervorhebung von Suchergebnissen
+	set nohlsearch
+" Fügt das System-Clipboard zur unbenannten Registrierung hinzu (für Copy & Paste)
+	set clipboard+=unnamedplus
+" Versteckt die Modusanzeige (da oft durch Plugins wie Airline ersetzt)
+	set noshowmode
+" Deaktiviert die Anzeige von Zeilen- und Spaltennummer unten rechts
+	set noruler
+" Deaktiviert die Statusleiste (0=nie, 2=immer, 1=nur bei mehreren Fenstern)
+	set laststatus=0
+" Versteckt die Anzeige von (unvollständigen) Befehlen in der letzten Zeile
+	set noshowcmd
+" voreingestelltes Farbschema
+	colorscheme vim
+	" colorscheme desert  	" kontrastreiche Farbschema (transprenz verschwindet)
+" ändert das verhalten der Taste "c" in Normal Mode. Gelöschter Text wird in das "Black Hole" -Register geschoben, wenn Sie Text löschen möchten, ohne den Inhalt der Zwischenablage zu ändern.
 	nnoremap c "_c
+" Aktiviert die Erkennung von Dateitypen und lädt entsprechende Plugins.
 	filetype plugin on
+" Aktiviert die Syntax-Hervorhebung.
 	syntax on
+" Setzt die Zeichenkodierung auf UTF-8
 	set encoding=utf-8
+" Aktiviert die Zeilennummerierung mit einer Kombination aus absoluten und relativen Nummern.
 	set number relativenumber
-" Enable autocompletion:
+" Ativiert und steuert das Verhalten der Befehlszeilen-Vervollständigung.
 	set wildmode=longest,list,full
-" Disables automatic commenting on newline:
+" Verhindert, dass Vim automatisch Kommentarzeichen in neue Zeilen einfügt.
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-" Perform dot commands over visual blocks:
+" Punkt-Befehle über visuelle Blöcke ausführen
 	vnoremap . :normal .<CR>
-" Goyo plugin makes text more readable when writing prose:
-	map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
-" Spell-check set to <leader>o, 'o' for 'orthography':
-	map <leader>o :setlocal spell! spelllang=en_us,de_de<CR>
-" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
+" Goyo-Plugin für bessere Lesbarkeit beim Schreiben:
+	map <leader>f :Goyo \| set bg=dark \| set linebreak<CR>
+" Rechtschreibprüfung <leader>o, 'o' for 'orthography':
+	map <leader>o :setlocal spell! spelllang=de_de,en_us<CR>
+" Splits-Verhalten ändern: Teilt sich unten und rechts, was im Gegensatz zu vim Standardeinstellungen nicht verzögert ist.
 	set splitbelow splitright
 
 " Nerd tree
@@ -99,10 +114,19 @@ colorscheme vim
 " Ensure files are read as what I want:
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 	map <leader>v :VimwikiIndex<CR>
-	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+	let g:vimwiki_list = [
+	  \ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
+	  \ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki'},
+	  \ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
+	  \ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
+	  \ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
+	  \ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
+	  \ ]
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 	autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
 	autocmd BufRead,BufNewFile *.tex set filetype=tex
+
+" 	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Save file as sudo on files that require root permission
 	cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
@@ -116,8 +140,8 @@ colorscheme vim
  	autocmd BufWritePre * let currPos = getpos(".")
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritePre * %s/\n\+\%$//e
-  autocmd BufWritePre *.[ch] %s/\%$/\r/e " add trailing newline for ANSI C standard
-  autocmd BufWritePre *neomutt* %s/^--$/-- /e " dash-dash-space signature delimiter in emails
+	autocmd BufWritePre *.[ch] %s/\%$/\r/e " add trailing newline for ANSI C standard
+	autocmd BufWritePre *neomutt* %s/^--$/-- /e " dash-dash-space signature delimiter in emails
   	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 " When shortcut files are updated, renew bash and ranger configs with new material:

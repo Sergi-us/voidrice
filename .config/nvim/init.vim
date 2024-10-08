@@ -19,7 +19,8 @@ Plug 'preservim/nerdtree'
 Plug 'junegunn/goyo.vim'
 Plug 'jreybert/vimagit'
 Plug 'vimwiki/vimwiki'
-Plug 'vim-airline/vim-airline',
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
@@ -82,6 +83,11 @@ call plug#end()
 	let g:airline_symbols.colnr = ' C:'
 	let g:airline_symbols.linenr = ' L:'
 	let g:airline_symbols.maxlinenr = '☰ '
+
+" vim-airline-theme (molokai solarized powerlineish tomorrow papercolor)
+	" let g:airline_theme='papercolor'
+	" let g:airline_solarized_bg='dark'
+	let g:airline_powerline_fonts = 1
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h

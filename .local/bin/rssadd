@@ -1,4 +1,10 @@
 #!/bin/sh
+# RSS Feed Hinzufügen
+# Nutzung: rssadd <URL oder HTML-Datei>
+#
+# Dieses Skript fügt eine neue RSS-Feed-URL zur Newsboat-Konfigurationsdatei hinzu.
+# Es akzeptiert entweder eine direkte URL oder eine HTML-Datei als Argument.
+# Bei einer HTML-Datei versucht es, die Feed-URL aus dem Inhalt zu extrahieren.
 
 if echo "$1" | grep -q "https*://\S\+\.[A-Za-z]\+\S*" ; then
 	url="$1"

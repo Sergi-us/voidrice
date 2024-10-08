@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Skript zum Starten von Diensten und Öffnen von Browsern
+#
+# Dieses Skript startet nzbhydra2 und sabnzbd und öffnet deren Webinterfaces im Browser.
+#
+# Abhängigkeiten:
+#   - systemctl: Zum Starten der Dienste
+#   - notify-send: Für Desktop-Benachrichtigungen
+#   - sudo: Für die Ausführung von Befehlen mit erhöhten Rechten
+#   - Ein Webbrowser (Firefox, Chromium, oder ein anderer installierter Browser)
+
+# Funktion zum Überprüfen, ob ein Befehl verfügbar ist
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Funktion zum Senden von Benachrichtigungen
+notify() {
+    if command_exists notify-send; then
+        notify-send "Dienste-Manager" "$1"
+    else
+        echo "$1"
+    fi
+}
+
+# Funktion zum Ausführen von Befehlen mit sudo
+sudo_run() {
+    if [ "$EUID" -ne 0 ]; then
+        sudo "$@"
+    else
+        "$@"
+    fi
+}
+
+# Funktion zum Öffnen einer URL im Browser
+open_url() {
+    if command_exists firefox; then
+        firefox "$1" >/dev/null 2>&1 &
+    elif command_exists chromium; then
+        chromium "$1" >/dev/null 2>&1 &
+    elif command_exists xdg-open; then
+        xdg-open "$1" >/dev/null 2>&1 &
+    else
+        notify "Konnte keinen Browser finden. Bitte öffnen Sie $1 manuell."
+        return 1
+    fi
+    return 0
+}
+
+# Dienste starten
+notify "Starte nzbhydra2 und sabnzbd..."
+sudo_run systemctl start nzbhydra2
+sudo_run systemctl start sabnzbd
+
+# Warten, bis die Dienste vollständig gestartet sind
+sleep 10
+
+# URLs im Browser öffnen
+urls=("http://localhost:5076" "http://localhost:8080")
+
+for url in "${urls[@]}"; do
+    notify "Öffne $url im Browser..."
+    open_url "$url"
+done
+
+notify "Dienste gestartet und Browser geöffnet."

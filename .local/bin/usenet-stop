@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Skript zum Stoppen von Diensten
+#
+# Dieses Skript stoppt nzbhydra2 und sabnzbd.
+#
+# Abhängigkeiten:
+#   - systemctl: Zum Stoppen der Dienste
+#   - notify-send: Für Desktop-Benachrichtigungen
+#   - sudo: Für die Ausführung von Befehlen mit erhöhten Rechten
+
+# Funktion zum Überprüfen, ob ein Befehl verfügbar ist
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Funktion zum Senden von Benachrichtigungen
+notify() {
+    if command_exists notify-send; then
+        notify-send "Dienste-Manager" "$1"
+    else
+        echo "$1"
+    fi
+}
+
+# Funktion zum Ausführen von Befehlen mit sudo
+sudo_run() {
+    if [ "$EUID" -ne 0 ]; then
+        sudo "$@"
+    else
+        "$@"
+    fi
+}
+
+# Dienste stoppen
+notify "Stoppe nzbhydra2 und sabnzbd..."
+sudo_run systemctl stop nzbhydra2
+sudo_run systemctl stop sabnzbd
+
+notify "Dienste gestoppt."

@@ -1,26 +1,45 @@
 #!/bin/sh
+# Ein dmenu-Wrapper-Skript für Systemfunktionen.
 
-# A dmenu wrapper script for system functions.
+# Setze die Umgebungsvariable WM auf "dwm" (Dynamic Window Manager)
 export WM="dwm"
+
+# Ermittle, welches Init-System verwendet wird (systemd oder andere)
 case "$(readlink -f /sbin/init)" in
-	*systemd*) ctl='systemctl' ;;
-	*) ctl='loginctl' ;;
+    *systemd*) ctl='systemctl' ;;  # Falls systemd verwendet wird
+    *) ctl='loginctl' ;;           # Falls ein anderes Init-System verwendet wird
 esac
 
-wmpid(){ # This function is needed if there are multiple instances of the window manager.
-	tree="$(pstree -ps $$)"
-	tree="${tree#*$WM(}"
-	echo "${tree%%)*}"
+# Funktion zur Ermittlung der Prozess-ID des Fenstermanagers
+# Dies ist nötig, wenn mehrere Instanzen des Fenstermanagers laufen könnten
+wmpid() {
+    # Erstelle einen Prozessbaum ausgehend vom aktuellen Skript
+    tree="$(pstree -ps $$)"
+    # Extrahiere den Teil des Baums, der nach dem Fenstermanager-Prozess kommt
+    tree="${tree#*$WM(}"
+    # Gib die Prozess-ID des Fenstermanagers zurück
+    echo "${tree%%)*}"
 }
 
-case "$(printf "🔒 lock\n🚪 leave $WM\n♻️ renew $WM\n🐻 hibernate\n🔃 reboot\n🖥️shutdown\n💤 sleep\n📺 display off" | dmenu -i -p 'Action: ')" in
-	'🔒 lock') slock ;;
-	"🚪 leave $WM") kill -TERM "$(wmpid)" ;;
-	"♻️ renew $WM") kill -HUP "$(wmpid)" ;;
-	'🐻 hibernate') slock $ctl hibernate -i ;;
-	'💤 sleep') slock $ctl suspend -i ;;
-	'🔃 reboot') $ctl reboot -i ;;
-	'🖥️shutdown') $ctl poweroff -i ;;
-	'📺 display off') xset dpms force off ;;
-	*) exit 1 ;;
+# Hauptmenü mit verschiedenen Systemaktionen
+# dmenu wird verwendet, um eine grafische Auswahl anzuzeigen
+case "$(printf "🔒 Sperren\n🚪 $WM verlassen\n♻️ $WM erneuern\n🐻 Ruhezustand\n🔃 Neustart\n🖥️ Herunterfahren\n💤 Schlafmodus\n📺 Bildschirm aus" | dmenu -i -p 'Aktion: ')" in
+    '🔒 Sperren')
+        slock ;;  # Bildschirm sperren
+    "🚪 $WM verlassen")
+        kill -TERM "$(wmpid)" ;;  # Beende den Fenstermanager
+    "♻️ $WM erneuern")
+        kill -HUP "$(wmpid)" ;;   # Lade den Fenstermanager neu
+    '🐻 Ruhezustand')
+        slock $ctl hibernate -i ;;  # Aktiviere den Ruhezustand und sperre den Bildschirm
+    '💤 Schlafmodus')
+        slock $ctl suspend -i ;;    # Aktiviere den Schlafmodus und sperre den Bildschirm
+    '🔃 Neustart')
+        $ctl reboot -i ;;           # Starte das System neu
+    '🖥️ Herunterfahren')
+        $ctl poweroff -i ;;         # Fahre das System herunter
+    '📺 Bildschirm aus')
+        xset dpms force off ;;      # Schalte den Bildschirm aus
+    *)  # Falls keine gültige Option ausgewählt wurde
+        exit 1 ;;
 esac

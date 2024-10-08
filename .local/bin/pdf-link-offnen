@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Abhängigkeiten: exiftool, libnotify (für notify-send) müssen installiert sein
+# Installation auf Arch Linux:
+# sudo pacman -S perl-image-exiftool libnotify
+
+# Globbing deaktivieren
+set -f
+
+# Funktion zum Senden von Benachrichtigungen
+send_notification() {
+    if command -v notify-send &> /dev/null; then
+        notify-send "PDF-Link Öffner" "$1"
+    else
+        echo "$1"
+    fi
+}
+
+# Funktion zum Extrahieren des Links
+extract_link() {
+    local pdf_file="$1"
+    local link
+
+    # Versuche zunächst, das Web Statement-Tag zu extrahieren
+    link=$(exiftool -s -s -s -WebStatement "$pdf_file")
+
+    # Wenn kein Link gefunden wurde, versuche es mit dem URL-Tag
+    if [ -z "$link" ]; then
+        link=$(exiftool -s -s -s -URL "$pdf_file")
+    fi
+
+    echo "$link"
+}
+
+# Funktion zum Öffnen des Links im Browser
+open_link() {
+    local link="$1"
+
+    # Versuche zuerst, die BROWSER-Umgebungsvariable zu verwenden
+    if [ -n "$BROWSER" ]; then
+        if $BROWSER "$link" &> /dev/null; then
+            return 0
+        fi
+    fi
+
+    # Versuche dann xdg-open
+    if command -v xdg-open &> /dev/null; then
+        if xdg-open "$link" &> /dev/null; then
+            return 0
+        fi
+    fi
+
+    # Versuche gängige Browser
+    for browser in firefox chromium google-chrome librewolf; do
+        if command -v $browser &> /dev/null; then
+            if $browser "$link" &> /dev/null; then
+                return 0
+            fi
+        fi
+    done
+
+    return 1
+}
+
+# Sicherstellen, dass das Skript im aktuellen Verzeichnis ausgeführt wird
+cd "$(pwd)"
+
+# Überprüfen, ob exiftool installiert ist
+if ! command -v exiftool &> /dev/null; then
+    send_notification "Fehler: exiftool ist nicht installiert. Bitte installieren Sie es mit: sudo pacman -S perl-image-exiftool"
+    exit 1
+fi
+
+# Überprüfen, ob die richtige Anzahl an Argumenten übergeben wurde
+if [ "$#" -ne 1 ]; then
+    send_notification "Verwendung: $0 <pdf_datei>"
+    exit 1
+fi
+
+pdf_datei="$1"
+
+# Überprüfen, ob die PDF-Datei im aktuellen Verzeichnis existiert
+if [ ! -f "$pdf_datei" ]; then
+    send_notification "Fehler: Die Datei '$pdf_datei' wurde im aktuellen Verzeichnis nicht gefunden."
+    exit 1
+fi
+
+# Link extrahieren
+link=$(extract_link "$pdf_datei")
+
+# Überprüfen, ob ein gültiger Link gefunden wurde
+if [ -z "$link" ]; then
+    send_notification "Kein Link in den Metadaten von '$pdf_datei' gefunden."
+    exit 1
+fi
+
+# Link im Browser öffnen
+if open_link "$link"; then
+    send_notification "Link aus '$pdf_datei' wurde im Browser geöffnet.\nLink: $link"
+else
+    send_notification "Fehler beim Öffnen des Links aus '$pdf_datei'.\nLink: $link\nBitte öffnen Sie den Link manuell."
+fi
+
+# Globbing wieder aktivieren
+set +f

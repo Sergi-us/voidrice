@@ -10,6 +10,7 @@
 #   - sudo: Für die Ausführung von Befehlen mit erhöhten Rechten
 #   - Ein Webbrowser (Firefox, Chromium, oder ein anderer installierter Browser)
 
+
 # Funktion zum Überprüfen, ob ein Befehl verfügbar ist
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -24,44 +25,59 @@ notify() {
     fi
 }
 
-# Funktion zum Ausführen von Befehlen mit sudo
-sudo_run() {
-    if [ "$EUID" -ne 0 ]; then
-        sudo "$@"
-    else
-        "$@"
-    fi
-}
-
-# Funktion zum Öffnen einer URL im Browser
+# Funktion zum Öffnen einer URL im surf-Browser
 open_url() {
-    if command_exists firefox; then
-        firefox "$1" >/dev/null 2>&1 &
-    elif command_exists chromium; then
-        chromium "$1" >/dev/null 2>&1 &
-    elif command_exists xdg-open; then
-        xdg-open "$1" >/dev/null 2>&1 &
+    if command_exists surf; then
+        surf "$1" >/dev/null 2>&1 &
     else
-        notify "Konnte keinen Browser finden. Bitte öffnen Sie $1 manuell."
+        notify "Surf-Browser nicht gefunden. Bitte öffnen Sie $1 manuell."
         return 1
     fi
     return 0
 }
 
-# Dienste starten
-notify "Starte nzbhydra2 und sabnzbd..."
-sudo_run systemctl start nzbhydra2
-sudo_run systemctl start sabnzbd
+# nzbhydra2 starten
+start_nzbhydra2() {
+    notify "Versuche nzbhydra2 zu starten..."
+    if sudo systemctl is-active --quiet nzbhydra2; then
+        notify "nzbhydra2 läuft bereits."
+    else
+        sudo systemctl start nzbhydra2
+        sleep 15
+        if sudo systemctl is-active --quiet nzbhydra2; then
+            notify "nzbhydra2 erfolgreich gestartet."
+        else
+            notify "Fehler beim Starten von nzbhydra2. Überprüfe den Status..."
+            status_output=$(sudo systemctl status nzbhydra2)
+            notify "Status von nzbhydra2:\n$status_output"
+            return 1
+        fi
+    fi
+    notify "Öffne nzbhydra2 im Browser..."
+    open_url "http://localhost:5076"
+}
 
-# Warten, bis die Dienste vollständig gestartet sind
-sleep 10
+# SABnzbd mit spezifischer Konfiguration starten
+start_sabnzbd() {
+    notify "Starte SABnzbd..."
+    if sudo systemctl is-active --quiet sabnzbd; then
+        notify "SABnzbd läuft bereits."
+    else
+        sudo systemctl start sabnzbd
+        sleep 5
+        if sudo systemctl is-active --quiet sabnzbd; then
+            notify "SABnzbd erfolgreich gestartet."
+        else
+            notify "Fehler beim Starten von SABnzbd. Überprüfe den Status mit 'sudo systemctl status sabnzbd'"
+            return 1
+        fi
+    fi
+    notify "Öffne SABnzbd im Browser..."
+    open_url "http://localhost:8080"
+}
 
-# URLs im Browser öffnen
-urls=("http://localhost:5076" "http://localhost:8080")
+# Hauptprogramm
+start_nzbhydra2
+start_sabnzbd
 
-for url in "${urls[@]}"; do
-    notify "Öffne $url im Browser..."
-    open_url "$url"
-done
-
-notify "Dienste gestartet und Browser geöffnet."
+notify "Alle Dienste gestartet und Browser geöffnet."

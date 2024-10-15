@@ -1,8 +1,9 @@
 #!/bin/sh
-# SARBS 07.07.2024
-#       
-# Zeigt alle Batterien, deren verbleibenden Prozentsatz und ein Emoji entsprechend
-# dem Ladestatus an (🔌 für eingesteckt, 🔋 für Entladung über Batterie, etc.).
+# Angepasst am 11.10.2024
+# Zeigt den Batteriestand mit Symbolen entsprechend dem Ladestand und dem Anschlussstatus an
+# TODO Spaltenabstand verringern
+
+
 
 adjust_brightness() {
     tool=""
@@ -31,49 +32,101 @@ adjust_brightness() {
             fi
             ;;
         *)
-            notify-send "⚠️ Ungültige Operation"
+            notify-send "⚠️  Ungültige Operation"
             exit 1
             ;;
     esac
 }
 
 case $BLOCK_BUTTON in
-	3) notify-send "🔋 Battery module" "🔋 discharging
-🛑 keine Ladung
- Erhaltungsladung
-  wird geladen
-  vollständig geladen
-❗ Akku alle!
-- Scroll to change adjust xbacklight." ;;
+    3) notify-send "🔋 Batteriemodul" "🔋 Status:
+󰚥 Am Ladegerät
+❗ Akku schwach (<20 %)
+- Scrollen, um Helligkeit zu ändern." ;;
     4)
-        # Erhöhung der Helligkeit um 10%
+        # Erhöhung der Helligkeit um 10 %
         adjust_brightness inc
         ;;
     5)
-        # Verringerung der Helligkeit um 10%
+        # Verringerung der Helligkeit um 10 %
         adjust_brightness dec
         ;;
-#	4) xbacklight -inc 10 ;;
-#	5) xbacklight -dec 10 ;;
-	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+    6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-# Loop through all attached batteries and format the info
+# Funktion zur Bestimmung des Batterie-Symbols basierend auf dem Ladestand
+get_battery_symbol() {
+    capacity=$1
+
+    if [ "$capacity" -le 10 ]; then
+        echo "󰂃"  # Batterie 10 %
+    elif [ "$capacity" -le 20 ]; then
+        echo "󰁺"  # Batterie 20 %
+    elif [ "$capacity" -le 30 ]; then
+        echo "󰁻"  # Batterie 30 %
+    elif [ "$capacity" -le 40 ]; then
+        echo "󰁼"  # Batterie 40 %
+    elif [ "$capacity" -le 50 ]; then
+        echo "󰁽"  # Batterie 50 %
+    elif [ "$capacity" -le 60 ]; then
+        echo "󰁾"  # Batterie 60 %
+    elif [ "$capacity" -le 70 ]; then
+        echo "󰁿"  # Batterie 70 %
+    elif [ "$capacity" -le 80 ]; then
+        echo "󰂀"  # Batterie 80 %
+    elif [ "$capacity" -le 90 ]; then
+        echo "󰂁"  # Batterie 90 %
+    else
+        echo "󰂂"  # Batterie voll
+    fi
+}
+
+# Funktion zur Bestimmung des Anschlussstatus (Ladegerät angeschlossen oder nicht)
+get_connection_status() {
+    # Prüfe, ob das System an AC-Strom angeschlossen ist
+    for ac in /sys/class/power_supply/AC* /sys/class/power_supply/Mains; do
+        [ -e "$ac/online" ] || continue
+        if [ "$(cat "$ac/online")" -eq 1 ]; then
+            echo "AC"  # Ladegerät angeschlossen
+            return
+        fi
+    done
+    echo "BAT"  # Batteriebetrieb
+}
+
+# Loop durch alle angeschlossenen Batterien und formatiere die Infos
+output=""
 for battery in /sys/class/power_supply/BAT?*; do
-	# If non-first battery, print a space separator.
-	[ -n "${capacity+x}" ] && printf " "
-	# Sets up the status and capacity
-	case "$(cat "$battery/status" 2>&1)" in
-		"Full") status="" ;;
-		"Discharging") status="🔋" ;;
-		"Charging") status="" ;;
-		"Not charging") status="🛑" ;;
-		"Unknown") status="♻️" ;;
-		*) exit 1 ;;
-	esac
-	capacity="$(cat "$battery/capacity" 2>&1)"
-	# Will make a warn variable if discharging and low
-	[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
-	# Prints the info
-	printf "|%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
-done && printf "\\n"
+    [ -d "$battery" ] || continue
+    capacity=$(cat "$battery/capacity" 2>/dev/null)
+
+    symbol=$(get_battery_symbol "$capacity")
+
+    # Warnung bei niedrigem Akkustand
+    if [ "$capacity" -le 20 ]; then
+        warn="❗"
+    else
+        warn=""
+    fi
+
+    # Anschlussstatus ermitteln
+    connection_status=$(get_connection_status)
+    if [ "$connection_status" = "AC" ]; then
+        # Verwende ein Symbol für angeschlossenes Ladegerät
+        # Vorschlag: "󰚥" (Steckersymbol) oder "" (Blitzsymbol)
+        connection_symbol="󰚥"
+    else
+        connection_symbol=""
+    fi
+
+    # Ausgabe zusammenstellen
+    # Um den Prozentwert auszublenden, kannst du "$capacity%" entfernen oder auskommentieren
+    output="$output $connection_symbol$warn $capacity󱉸 $symbol"
+done
+
+# Ausgabe drucken
+echo "|$output"
+
+thin_space=$'\u2009'
+hair_space=$'\u200A'
+six_space=$'\u2006'

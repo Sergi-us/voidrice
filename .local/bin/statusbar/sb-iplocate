@@ -22,7 +22,7 @@ fi
 name="${addr##*, }"
 
 # Suche nach der Flagge für das Land
-flag=$(grep "flag: $name" "${XDG_DATA_HOME:-$HOME/.local/share}/larbs/emoji")
+flag=$(grep "flag: $name" "${XDG_DATA_HOME:-$HOME/.local/share}/sarbs/flags")
 flag="${flag%% *}"
 
 # Ausgabe

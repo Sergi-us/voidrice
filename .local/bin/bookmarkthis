@@ -2,7 +2,7 @@
 # Skript um ausgewählten Text zu snippets hinzuzufügen
 
 bookmark="$(xclip -o)"
-file="$HOME/.local/share/larbs/snippets"
+file="$HOME/.local/share/sarbs/snippets"
 
 if grep -q "^$bookmark$" "$file"; then
     notify-send "Hoppla.." "Bereits vorhanden!"

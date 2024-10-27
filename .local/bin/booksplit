@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# TODO Obsolet. geht einfacher in "ncmpcpp" über "Super+m" starten
 # Benötigt ffmpeg
 
 [ ! -f "$2" ] && printf "Die erste Datei sollte die Audiodatei sein, die zweite sollte die Zeitstempel enthalten.\\n" && exit

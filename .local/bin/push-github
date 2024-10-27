@@ -1,5 +1,5 @@
 #!/bin/bash
-# Sergius 04.11.2024
+# SARBS 04.11.2024
 
 # Wechsle in das Projektverzeichnis (Passe den Pfad entsprechend an)
 cd "$(pwd)"

@@ -13,7 +13,7 @@ unsetopt PROMPT_SP 2>/dev/null
 export EDITOR="nvim"
 export TERMINAL="st"
 export TERMINAL_PROG="st"
-export BROWSER="librewolf"
+export BROWSER="surf"
 
 # Ändere die Standardseiten für Krypto-/Wetterüberwachung.
 # export CRYPTOURL="rate.sx"
@@ -61,6 +61,13 @@ export LESS_TERMCAP_us="$(printf '%b' '[1;32m')"
 export LESS_TERMCAP_ue="$(printf '%b' '[0m')"
 export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"	# Syntax-Hervorhebung für Less
 export QT_QPA_PLATFORMTHEME="gtk2"				# QT soll gtk2-Thema verwenden
+export QT_AUTO_SCREEN_SCALE_FACTOR=1			# testeinstellungen von Arch-Wiki
+export QT_ENABLE_HIGHDPI_SCALING=1			# testeinstellungen aus der Arch-Wiki
+# export QT_QPA_PLATFORMTHEME="gtk3"				# QT soll gtk3-Thema verwenden
+# export QT_QPA_PLATFORMTHEME="qt5ct"				# qt5ct benötigt
+# export QT_SCALE_FACTOR=1.5  					# Für Qt-Anwendungen
+# export GDK_SCALE=2          					# Für GTK-Anwendungen
+# export GDK_DPI_SCALE=0.5    					# Korrigiert die Schriftgrößen bei GDK_SCALE=2
 export MOZ_USE_XINPUT2=1					# Mozilla Smooth Scrolling für Touchpads
 export AWT_TOOLKIT="MToolkit wmname LG3D"			# Fix für Java-Anwendungen in dwm
 export _JAVA_AWT_WM_NONREPARENTING=1				# Weiterer Fix für Java-Anwendungen in dwm

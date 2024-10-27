@@ -1,51 +1,100 @@
 #!/bin/sh
-# TODO Testversion des unmount Skript's welches enutzte Geräte erkennen und deaktivieren soll
-# USB-Laufwerke oder Android-Telefone aushängen. Ersetzt das ältere `dmenuumount`. Weniger
-# Eingabeaufforderungen und entschlüsselt auch LUKS-Laufwerke, die ausgehängt werden.
+# Testversion von Claude
+# Skript zum Aushängen von USB-Laufwerken und Android-Telefonen
+# Unterstützt auch das Aushängen von LUKS-verschlüsselten Laufwerken
+# Fehler bei fehlenden Abhängigkeiten werden abgefangen
 
-set -e
+set -eu
+
+# Überprüfen der notwendigen Programme
+check_dependencies() {
+    for cmd in lsof dmenu lsblk cryptsetup notify-send; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            echo "Fehler: $cmd ist nicht installiert" >&2
+            exit 1
+        fi
+    done
+}
 
 # Überprüfen und Beenden von Prozessen, die das Zielverzeichnis verwenden
 kill_processes_using_directory() {
     directory=$1
-    process_list=$(lsof +D "$directory" | awk 'NR>1 {print $2}')
+    if ! process_list=$(lsof +D "$directory" 2>/dev/null | awk 'NR>1 {print $2}'); then
+        echo "Warnung: Konnte Prozesse nicht auflisten" >&2
+        return 1
+    fi
 
     if [ -n "$process_list" ]; then
-        echo "Folgende Prozesse verwenden $directory und werden beendet:"
-        echo "$process_list"
-        echo "$process_list" | xargs sudo kill -9
-        echo "Prozesse beendet."
+        echo "Folgende Prozesse verwenden $directory und werden beendet:" >&2
+        echo "$process_list" >&2
+        if ! echo "$process_list" | xargs -r sudo kill -9; then
+            echo "Warnung: Einige Prozesse konnten nicht beendet werden" >&2
+            return 1
+        fi
+        echo "Prozesse beendet." >&2
     else
-        echo "Keine Prozesse verwenden $directory."
+        echo "Keine Prozesse verwenden $directory." >&2
     fi
 }
 
-mounteddroids="$(grep simple-mtpfs /etc/mtab | awk '{print "📱" $2}')"
-lsblkoutput="$(lsblk -nrpo "name,type,size,mountpoint")"
-mounteddrives="$(echo "$lsblkoutput" | awk '($2=="part"||$2="crypt")&&$4!~/\/boot|\/home$|SWAP/&&length($4)>1{printf "💾%s (%s)\n",$4,$3}')"
+main() {
+    check_dependencies
 
-allunmountable="$(echo "$mounteddroids
-$mounteddrives" | sed "/^$/d;s/ *$//")"
-test -n "$allunmountable"
+    # MTP-Geräte finden
+    mounteddroids=$(grep simple-mtpfs /etc/mtab 2>/dev/null | awk '{print "📱" $2}') || true
 
-chosen="$(echo "$allunmountable" | dmenu -i -p "Welches Laufwerk aushängen?")"
-chosen="${chosen%% *}"
-test -n "$chosen"
+    # Gemountete Laufwerke finden
+    lsblkoutput=$(lsblk -nrpo "name,type,size,mountpoint")
+    mounteddrives=$(echo "$lsblkoutput" | awk '
+        ($2=="part" || $2=="crypt") &&
+        $4!~/\/boot|\/home$|SWAP/ &&
+        length($4)>1 {
+            printf "💾%s (%s)\n",$4,$3
+        }
+    ')
 
-# Verzeichnispfad extrahieren
-mountpoint="/${chosen#*/}"
+    # Liste aller unmountbaren Geräte erstellen
+    allunmountable=$(printf '%s\n%s' "$mounteddroids" "$mounteddrives" | sed '/^$/d;s/ *$//')
 
-# Prozesse beenden, die das Zielverzeichnis verwenden
-kill_processes_using_directory "$mountpoint"
+    # Prüfen ob überhaupt Geräte verfügbar sind
+    if [ -z "$allunmountable" ]; then
+        notify-send "Keine Geräte" "Keine auswerfbaren Geräte gefunden."
+        exit 0
+    fi
 
-# Laufwerk aushängen
-sudo -A umount -l "$mountpoint"
-notify-send "Gerät ausgehängt." "$chosen wurde ausgehängt."
+    # Gerät auswählen
+    chosen=$(echo "$allunmountable" | dmenu -i -p "Welches Laufwerk aushängen?")
+    if [ -z "$chosen" ]; then
+        exit 0
+    fi
 
-# Schließt das ausgewählte Laufwerk, wenn es entschlüsselt ist.
-cryptid="$(echo "$lsblkoutput" | grep "/${chosen#*/}$")"
-cryptid="${cryptid%% *}"
-if [ -b /dev/mapper/"${cryptid##*/}" ]; then
-    sudo -A cryptsetup close "$cryptid"
-    notify-send "🔒Geräteverschlüsselung geschlossen." "Laufwerk ist jetzt wieder sicher verschlossen."
-fi
+    # Mountpoint extrahieren
+    mountpoint="/${chosen#*/}"
+    mountpoint=${mountpoint%% *}
+
+    # Prozesse beenden und unmounten
+    if ! kill_processes_using_directory "$mountpoint"; then
+        notify-send "Warnung" "Einige Prozesse konnten nicht beendet werden"
+    fi
+
+    if ! sudo -A umount -l "$mountpoint"; then
+        notify-send "Fehler" "Konnte $chosen nicht aushängen"
+        exit 1
+    fi
+
+    notify-send "Gerät ausgehängt" "$chosen wurde ausgehängt"
+
+    # LUKS-Verschlüsselung schließen falls vorhanden
+    cryptid=$(echo "$lsblkoutput" | grep "/${chosen#*/}$")
+    cryptid="${cryptid%% *}"
+
+    if [ -b "/dev/mapper/${cryptid##*/}" ]; then
+        if ! sudo -A cryptsetup close "$cryptid"; then
+            notify-send "Fehler" "Konnte Verschlüsselung nicht schließen"
+            exit 1
+        fi
+        notify-send "🔒Geräteverschlüsselung geschlossen" "Laufwerk ist jetzt wieder sicher verschlossen"
+    fi
+}
+
+main "$@"

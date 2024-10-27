@@ -1,38 +1,53 @@
 #!/bin/bash
-# Sergi Webcam-Script V-0.8
+# Sergi Webcam-Script
+# TODO Experementel
+# 2024-07-29
 
-# Gerät für Pixel 7a Webcam
-PIXEL_DEVICE="/dev/video2"
+# Funktion zum Finden des ersten verfügbaren Videogeräts
+find_video_device() {
+    v4l2-ctl --list-devices | grep -oP '/dev/video\d+' | head -n 1
+}
 
-# Standard Webcam Gerät
-STANDARD_DEVICE="/dev/video0"
+# Funktion zum Überprüfen, ob ein Gerät eine Android Webcam ist
+is_android_webcam() {
+    v4l2-ctl --list-devices | grep -q "Android Webcam"
+}
 
-# Original Promt aus der DWM config.h
-# SHCMD("mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --vf='hue=s=0' --title=webcam $(ls /dev/video[0,2,4,6,8] | tail -n 1)")
+# Konfigurationsvariablen
+ANDROID_RESOLUTION="1920x1080"
+STANDARD_RESOLUTION="1280x720"
+PIXELFORMAT="MJPG"
+MPV_BASE_OPTIONS="--untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title=webcam"
+ANDROID_FILTERS="hue=s=0,crop=1080:1080,scale=1080:1080"
+STANDARD_FILTERS="hue=s=0,crop=720:720,scale=720:720"
+ANDROID_ROTATION="--video-rotate=90"
 
-# Jedes Android sollte erkannt werden
-# ansonsten damit ausfindig machen und anpassen
-# v4l2-ctl --list-devices
+# Finde das erste verfügbare Videogerät
+DEVICE=$(find_video_device)
 
-# Überprüfen, ob Pixel Webcam angeschlossen ist
-if v4l2-ctl --list-devices | grep -q "Android Webcam"; then
-    # Pixel Webcam ist angeschlossen
-    DEVICE=$PIXEL_DEVICE
-    # Setze die Auflösung und starte MPV mit Effekten und Crop
-    v4l2-ctl --set-fmt-video=width=1920,height=1080,pixelformat=MJPG --device=$DEVICE
-    mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency \
-        --input-conf=/dev/null --title=webcam \
-else
-    # Pixel Webcam ist nicht angeschlossen, Standard Webcam verwenden
-    DEVICE=$STANDARD_DEVICE
-    # Setze die bestmögliche Auflösung und Bildwiederholfrequenz für die Standard Webcam
-    v4l2-ctl --set-fmt-video=width=1280,height=720,pixelformat=MJPG --device=$DEVICE
-    # Starte MPV mit Effekten und Crop
-    mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency \
-        --input-conf=/dev/null --title=webcam \
-        --vf='hue=s=0,crop=720:720,scale=720:720' \
-        $DEVICE
+if [ -z "$DEVICE" ]; then
+    echo "Kein Videogerät gefunden."
+    exit 1
 fi
+
+# Konfiguriere das Gerät basierend auf dem Typ
+if is_android_webcam; then
+    RESOLUTION=$ANDROID_RESOLUTION
+    FILTERS=$ANDROID_FILTERS
+    ROTATION=$ANDROID_ROTATION
+else
+    RESOLUTION=$STANDARD_RESOLUTION
+    FILTERS=$STANDARD_FILTERS
+    ROTATION=""
+fi
+
+# Setze die Auflösung
+WIDTH=$(echo $RESOLUTION | cut -d'x' -f1)
+HEIGHT=$(echo $RESOLUTION | cut -d'x' -f2)
+v4l2-ctl --set-fmt-video=width=$WIDTH,height=$HEIGHT,pixelformat=$PIXELFORMAT --device=$DEVICE
+
+# Starte MPV mit den konfigurierten Optionen
+mpv $MPV_BASE_OPTIONS $ROTATION --vf="$FILTERS" $DEVICE
 
 
 # Weitere mpv Filter

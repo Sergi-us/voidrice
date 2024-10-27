@@ -14,31 +14,28 @@ USB_BACKUP_DIR="$USB_MOUNT_POINT/BACKUP"
 
 # Liste der zu synchronisierenden Verzeichnisse und Dateien (relative Pfade)
 DIR_LIST=(
+    "Bilder/"
+    "Bücher/"
+    "Dokumente/"
+    "Downloads/"
+    "Filme/"
+    "Handy/"
+    "Magazine/"
+    "Musik/"
+    "Serien/"
+    "Videos/"
     ".ssh/"
     ".config/abook/"
-    ".local/share/nvim/vimwiki/"
+    ".local/share/nvim/"
     ".local/share/calcurse/"
-    ".local/share/nvim/tutor/"
-    "Dokumente/"
-    ".local/bin/"
-    "Downloads/"
-    "GitHub/"
-    "Musik/"
-    "Sergi-us/"
-    "Videos/"
+    ".android/"
 )
 
 FILE_LIST=(
     ".config/newsboat/urls"
-    ".config/zsh/.zshrc"
+    ".config/zsh/history"
     ".gitconfig"
     ".local/share/larbs/snippets"
-    ".local/bin/syn"
-    ".local/bin/dmenurecord"
-    ".local/bin/push-www"
-    ".local/bin/push-github"
-    ".local/bin/cam"
-    ".config/zsh/.zsh_history"
     "~"
 )
 
@@ -76,6 +73,7 @@ create_directories() {
 # Funktion zum Durchführen des Backups
 perform_backup() {
     echo "Backup wird durchgeführt..."
+    # Erst die definierten Verzeichnisse synchronisieren
     for item in "${DIR_LIST[@]}"; do
         rsync -av --delete "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
         echo "Synchronisiert: $item"
@@ -83,14 +81,17 @@ perform_backup() {
 
     for item in "${FILE_LIST[@]}"; do
         if [ "$item" = "~" ]; then
-            rsync -av --delete --exclude '.*' "/home/$CLIENT_USER/" "$USB_BACKUP_DIR/"
-            echo "Synchronisiert: nicht versteckte Dateien im Home-Verzeichnis"
+            # Nur einzelne Dateien im Home-Verzeichnis synchronisieren, keine Verzeichnisse
+            rsync -av --delete \
+                  --exclude='.*' \
+                  --exclude='*/' \
+                  "/home/$CLIENT_USER/" "$USB_BACKUP_DIR/home_files/"
+            echo "Synchronisiert: Einzeldateien im Home-Verzeichnis"
         else
             rsync -av --delete "/home/$CLIENT_USER/$item" "$USB_BACKUP_DIR/$item"
             echo "Synchronisiert: $item"
         fi
     done
-
     echo "Backup abgeschlossen."
 }
 

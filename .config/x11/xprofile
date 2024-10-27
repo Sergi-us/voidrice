@@ -1,76 +1,73 @@
 #!/bin/sh
 
-# This file runs when a DM logs you into a graphical session.
-# If you use startx/xinit like a Chad, this file will also be sourced.
+# Diese Datei wird ausgeführt, wenn ein Display Manager Sie in eine grafische
+# Sitzung einloggt. Wenn Sie startx/xinit wie ein Profi verwenden, wird diese
+# Datei ebenfalls geladen.
 
-xrandr --dpi 110	# Set DPI. User may want to use a larger number for larger screens.
-setbg &			# set the background with the `setbg` script
-#xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!	# Uncomment to use Xresources colors/settings on startup
+# xrandr Einstellungen (nur ein promt möglich)
+# xrandr --listmonitors
+# xrandr --dpi 92 	# Standartwert von Luke
 
-autostart="mpd xcompmgr dunst unclutter pipewire remapd"
-
-for program in $autostart; do
-	pidof -sx "$program" || "$program" &
-done >/dev/null 2>&1
-
-# XDG Paths (testeinstellungen von chris@mshine
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-
-# zsh config dir
-export ZDOTDIR=$HOME/.config/zsh
-
-# Ensure that xrdb has finished running before moving on to start the WM/DE.
-[ -n "$xrdbpid" ] && wait "$xrdbpid"
-
-# Testeinstellungen von cris@machine
-# Status Bar
-# dwmblocks &
-
-# Random Photo Every Login
-# feh --bg-fill --randomize ~/Pictures/wallpapers/* &
-
-# feh --bg-fill ~/Pictures/wallpapers/mac/Mojave\ Night.jpg --bg-fill ~/Pictures/wallpapers/macos-cataline-night-6k.jpg/
-
-# Monitor Config
-# xrandr --auto --output DVI-D-0 --mode 2560x1440 --left-of HDMI-0
-
-# xrandr --output DVI-D-0 --mode 2560x1440 --rate 59.95
-# xrandr --auto --output HDMI-0 --mode 2560x1440 --right-of DVI-D-0
-
-# Network Manager Applet
-# nm-applet --indicator &
+# vom Screen-Layout-Editor (mein Dualscreen setup)
+xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --mode 1920x1080 --pos 1920x0 --rotate normal
 
 # Don't Randomly Turn off
+# TODO Testen...
 # xset s off
 # xset -dpms
 # xset s noblank
 
-# Speedy keys
-# xset r rate 210 40
+# export GDK_SCALE=2
+# export GDK_DPI_SCALE=0.5
 
-# Environment variables set everywhere
-# export EDITOR="nvim"
-# export TERMINAL="kitty"
-# export BROWSER="brave"
+# Ermitteln Sie zunächst die Namen Ihrer Displays
+# xrandr --output eDP-1 --dpi 160 /
+#        --output HDMI-2 --dpi 92
+# xrandr --output HDMI-2 --scale 1.5x1.5
+
+# Skalierungs einstellungen test
+# export GDK_SCALE=2
+# export GTK_SCALE=1.4
 
 # For QT Themes
 # export QT_QPA_PLATFORMTHEME=qt5ct
 
-# XDG Paths
-# export XDG_CONFIG_HOME=$HOME/.config
-# export XDG_CACHE_HOME=$HOME/.cache
-# export XDG_DATA_HOME=$HOME/.local/share
-
-# Compositor
-# picom -b
-
 # Hide mouse when typing
 # xbanish &
 
-# Screenshots
-# flameshot &
+# Setzt den Hintergrund mit dem `setbg` Skript
+setbg &
+
+# Lädt Xresources Farben/Einstellungen beim Start
+# TODO Trennen von Skalierung und Farben
+# wenn xrdb aktiviert, dann "~/.config/x11/xresources" beachten
+xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!
+
+# Liste der automatisch zu startenden Programme
+autostart="mpd xcompmgr dunst unclutter pipewire remapd"
+for program in $autostart; do
+	pidof -sx "$program" || "$program" &
+done >/dev/null 2>&1
+
+# Aktiviert Natural Scrolling (Mac-like)
+# xinput set-prop 10 "libinput Natural Scrolling Enabled" 1
+
+# Stellt sicher, dass xrdb fertig ist, bevor der Window Manager / Desktop Environment gestartet wird
+[ -n "$xrdbpid" ] && wait "$xrdbpid"
+
+# Testeinstellungen von cris@machine
+# TODO Testen...
+# Status Bar
+# dwmblocks &
+
+# Network Manager Applet
+# nm-applet --indicator &
+
+# Speedy keys
+# xset r rate 210 40
+
+# Compositor
+# picom -b
 
 # Bluetooth systray icon
 # blueman-applet &
@@ -81,16 +78,7 @@ export ZDOTDIR=$HOME/.config/zsh
 # Easy file sharing
 # pcloudcc -u chris.machine@pm.me -m ~/Cloud -d
 
-# Screenkey applet (this will break everything)
-# screenkey --start-disabled
-
 # remap caps to escape
 # setxkbmap -option caps:escape
 # swap escape and caps
 # setxkbmap -option caps:swapescape
-
-# load Xresources
-# xrdb ~/.Xresources
-
-# zsh config dir
-# export ZDOTDIR=$HOME/.config/zsh

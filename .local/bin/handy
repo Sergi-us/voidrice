@@ -1,0 +1,139 @@
+#!/bin/bash
+# Backup-Skript für die Synchronisation von Verzeichnissen über ADB vom Handy zum Linux-System
+# Zielsystemdateien werden nicht gelöscht
+
+# Automatisch den Benutzernamen und die Gruppe ermitteln
+CLIENT_USER=$(whoami)
+CLIENT_GROUP=$(id -gn "$CLIENT_USER")
+
+# Pfad zum Zielverzeichnis auf dem Linux-System
+TARGET_DIR="$HOME/Handy"
+
+# Liste der zu kopierenden Verzeichnisse auf dem Handy (relative Pfade)
+DIR_LIST=(
+    "/sdcard/DCIM"
+    "/sdcard/Documents"
+    "/sdcard/Scan"
+    "/sdcard/Pictures"
+    "/sdcard/Download"
+    "/sdcard/Hintergrundbilder"
+    "/sdcard/Meme-vids"
+)
+
+# Statistik-Variablen
+TOTAL_FILES=0
+COPIED_FILES=0
+SKIPPED_FILES=0
+FAILED_FILES=0
+
+# Datei für fehlgeschlagene Kopierversuche
+RETRY_FILE="/tmp/adb_retry_list.txt"
+> "$RETRY_FILE"  # Datei leeren oder erstellen
+
+# Überprüfen, ob ADB-Gerät verbunden ist
+check_adb_connection() {
+    if adb devices | grep -w "device" > /dev/null; then
+        echo "ADB-Gerät verbunden."
+        return 0
+    else
+        echo "Kein ADB-Gerät verbunden."
+        return 1
+    fi
+}
+
+# Nur neue oder geänderte Dateien vom Handy kopieren
+perform_backup() {
+    for DIR in "${DIR_LIST[@]}"; do
+        echo "Synchronisiere Verzeichnis: $DIR"
+
+        # Liste alle Dateien im aktuellen Verzeichnis
+        while IFS= read -r file; do
+            # Überspringe leere Zeilen und Fehlermeldungen
+            [ -z "$file" ] && continue
+            [[ "$file" == *"find:"* ]] && continue
+
+            ((TOTAL_FILES++))
+
+            # Zielpfad auf dem Linux-System ermitteln
+            local_path="$TARGET_DIR${file#/sdcard}"
+
+            # Debug-Ausgabe
+            echo "Verarbeite: $file"
+            echo "Lokaler Pfad: $local_path"
+
+            # Prüfen, ob die Datei existiert und ob sie identisch ist
+            if [[ -f "$local_path" ]]; then
+                remote_size=$(adb shell "stat -c%s '$file'" 2>/dev/null)
+                local_size=$(stat -c%s "$local_path" 2>/dev/null)
+
+                # Prüfe ob beide Größen verfügbar sind
+                if [[ -n "$remote_size" ]] && [[ -n "$local_size" ]]; then
+                    if [[ "$remote_size" -eq "$local_size" ]]; then
+                        echo "Überspringe Datei (unverändert): $file"
+                        ((SKIPPED_FILES++))
+                        continue
+                    fi
+                fi
+            fi
+
+            # Falls Datei neu oder geändert, wird sie kopiert
+            echo "Kopiere Datei: $file"
+
+            # Verzeichnisstruktur erstellen
+            mkdir -p "$(dirname "$local_path")"
+
+            # Kopiere die Datei
+            if adb pull "$file" "$local_path"; then
+                echo "✓ Erfolgreich kopiert: $file"
+                ((COPIED_FILES++))
+
+                # Setze Zeitstempel von der Originaldatei
+                timestamp=$(adb shell "stat -c %y '$file'" 2>/dev/null)
+                if [[ -n "$timestamp" ]]; then
+                    touch -d "$timestamp" "$local_path" 2>/dev/null
+                fi
+            else
+                echo "✗ Fehler beim Kopieren: $file"
+                echo "$file" >> "$RETRY_FILE"
+                ((FAILED_FILES++))
+            fi
+
+        done < <(adb shell "find '$DIR' -type f" | tr -d '\r')
+    done
+
+    # Zweiter Versuch für nicht kopierte Dateien
+    if [[ -s "$RETRY_FILE" ]]; then
+        echo "Erneuter Versuch für fehlgeschlagene Dateien..."
+        while IFS= read -r file; do
+            local_path="$TARGET_DIR${file#/sdcard}"
+            if adb pull "$file" "$local_path"; then
+                echo "✓ Erfolgreich kopiert (zweiter Versuch): $file"
+                ((COPIED_FILES++))
+                sed -i "\|$file|d" "$RETRY_FILE"
+            else
+                echo "✗ Fehler beim Kopieren (zweiter Versuch): $file"
+                ((FAILED_FILES++))
+            fi
+        done < "$RETRY_FILE"
+    fi
+
+    # Ausgabe der Statistik
+    echo "=== Backup-Statistik ==="
+    echo "Gefundene Dateien: $TOTAL_FILES"
+    echo "Kopierte Dateien: $COPIED_FILES"
+    echo "Übersprungene Dateien: $SKIPPED_FILES"
+    echo "Fehlgeschlagene Dateien: $FAILED_FILES"
+}
+
+# Funktionsaufruf entsprechend dem Parameter
+case $1 in
+    --backup)
+        check_adb_connection && perform_backup ;;
+    *)
+        echo "Usage: $0 {--backup}"
+        echo "  --backup   Kopiert nur neue oder geänderte Dateien vom Handy auf den Rechner"
+        ;;
+esac
+
+# Am Ende eine Bestätigung einfügen
+read -p "Drücke Enter, um das Terminal zu schließen..."

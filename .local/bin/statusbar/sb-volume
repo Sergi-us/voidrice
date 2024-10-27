@@ -10,9 +10,10 @@ case $BLOCK_BUTTON in
     2) wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
     4) wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ ;;  # Scroll up
     5) wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;  # Scroll down
-    3) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
-- Middle click to mute.
-- Scroll to change." ;;
+    3) notify-send "Lautstärke Modul" "\- Zeigt Lautsärke   ,
+- Stumm.
+- Mittleclick für Stumm.
+- Scroll zum ändern" ;;
     6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
@@ -26,16 +27,16 @@ vol=$(awk -v vol="$vol" 'BEGIN{printf "%.0f\n", vol * 100}')
 
 # Determine the icon
 if [ "$muted" = "yes" ]; then
-    icon="🔇"
+    icon=""
 elif [ "$vol" -ge 70 ]; then
-    icon="🔊"
+    icon=""
 elif [ "$vol" -ge 30 ]; then
-    icon="🔉"
+    icon=""
 elif [ "$vol" -ge 1 ]; then
-    icon="🔈"
+    icon=""
 else
-    icon="🔇"
+    icon="󰖁"
 fi
 
 # Output the result
-echo "$icon$vol%"
+echo "$vol%$icon"

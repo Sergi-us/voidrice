@@ -1,5 +1,5 @@
-Xft.dpi: 92
-janus.fractionalDpi: 0.92
+/* Xft.dpi: 92 */
+/* janus.fractionalDpi: 0.92 */
 !! Transparency (0-1):
 *.alpha: 0.8
 

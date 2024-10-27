@@ -6,10 +6,10 @@
 
 # xrandr Einstellungen (nur ein promt möglich)
 # xrandr --listmonitors
-# xrandr --dpi 92 	# Standartwert von Luke
+xrandr --dpi 92 	# Standartwert von Luke
 
 # vom Screen-Layout-Editor (mein Dualscreen setup)
-xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --mode 1920x1080 --pos 1920x0 --rotate normal
+# xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --mode 1920x1080 --pos 1920x0 --rotate normal
 
 # Don't Randomly Turn off
 # TODO Testen...

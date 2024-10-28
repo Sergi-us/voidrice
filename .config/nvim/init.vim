@@ -1,7 +1,6 @@
 let mapleader =","
-" SARBS 0.4
+" SARBS 27.10.2024
 " TODO das 'q' dilemma Überdenken...
-" TODO Alle Bindings und Funktionen in MOD+F1 eintragen
 
 if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
@@ -70,6 +69,10 @@ call plug#end()
 	map <leader>o :setlocal spell! spelllang=de_de,en_us<CR>
 " Splits-Verhalten ändern: Teilt sich unten und rechts, was im Gegensatz zu vim Standardeinstellungen nicht verzögert ist.
 	set splitbelow splitright
+" Zeigt eine vertikale Linie bei der 80. Spalte an
+	set colorcolumn=80
+	"highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
+	highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
 
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
@@ -117,20 +120,23 @@ call plug#end()
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 	autocmd VimLeave *.tex !texclear %
 
-" Ensure files are read as what I want:
+" VimWiki Konfiguration - Syntax und Dateierweiterungen
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+
+" Tastenkombination für VimwikiIndex
 	map <leader>v :VimwikiIndex<CR>
+
+" Liste der VimWiki-Verzeichnisse mit entsprechenden Einstellungen
 	let g:vimwiki_list = [
 	  \ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
 	  \ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
 	  \ ]
+
+" Stelle sicher, dass Dateien wie gewünscht gelesen werden:
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 	autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
 	autocmd BufRead,BufNewFile *.tex set filetype=tex
+	autocmd BufRead,BufNewFile *.h set filetype=c
 
 " 	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 

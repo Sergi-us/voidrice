@@ -12,7 +12,7 @@ adjust_brightness() {
     elif command -v xbacklight &> /dev/null; then
         tool="xbacklight"
     else
-        notify-send "⚠️ Kein Helligkeitstool gefunden"
+        notify-send " Kein Helligkeitstool gefunden"
         exit 1
     fi
 
@@ -32,16 +32,16 @@ adjust_brightness() {
             fi
             ;;
         *)
-            notify-send "⚠️  Ungültige Operation"
+            notify-send "  Ungültige Operation"
             exit 1
             ;;
     esac
 }
 
 case $BLOCK_BUTTON in
-    3) notify-send "🔋 Batteriemodul" "🔋 Status:
+    3) notify-send "Batteriemodul" "󰂏 Status:
 󰚥 Am Ladegerät
-❗ Akku schwach (<20 %)
+󰂃 Akku schwach (<10 %)
 - Scrollen, um Helligkeit zu ändern." ;;
     4)
         # Erhöhung der Helligkeit um 10 %
@@ -121,12 +121,8 @@ for battery in /sys/class/power_supply/BAT?*; do
 
     # Ausgabe zusammenstellen
     # Um den Prozentwert auszublenden, kannst du "$capacity%" entfernen oder auskommentieren
-    output="$output $connection_symbol$warn $capacity󱉸 $symbol"
+    output="$output $symbol $connection_symbol$warn $capacity%"
 done
 
 # Ausgabe drucken
-echo "|$output"
-
-thin_space=$'\u2009'
-hair_space=$'\u200A'
-six_space=$'\u2006'
+echo "$output"

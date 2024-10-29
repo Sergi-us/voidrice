@@ -27,16 +27,16 @@ vol=$(awk -v vol="$vol" 'BEGIN{printf "%.0f\n", vol * 100}')
 
 # Determine the icon
 if [ "$muted" = "yes" ]; then
-    icon=""
+    icon="󰖁 "
 elif [ "$vol" -ge 70 ]; then
-    icon=""
+    icon="󰕾"
 elif [ "$vol" -ge 30 ]; then
-    icon=""
+    icon="󰖀"
 elif [ "$vol" -ge 1 ]; then
-    icon=""
+    icon="󰕿"
 else
-    icon="󰖁"
+    icon="󰝟"
 fi
 
 # Output the result
-echo "$vol%$icon"
+echo "$icon $vol%"

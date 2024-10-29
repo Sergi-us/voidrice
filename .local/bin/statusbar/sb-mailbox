@@ -1,20 +1,20 @@
 #!/bin/sh
 
-# Displays number of unread mail and an loading icon if updating.
-# When clicked, brings up `neomutt`.
+# Zeigt die Anzahl ungelesener E-Mails und ein Lade-Symbol während der Aktualisierung.
+# Bei Klick wird `neomutt` geöffnet.
 
 case $BLOCK_BUTTON in
 	1) setsid -w -f "$TERMINAL" -e neomutt; pkill -RTMIN+12 "${STATUSBAR:-dwmblocks}" ;;
 	2) setsid -f mw -Y >/dev/null ;;
-	3) notify-send "📬 Mail module" "\- Shows unread mail
-- Shows 🔃 if syncing mail
-- Left click opens neomutt
-- Middle click syncs mail" ;;
+	3) notify-send " Mail Modul" "\- Zeigt ungelesene E-Mails
+- Zeigt  bei synchronisation
+- Linksklick öffnet neomutt
+- Mittelklick synchronisiert E-Mails" ;;
 	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
 unread="$(find "${XDG_DATA_HOME:-$HOME/.local/share}"/mail/*/[Ii][Nn][Bb][Oo][Xx]/new/* -type f | wc -l 2>/dev/null)"
 
-pidof mbsync >/dev/null 2>&1 && icon="🔃"
+pidof mbsync >/dev/null 2>&1 && icon=" "
 
-[ "$unread" = "0" ] && [ "$icon" = "" ] || echo "📬$unread$icon"
+[ "$unread" = "0" ] && [ "$icon" = "" ] || echo " $unread$icon"

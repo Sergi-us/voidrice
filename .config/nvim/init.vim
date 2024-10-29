@@ -24,6 +24,8 @@ Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
 
+" voreingestelltes Farbschema
+	colorscheme vim
 " Automatische Faltung basierend auf Einrückung
 " Faltungseinstellungen
 	set foldmethod=indent		" Faltung basierend auf Einrückung
@@ -31,6 +33,10 @@ call plug#end()
 	set foldenable			" Startet mit gefalteten Bereichen
 	" set nofoldenable		" Startet mit allen offenen Faltungen
 	set foldminlines=2	    " Minimale Zeilenanzahl für eine Faltung
+" Faltungshervorhebung
+    highlight Folded guifg=#BBC2C9 guibg=#262B31 gui=NONE ctermbg=235 ctermfg=250 cterm=NONE
+    " highlight Folded guifg=#D3D7DB guibg=#1F242A gui=NONE ctermbg=234 ctermfg=252 cterm=NONE
+    highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
 " Einrückungseinstellungen
     set expandtab			" Konvertiert Tab zu Spaces
     set tabstop=4			" Tab entspricht 4 Leerzeichen
@@ -76,8 +82,6 @@ augroup END
 	set laststatus=0
 " Versteckt die Anzeige von (unvollständigen) Befehlen in der letzten Zeile
 	set noshowcmd
-" voreingestelltes Farbschema
-	colorscheme vim
 	" colorscheme desert	" kontrastreiche Farbschema (transprenz verschwindet)
 " ändert das verhalten der Taste "c" in Normal Mode. Gelöschter Text wird in das "Black Hole" -Register geschoben, wenn Sie Text löschen möchten, ohne den Inhalt der Zwischenablage zu ändern.
 	nnoremap c "_c

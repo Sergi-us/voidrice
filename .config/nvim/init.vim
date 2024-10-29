@@ -24,6 +24,38 @@ Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
 
+" Automatische Faltung basierend auf Einrückung
+" Faltungseinstellungen
+	set foldmethod=indent		" Faltung basierend auf Einrückung
+	set foldnestmax=10	    	" Maximale Verschachtelungstiefe
+	set foldenable			" Startet mit gefalteten Bereichen
+	" set nofoldenable		" Startet mit allen offenen Faltungen
+	set foldminlines=2	    " Minimale Zeilenanzahl für eine Faltung
+" Einrückungseinstellungen
+    set expandtab			" Konvertiert Tab zu Spaces
+    set tabstop=4			" Tab entspricht 4 Leerzeichen
+    set shiftwidth=4        " Einrücktiefe für automatische Einrückung
+    set softtabstop=4       " Backspace löscht 4 Spaces als wäre es ein Tab
+    " set foldlevel=1		" Öffnet Faltungen bis Level 1
+    " set foldlevel=2		" Faltungen bis Level 2 standardmäßig öffnen
+    " :set foldmethod=indent	" Probier dies in einer Python-Datei
+    " :set foldmethod=syntax	" Dann dies in einer Java/C++ Datei
+    " :set foldmethod=marker	" Und dies in einer Dokumentation
+" Visuelle Hilfen
+    set list                     " Aktiviert die Anzeige von unsichtbaren Zeichen
+    " set listchars=tab:⇥\ ,lead:·   " │⇥↹ für Tabs, · für Leerzeichen am Zeilenanfang
+    set listchars=tab:⇥\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:␣
+" Dateityp-spezifische Einstellungen
+augroup FileTypeSpecific
+    autocmd!
+    " Python: 4 Spaces Einrückung
+    autocmd FileType python setlocal expandtab tabstop=4 shiftwidth=4
+    " JavaScript: 2 Spaces Einrückung
+    autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2
+    " Markdown: Marker-basierte Faltung
+    autocmd FileType markdown setlocal foldmethod=marker
+augroup END
+
 " Setzt den Fenstertitel (nützlich für Terminalemulator-Tabs)
 	set title
 " (light dark) Setzt den Hintergrund auf 'hell' oder dunkel.
@@ -46,7 +78,7 @@ call plug#end()
 	set noshowcmd
 " voreingestelltes Farbschema
 	colorscheme vim
-	" colorscheme desert  	" kontrastreiche Farbschema (transprenz verschwindet)
+	" colorscheme desert	" kontrastreiche Farbschema (transprenz verschwindet)
 " ändert das verhalten der Taste "c" in Normal Mode. Gelöschter Text wird in das "Black Hole" -Register geschoben, wenn Sie Text löschen möchten, ohne den Inhalt der Zwischenablage zu ändern.
 	nnoremap c "_c
 " Aktiviert die Erkennung von Dateitypen und lädt entsprechende Plugins.
@@ -69,10 +101,16 @@ call plug#end()
 	map <leader>o :setlocal spell! spelllang=de_de,en_us<CR>
 " Splits-Verhalten ändern: Teilt sich unten und rechts, was im Gegensatz zu vim Standardeinstellungen nicht verzögert ist.
 	set splitbelow splitright
-" Zeigt eine vertikale Linie bei der 80. Spalte an
-	set colorcolumn=80
-	"highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
-	highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
+" Hervorhebungen für Zeilenende und Zeile und Spalte
+" TODO Transparenz für die Herforhebung von Zeilen und Spalten einrichten...
+    set colorcolumn=80
+    highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
+    set cursorline          " Hebt die aktuelle Zeile hervor
+    " highlight CursorLine   ctermbg=NONE guibg=NONE cterm=underline gui=underline
+    highlight CursorLine   ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
+    set cursorcolumn        " Hebt die aktuelle Spalte hervor
+    " highlight CursorColumn ctermbg=NONE guibg=NONE cterm=underline gui=underline guifg=#303030
+    highlight CursorColumn ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
 
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
@@ -130,6 +168,10 @@ call plug#end()
 	let g:vimwiki_list = [
 	  \ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
 	  \ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki'},
+	  \ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
+	  \ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
+	  \ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
+	  \ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
 	  \ ]
 
 " Stelle sicher, dass Dateien wie gewünscht gelesen werden:
@@ -138,7 +180,7 @@ call plug#end()
 	autocmd BufRead,BufNewFile *.tex set filetype=tex
 	autocmd BufRead,BufNewFile *.h set filetype=c
 
-" 	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+"	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Save file as sudo on files that require root permission
 	cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
@@ -149,12 +191,12 @@ call plug#end()
 	autocmd BufRead,BufNewFile /tmp/neomutt* map ZQ :Goyo!\|q!<CR>
 
 " Automatically deletes all trailing whitespace and newlines at end of file on save. & reset cursor position
- 	autocmd BufWritePre * let currPos = getpos(".")
+	autocmd BufWritePre * let currPos = getpos(".")
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritePre * %s/\n\+\%$//e
 	autocmd BufWritePre *.[ch] %s/\%$/\r/e " add trailing newline for ANSI C standard
 	autocmd BufWritePre *neomutt* %s/^--$/-- /e " dash-dash-space signature delimiter in emails
-  	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
+	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 " When shortcut files are updated, renew bash and ranger configs with new material:
 	autocmd BufWritePost bm-files,bm-dirs !shortcuts

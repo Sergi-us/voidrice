@@ -172,10 +172,6 @@ augroup END
 	let g:vimwiki_list = [
 	  \ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
 	  \ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
 	  \ ]
 
 " Stelle sicher, dass Dateien wie gewünscht gelesen werden:

@@ -1,0 +1,5 @@
+ST ist der integrierte Dateimanager in SARBS
+
+TODO Scroll funktion integrieren
+
+nützliche funktionen integriert

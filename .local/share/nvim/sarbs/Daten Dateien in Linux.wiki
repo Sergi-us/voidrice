@@ -1,0 +1,16 @@
+# Anzahl der Dateien im Verzeichniss
+`$ find . -type f | wc -l`
+`$ find . -type f \( -iname "*.avi" -o -iname "*.AVI" \) | wc -l`
+	- type f `file`
+	- wc -l `kein plan`
+	- \( -iname "*.avi" -o -iname "*.AVI" \) `filter nach *.avi und *.AVI`
+`$ find . -type f -name "*.avi" | wc -l`
+	- -name und iname - brücksichtigt klein/groß schreibung und ingnoriert diese
+
+
+# Speicherverbrauch ermittel.
+`du -sh .`
+	-s für "summary" und -h für "human-readable"
+`du -ch *.{avi,AVI}`
+
+- avi zu mkv umpacken. Dazu habe ich ein Skript erstellen lassen. ffmpeg macht die magie.

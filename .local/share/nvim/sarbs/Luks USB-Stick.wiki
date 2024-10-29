@@ -1,0 +1,43 @@
+USB-Stick für SARBS
+
+`sudo su`
+
+`lsblk` Um Laufwerke und Partitionen zu identifizieren
+
+`fdisk /dev/sdX`
+	`d` für Delete
+	`n` für neue Partition
+	`p` Primäre Partition
+	alles weitere Bestätigen
+	`w` write (Schreibt die Partition auf's Laufwerk)
+
+`cryptsetup` um eine Partition zu verschlüsseln
+	`cryptsetup luksFormat /dev/sdX1`
+mit `YES` zum bestätigen
+	Passfrase 2X eingeben und abwarten...
+
+`cryptsetup open /dev/sdX1 bezeichnung`
+	Damit öffnet sich die Verschlüsselte Partition und wird laut Bezeichnung benannt
+	Passwort eingeben...
+
+`mkfs.btrfs /dev/mapper/bezeichnung`
+	Formatiert die Partition mit btrfs
+
+`mkfs.ext4 /dev/mapper/bezeichnung`
+	Formatiert die Partition mit Ext4
+
+`mount /dev/mapper/bezeichnung /mnt`
+	hängt den Stick ins Dateisystem ein
+
+`umount /mnt/`
+	hängt den Stick wieder aus
+
+`cryptsetup close bezeichnung`
+	Schließt Cryptsetup
+
+Das Mounten einer LUKS Platte funktioniert nicht mit dem Skript...
+
+Das Verzeichniss sollte noch die User-Zugrifsrechte vergeben werden
+`sudo chown benutzernahme /pfad/zum/mountpunkt`
+
+fetig

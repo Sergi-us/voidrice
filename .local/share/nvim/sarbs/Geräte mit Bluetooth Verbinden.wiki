@@ -1,37 +1,60 @@
-# Geräte mit Bluetooth Verbinden
-	`lspci` und `lsusb`
-	`pacman -S bluez bluez-utils pulseaudio-bluetooth` Notwendige Packete
-	Prüfen ob `bluetooth.service` läuft, gegebenenfalls starten und Aktivieren
-		systemctl enable bluetooth.service
-		sudo systemctl start bluetooth.service
-	`bluetoothctl`	Starten
-		`scan on`	Scan starten und Kopfhörer identifizieren die Mac-Adresse
-			sieht ungefär so aus `Device XX:XX:XX:XX:XX:XX` warscheinlich mit namen der Kopfhörer
-		`scan off`
-		`pair XX:XX:XX:XX:XX:XX`
-		`trust XX:XX:XX:XX:XX:XX`
-		`connect XX:XX:XX:XX:XX:XX`
-		`exit`	Verlassen
+= Geräte mit Bluetooth Verbinden =
+Notwendige Packete (in SARBS bereits instaliert)
+{{{
+pacman -S bluez bluez-utils pulseaudio-bluetooth
+}}}
+Prüfen ob `bluetooth.service` läuft, gegebenenfalls starten:
+{{{
+sudo systemctl start bluetooth.service
+}}}
+für Automatischen start beim booten den Dienst aktivieren:
+{{{
+systemctl enable bluetooth.service
+}}}
 
-		weitere Befehle
-		`devices`	alle bekannten geräte auflisten
-		`disconnect XX:XX:...` verbindung trennen
-		`remove <Mac-Adresse>` entkoppeln des Gerätes
-		`agent <on|off|auto>` Agent für das Automatische annehmen von Vertrauenswürdigen geräten
-		`trust <man-adresse>` ein gerät als Vertrauenswürdig markieren
-		`untrust <mac-adresse>` aufheben des Vertrauensstatus
-		`show` informationen über den lokalen Bluetooth-Adapter erhalten
-		`help` hilfe
-	`dmenu-bluetooth` D-Menu Shell-promt auf GitHub oder vergleichbare tools
-	Tastenkombination für dmenu-Bluetooth anlegen
-		`v ~/.local/src/dwm/config.h`
-		`{ MODKEY|ShiftMask, XK_s, spawn, {.v = (const char*[]){ "dmenu-bluetooth", NULL } } },`
+`bluetoothctl` Agent Starten
+{{{
+bluetoothctl
+}}}
+Scan starten und Kopfhörer identifizieren die Mac-Adresse
+{{{
+scan on
+}}}
+_sieht ungefär so aus `Device XX:XX:XX:XX:XX:XX` warscheinlich mit namen der Kopfhörer_
+{{{
+scan off
+devices
+pair XX:XX:XX:XX:XX:XX
+trust XX:XX:XX:XX:XX:XX
+connect XX:XX:XX:XX:XX:XX
+}}}
+`bluetoothctl` Verlassen mit:
+{{{
+exit
+}}}
+
+
+weitere Befehle in `bluetoothctl`
+`devices`               alle bekannten geräte auflisten
+`disconnect XX:XX:...`  verbindung trennen
+`remove <Mac-Adresse>`  entkoppeln des Gerätes
+`agent <on|off|auto>`   Agent für das Automatische annehmen von Vertrauenswürdigen geräten
+`untrust <mac-adresse>` aufheben des Vertrauensstatus
+`show`                  informationen über den lokalen Bluetooth-Adapter erhalten
+`info <Mac-Adresse>`    zeigt infos über das Gerät
+`help`                  hilfe
+
+TODO blue neu Integrieren
+TODO blue in Kombination mit D-Menu
+TODO `dmenu-bluetooth` D-Menu Shell-promt auf GitHub oder vergleichbare tools
 
 # Fehlersuche und sonstiges
-
-- neustarten des Dienstes
+neustarten des Dienstes
+{{{
 sudo systemctl restart bluetooth
-
-im bluetoothctl utility
-	info XX:XX:XX:XX:XX:XX
-	- gibt informationen zum Devvice aus
+}}}
+im `bluetoothctl` utility
+- gibt informationen zum Devvice aus
+{{{
+info XX:XX:XX:XX:XX:XX
+}}}

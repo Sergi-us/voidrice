@@ -1,5 +1,5 @@
 let mapleader =","
-" SARBS 27.10.2024
+" SARBS 11.11.2024
 " TODO das 'q' dilemma Überdenken...
 
 " Plugins herunterladen und verwalten mit vim-plug
@@ -30,42 +30,42 @@ call plug#end()
 	colorscheme vim
 
 " Faltungseinstellungen
-	set foldmethod=indent       " Faltung basierend auf Einrückung
-	set foldnestmax=10          " Maximale Verschachtelungstiefe
-	" set foldenable            " Startet mit gefalteten Bereichen
-	set nofoldenable            " Startet mit allen offenen Faltungen
-	set foldminlines=2          " Minimale Zeilenanzahl für eine Faltung
+	set foldmethod=indent		" Faltung basierend auf Einrückung
+	set foldnestmax=10			" Maximale Verschachtelungstiefe
+	" set foldenable			" Startet mit gefalteten Bereichen
+	set nofoldenable			" Startet mit allen offenen Faltungen
+	set foldminlines=2			" Minimale Zeilenanzahl für eine Faltung
 
 " Faltungshervorhebung
-    highlight Folded guifg=#BBC2C9 guibg=#262B31 gui=NONE ctermbg=235 ctermfg=250 cterm=NONE
-    " highlight Folded guifg=#D3D7DB guibg=#1F242A gui=NONE ctermbg=234 ctermfg=252 cterm=NONE
-    highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
+	highlight Folded guifg=#BBC2C9 guibg=#262B31 gui=NONE ctermbg=235 ctermfg=250 cterm=NONE
+	" highlight Folded guifg=#D3D7DB guibg=#1F242A gui=NONE ctermbg=234 ctermfg=252 cterm=NONE
+	highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
 
 " Einrückungseinstellungen
-    set expandtab			" Konvertiert Tab zu Spaces
-    set tabstop=4			" Tab entspricht 4 Leerzeichen
-    set shiftwidth=4        " Einrücktiefe für automatische Einrückung
-    set softtabstop=4       " Backspace löscht 4 Spaces als wäre es ein Tab
-    " set foldlevel=1		" Öffnet Faltungen bis Level 1
-    " set foldlevel=2		" Faltungen bis Level 2 standardmäßig öffnen
-    " :set foldmethod=indent	" Probier dies in einer Python-Datei
-    " :set foldmethod=syntax	" Dann dies in einer Java/C++ Datei
-    " :set foldmethod=marker	" Und dies in einer Dokumentation
+	" set expandtab				" Konvertiert Tab zu Spaces
+	set tabstop=4				" Tab entspricht 4 Leerzeichen
+	set shiftwidth=4			" Einrücktiefe für automatische Einrückung
+	set softtabstop=4			" Backspace löscht 4 Spaces als wäre es ein Tab
+	" set foldlevel=1			" Öffnet Faltungen bis Level 1
+	" set foldlevel=2			" Faltungen bis Level 2 standardmäßig öffnen
+	" :set foldmethod=indent	" Probier dies in einer Python-Datei
+	" :set foldmethod=syntax	" Dann dies in einer Java/C++ Datei
+	" :set foldmethod=marker	" Und dies in einer Dokumentation
 
 " Visuelle Hilfen
-    set list                     " Aktiviert die Anzeige von unsichtbaren Zeichen
-    " set listchars=tab:│\ ,lead:·   " │⇥↹ für Tabs, · für Leerzeichen am Zeilenanfang
-    set listchars=tab:│\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:␣
+	set list			" Aktiviert die Anzeige von unsichtbaren Zeichen
+	" set listchars=tab:│\ ,lead:·   " │⇥↹ für Tabs, · für Leerzeichen am Zeilenanfang
+	set listchars=tab:│\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:␣
 
 " Dateityp-spezifische Einstellungen
 augroup FileTypeSpecific
-    autocmd!
-    " Python: 4 Spaces Einrückung
-    autocmd FileType python setlocal expandtab tabstop=4 shiftwidth=4
-    " JavaScript: 2 Spaces Einrückung
-    autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2
-    " Markdown: Marker-basierte Faltung
-    autocmd FileType markdown setlocal foldmethod=marker
+	autocmd!
+	" Python: 4 Spaces Einrückung
+	autocmd FileType python setlocal expandtab tabstop=4 shiftwidth=4
+	" JavaScript: 2 Spaces Einrückung
+	autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2
+	" Markdown: Marker-basierte Faltung
+	autocmd FileType markdown setlocal foldmethod=marker
 augroup END
 
 " Setzt den Fenstertitel (nützlich für Terminalemulator-Tabs)
@@ -90,7 +90,7 @@ augroup END
 	set noshowmode
 
 " Deaktiviert die Anzeige von Zeilen- und Spaltennummer unten rechts
-    set noruler
+	set noruler
 
 " Deaktiviert die Statusleiste (0=nie, 2=immer, 1=nur bei mehreren Fenstern)
 	set laststatus=0
@@ -99,7 +99,9 @@ augroup END
 	set noshowcmd
 	" colorscheme desert	" kontrastreiche Farbschema (transprenz verschwindet)
 
-" ändert das verhalten der Taste "c" in Normal Mode. Gelöschter Text wird in das "Black Hole" -Register geschoben, wenn Sie Text löschen möchten, ohne den Inhalt der Zwischenablage zu ändern.
+" ändert das verhalten der Taste "c" in Normal Mode. Gelöschter Text wird in
+" das "Black Hole" -Register geschoben, wenn Sie Text löschen möchten, ohne
+" den Inhalt der Zwischenablage zu ändern.
 	nnoremap c "_c
 
 " Aktiviert die Erkennung von Dateitypen und lädt entsprechende Plugins.
@@ -134,14 +136,14 @@ augroup END
 
 " Hervorhebungen für Zeilenende und Zeile und Spalte
 " TODO Transparenz für die Herforhebung von Zeilen und Spalten einrichten...
-    set colorcolumn=80
-    highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
-    set cursorline          " Hebt die aktuelle Zeile hervor
-    " highlight CursorLine   ctermbg=NONE guibg=NONE cterm=underline gui=underline
-    highlight CursorLine   ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
-    set cursorcolumn        " Hebt die aktuelle Spalte hervor
-    " highlight CursorColumn ctermbg=NONE guibg=NONE cterm=underline gui=underline guifg=#303030
-    highlight CursorColumn ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
+	set colorcolumn=80
+	highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
+	set cursorline			" Hebt die aktuelle Zeile hervor
+	" highlight CursorLine   ctermbg=NONE guibg=NONE cterm=underline gui=underline
+	highlight CursorLine   ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
+	set cursorcolumn		" Hebt die aktuelle Spalte hervor
+	" highlight CursorColumn ctermbg=NONE guibg=NONE cterm=underline gui=underline guifg=#303030
+	highlight CursorColumn ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
 
 " NERDTree Konfiguration
 	map <leader>n :NERDTreeToggle<CR>
@@ -155,8 +157,7 @@ augroup END
 	let g:airline_symbols.colnr = ' C:'
 	let g:airline_symbols.linenr = ' L:'
 	let g:airline_symbols.maxlinenr = '☰ '
-
-" vim-airline-theme (molokai solarized powerlineish tomorrow papercolor)
+	" vim-airline-theme (molokai solarized powerlineish tomorrow papercolor)
 	" let g:airline_theme='papercolor'
 	" let g:airline_solarized_bg='dark'
 	let g:airline_powerline_fonts = 1
@@ -200,28 +201,26 @@ augroup END
 
 " Liste der VimWiki-Verzeichnisse mit entsprechenden Einstellungen
 	let g:vimwiki_list = [
-	  \ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki',
-        \ 'path_html': '~/www/sarbs',
-        \ 'auto_toc': 1,
-        \ 'auto_tags': 1,
-        \ 'auto_generate_links': 1,
-        \ 'auto_generate_tags': 1},
-	  \ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
-	  \ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/memes', 'syntax': 'default', 'ext': '.wiki'},
-	  \ {'path': '~/.local/share/nvim/Schaal', 'syntax': 'default', 'ext': '.wiki'},
-	  \ ]
+		\ {'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'},
+		\ {'path': '~/.local/share/nvim/sarbs', 'syntax': 'default', 'ext': '.wiki',
+			\ 'path_html': '~/www/sarbs',
+			\ 'auto_toc': 1,
+			\ 'auto_tags': 1,
+			\ 'auto_generate_links': 1,
+			\ 'auto_generate_tags': 1},
+		\ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
+		\ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
+		\ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
+		\ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
+		\ {'path': '~/.local/share/nvim/memes', 'syntax': 'default', 'ext': '.wiki'},
+		\ {'path': '~/.local/share/nvim/Schaal', 'syntax': 'default', 'ext': '.wiki'},
+		\ ]
 
 " Dateitypen korrekt erkennen
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 	autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
 	autocmd BufRead,BufNewFile *.tex set filetype=tex
 	autocmd BufRead,BufNewFile *.h set filetype=c
-
-"	let g:vimwiki_list = [{'path': '~/.local/share/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Datei mit sudo-Rechten speichern
 	cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
@@ -239,7 +238,7 @@ augroup END
 " Fügt Zeilenumbruch am Ende für ANSI C Standard hinzu
 	autocmd BufWritePre *.[ch] %s/\%$/\r/e " add trailing newline for ANSI C standard
 " Signatur-Trennzeichen in E-Mails
-    autocmd BufWritePre *neomutt* %s/^--$/-- /e " dash-dash-space signature delimiter in emails
+	autocmd BufWritePre *neomutt* %s/^--$/-- /e " dash-dash-space signature delimiter in emails
 	autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
 
 " Bei Aktualisierung der Verknüpfungsdateien bash und ranger Konfigurationen erneuern

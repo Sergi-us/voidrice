@@ -1,4 +1,6 @@
-Installation
+= Davinci Resolve =
+
+== Installation ==
 
 1. Installation der notwendigen Pakete (Abhängigkeiten) Die Liste der zu
    installierenden Pakete enthält wichtige Abhängigkeiten für DaVinci Resolve:
@@ -7,16 +9,16 @@ Installation
    - Verschiedene Bibliotheken und Frameworks wie GTK2, Qt5, und GStreamer
    - Kompatibilitätsbibliotheken wie libxcrypt-compat und libpng12
 
-```
+`
 sudo pacman -Syu nvidia cuda opencl-nvidia gstreamer gtk2 libxcrypt-compat ocl-icd qt5-base qt5-svg qt5-webengine qt5-websockets fuse2 glu libpng12
-```
+`
 
 Nach der installation der Treiber solltest du dein System neu starten und die Installation überprüfen:
 
 2. Überprüfen der NVIDIA-Treiberversion:
-```
+`
 nvidia-smi
-```
+`
 Dieser Befehl sollte Informationen über Ihre NVIDIA-GPU, den Treiber und die CUDA-Version anzeigen.
 
 ```

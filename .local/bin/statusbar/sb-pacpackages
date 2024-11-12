@@ -1,32 +1,19 @@
 #!/bin/sh
-# SARBS 09.07.2024
+# SARBS 11.11.2024
 # Zeigt die Anzahl der aktualisierbaren Pakete für Pacman und YAY an.
-#!/bin/sh
 
 # Zeigt die Anzahl der aktualisierbaren Pakete an.
 # Damit dies funktioniert, muss ein `pacman -Sy`-Befehl regelmäßig als
 # Cronjob im Hintergrund als root ausgeführt werden. Dieses Script liest dann diese Pakete.
 # Bei einem Klick wird ein Upgrade via pacman durchgeführt.
-#
-# Füge den folgenden Text als Datei in /usr/share/libalpm/hooks/statusbar.hook hinzu:
-#
-# [Trigger]
-# Operation = Upgrade
-# Type = Package
-# Target = *
-#
-# [Action]
-# Description = Statusleiste aktualisieren...
-# When = PostTransaction
-# Exec = /usr/bin/pkill -RTMIN+8 dwmblocks # Oder i3blocks, falls i3 verwendet wird.
 
 case $BLOCK_BUTTON in
 	1) setsid -f "$TERMINAL" -e sb-popupgrade ;; # Linksklick zum Upgraden
 	2) notify-send "$(/usr/bin/pacman -Qu)" ;; # Mittelklick zeigt aktualisierbare Pakete
-	3) notify-send "🎁 Upgrade-Modul" "📦: Anzahl der aktualisierbaren Pakete
+	3) notify-send "󰣇 Upgrade-Modul" "󰣇: Anzahl der aktualisierbaren Pakete
 - Linksklick, um Pakete zu aktualisieren
 - Mittelklick, um aktualisierbare Pakete anzuzeigen" ;; # Rechtsklick für Hilfe
 	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;; # Strg + Rechtsklick zum Bearbeiten
 esac
 
-pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦/;s/^📦0$//g"
+pacman -Qu | grep -Fcv "[ignored]" | sed "s/^0$//g"

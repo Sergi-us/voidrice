@@ -1,112 +1,58 @@
-# Zusammenfassung aller Befehle und Tools zur Einrichtung der Firewall (UFW) und des Monitorings auf Arch Linux
+= Firewall Konfiguration =
+== Installation und Konfiguration von UFW ==
 
-## Installation und Konfiguration von UFW
-
-    UFW installieren:
-
-    sh
-
+UFW ist ein Terminal frontend für IP-Tabels
+UFW installieren (auf SARBS bereits instaliert):
+{{{
 sudo pacman -S ufw
-
+}}}
 UFW aktivieren und Standardregeln setzen:
-
-sh
-
+{{{
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-
-Erlaube SSH-Verbindungen (Port 22):
-
-sh
-
+}}}
+Erlaube SSH-Verbindungen OPTIONAL (Port 22):
+{{{
 sudo ufw allow 22/tcp
-
+}}}
 Erlaube HTTP-Verbindungen (Port 80):
-
-sh
-
+{{{
 sudo ufw allow 80/tcp
-
+}}}
 Erlaube HTTPS-Verbindungen (Port 443):
-
-sh
-
+{{{
 sudo ufw allow 443/tcp
-
+}}}
 UFW aktivieren:
-
-sh
-
-    sudo ufw enable
-
+{{{
+sudo ufw enable
+sudo ufw status
+}}}
 Fehlerbehebung für UFW
 
-    Überprüfen, ob iptables installiert ist:
-
-    sh
-
-sudo pacman -S iptables
-
-Kernel-Module laden:
-
-sh
-
-sudo modprobe ip_tables
-sudo modprobe ip6_tables
-
-Überprüfen, ob iptables jetzt funktioniert:
-
-sh
-
-sudo iptables -L
-
-iptables-nft installieren:
-
-sh
-
-sudo pacman -S iptables-nft
-
-iptables und ip6tables auf nft umstellen:
-
-sh
-
-sudo update-alternatives --set iptables /usr/sbin/iptables-nft
-sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-nft
-
 UFW deaktivieren und reaktivieren:
-
-sh
-
+{{{
 sudo ufw disable
 sudo ufw enable
+sudo ufw status
+}}}
 
-Regel hinzufügen (z.B. SSH):
-
-sh
-
-    sudo ufw allow 22/tcp
-
-Monitoring mit logwatch
-
-    logwatch installieren:
-
-    sh
-
+== Monitoring mit logwatch ==
+TODO unnötig
+logwatch installieren:
+{{{
 sudo pacman -S logwatch
-
+}}}
 logwatch konfigurieren:
 
-sh
-
+{{{
 sudo mkdir /etc/logwatch/conf/
 sudo cp /usr/share/logwatch/default.conf/logwatch.conf /etc/logwatch/conf/logwatch.conf
-
+}}}
 logwatch ausführen:
-
-sh
-
+{{{
 sudo logwatch --output file --format text --range today --filename /var/log/logwatch.log
-
+}}}
 Automatisches tägliches Logwatch-Reporting einrichten:
 
     Erstelle einen cron job:

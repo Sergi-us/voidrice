@@ -1,33 +1,12 @@
-Benutzeroberflächen
+== Benutzeroberflächen ==
 
-CLI	Command Line Interface
-Textbasierte Schnittstelle, bei der Benutzer Befehle über die Tastatur
-eingeben, um mit dem Computer zu interagieren. Charakteristisch ist die Nutzung
-des Terminals, wo Eingaben zeilenweise verarbeitet werden. Eine besondere
-Stärke liegt in der Möglichkeit, Befehle zu kombinieren und die Ausgabe eines
-Befehls als Eingabe für den nächsten zu verwenden (oft als "Piping"
-bezeichnet). Dies ermöglicht komplexe Operationen durch die Verkettung
-einfacher Befehle.
-Beispiel: In einem Unix-Terminal könnte man `ls -l | grep ".txt"` eingeben, um
-alle Textdateien im aktuellen Verzeichnis aufzulisten.
 
-GUI 	Graphical User Interface
-Visuelle Schnittstelle mit Fenstern, Symbolen und Menüs, die typischerweise mit
-Maus oder Touchscreen bedient wird. GUIs sind intuitiv und benutzerfreundlich,
-besonders für Einsteiger. Sie ermöglichen die gleichzeitige Darstellung
-mehrerer Informationen und die einfache Manipulation von Objekten durch
-Drag-and-Drop oder Klicken.
 
-Beispiel: Der Windows Desktop mit seinen Icons, dem Start-Menü und der
-Taskleiste ist ein klassisches Beispiel für eine GUI.
+[[CLI Command Line Interface]]
 
-TUI	Text User Interface
-Eine textbasierte Schnittstelle, die fortschrittlicher als CLI ist. Sie bietet
-eine einfache grafische Darstellung mit Textzeichen, oft in Form von Menüs,
-Fenstern oder Dialogen. TUIs kombinieren die Effizienz von Texteingaben mit
-einer strukturierteren visuellen Darstellung.
-Beispiel: Der Midnight Commander, ein Dateimanager für Unix-Systeme, nutzt eine
-TUI mit zwei Fenstern zur Dateianzeige und Menüs am unteren Bildschirmrand.
+[[GUI  Graphical User Interface]]
+
+[[TUI Text User Interface]]
 
 VUI	Voice User Interface
 Sprachgesteuerte Schnittstellen, wie bei Sprachassistenten

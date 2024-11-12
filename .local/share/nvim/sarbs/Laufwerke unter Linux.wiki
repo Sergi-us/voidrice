@@ -1,12 +1,12 @@
-# Laufwerke unter Linux
+=Laufwerke unter Linux=
 
-## Einführung
-	Was sind Laufwerke?
-	Verschiedene Arten von Laufwerken (HDD, SSD, NVMe, USB, etc.)
-	Laufwerke unter Linux erkennen und verwalten
+== Einführung ==
+  * Was sind Laufwerke?
+  * Verschiedene Arten von Laufwerken (HDD, SSD, NVMe, USB, etc.)
+  * Laufwerke unter Linux erkennen und verwalten
 
-## Vorbereiten von Laufwerken
-	[[Erkennen von Laufwerken]] mit lsblk, fdisk -l, blkid
+== Vorbereiten von Laufwerken ==
+  * [[Erkennen von Laufwerken]] mit lsblk, fdisk -l, blkid
 	[[Laufwerk sicher Löschen]]
 	[[SMART Festplattengesundheit]]
 	[[Laufweks Leistungstest]](Laufweks-Leistungstest)

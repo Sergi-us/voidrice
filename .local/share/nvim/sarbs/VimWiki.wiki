@@ -1,0 +1,85 @@
+ = VimWiki =
+Leaderkey ist `,` (komma)
+== > , ==
+	,ww		-Wiki Index
+	,wd		-seite löschen
+	,wr		-seite umbenennen
+	,wi		-öffnet das Tagebuch
+	,w,w	-zum heutigen Eintrag
+	,w,i	-Erstellt ein Index aller Einträge
+
+Link zum Tagebuch erstellen
+	[Tagebuch](diary/diary.md)
+
+* [X] liste mit zeug wird mit `Ctrl+Space` markiert und umgekehrt
+* [ ] awegtfa
+* [ ] agteawe
+
+# Wiki zu HTML umwandeln
+
+FIXIT Geht nicht mit Markdown Syntax???
+
+	:Vimwiki2HTML		kreiert eine Einzelne html seite
+	:VimwikiAll2HTML	kreiert die ganze Wiki
+
+# VimWiki Cheatsheet (https://gist.github.com/drkarl/4c503bccb62558dc85e8b1bc0f29e9cb#file-vimwiki-cheatsheet-md)
+
+_[nummer-Nummer] bezieht sich auf die Wikinummer, die durch die Reihenfolge in Ihrer vimrc festgelegt wird. Die Vorgabe ist 1._
+ - Mein Symbol für <leader-key>
+
+## Wiki-Verwaltung
+nummer
+	- `[nummer]  ww` - Wiki-Indexdatei öffnen
+	- `[nummer]  wt` - öffnet die Wiki-Indexdatei in einem neuen Tab
+	- ` ws` - verfügbare Wikis auflisten und auswählen
+	- ` wd` - Wikiseite löschen
+	- ` wr` - Wikiseite umbenennen
+
+## Tagebuchverwaltung
+
+- `[nummer] <> wi` 	- Tagebuch-Indexdatei für Wiki öffnen
+- `<> w <> i` 	- aktuellen Tagebuchindex aktualisieren
+- `[nummer] <> w <> w` 	- öffne die heutige Tagebuchdatei für das Wiki
+- `[nummer] <> w <> t` 	- öffnet die heutige Tagebuchdatei für das Wiki in einem neuen Tab
+- `<C-Up>` 	- öffnet das Tagebuch des Vortages
+- `<C-Down>` 	- öffnet das Tagebuch des nächsten Tages
+
+## Navigation
+
+- `<CR>` 	- Wiki-Link folgen/erstellen
+- `<<C-S-CR>` 	- Wiki-Link in neuer Registerkarte folgen/erstellen
+- `<Backspace>`	- zurück zur vorherigen Wiki-Seite
+- `<Tab>` 	- zum nächsten Link auf der aktuellen Seite gehen
+- `<S-Tab>` 	- zum vorherigen Link auf der aktuellen Seite wechseln
+
+## Editierkürzel
+
+- `<C-Leertaste>` - Listenelement ein-/ausschalten
+- `=` 		- Kopfebene hinzufügen
+- `-` 		- Überschriftenebene entfernen
+- `+` 		- Links erstellen/dekorieren
+- `glm` 	- Einzug eines Listenelements vergrößern
+- `gll` 	- Einzug eines Listenelements verringern
+- `gl*` oder `gl8`  - Symbol "* " umschalten oder einfügen
+- `gl#` oder `gl3`  - schaltet das "#"-Symbol um oder fügt es ein
+- `gl-` 	- umschalten oder "-"-Symbol einfügen
+- `gl1` 	- Umschalten oder Einfügen des Symbols "1".
+
+## Tabellenkürzel
+
+- `<A-Links>` 	Spalte nach links verschieben
+- `<A-Rechts>` 	Spalte nach rechts verschieben
+- `<CR>` 	(Einfügemodus) nach unten gehen/eine Zelle erstellen
+- `<Tab>` 	(Einfügemodus) weitergehen/eine Zelle erstellen
+- `gqq` oder `gww`  Tabelle neu formatieren
+
+## Textobjekte
+
+`ah` 	Abschnitt zwischen 2 Überschriften einschließlich leerer Zeilen am Ende
+`ih` 	Abschnitt zwischen 2 Überschriften ohne leere Endzeilen
+`a` 	Tabellenzelle
+`i\` 	innere Tabellenzelle
+`ac` 	Tabellenspalte
+`ic` 	innere Tabellenspalte
+
+# VimWiki Cheatsheet (https://gist.github.com/drkarl/4c503bccb62558dc85e8b1bc0f29e9cb#file-vimwiki-cheatsheet-md)

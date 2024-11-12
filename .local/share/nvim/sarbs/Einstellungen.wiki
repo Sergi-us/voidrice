@@ -1,6 +1,5 @@
-Allgemeine Einstellungen und kniffe für mein Linux
-
-[[Aktivierung von Natural Scrolling]]
+=Allgemeine Einstellungen und kniffe für mein Linux=
+[[Geräte mit Bluetooth Verbinden]]
 
 [[UFW Firewall]](UFW Firewall)
 
@@ -13,7 +12,6 @@ Allgemeine Einstellungen und kniffe für mein Linux
 
 [[Laufwerke unter Linux]]
 
-[[Geräte mit Bluetooth Verbinden]]
 
 Uhrzeit einstellen
 	`sudo timedatectl set-timezone Europe/Berlin`
@@ -37,3 +35,5 @@ im 'remaps' Script werden Tasten neu zugeordnet. Die funktion der 'alt_win' tast
   Datum und Zeiteinstellungen:
 	timedatectl	set-timezone	America/Asunktion
 			set-time	JJJJ-MM-TT HH:MM:SS
+
+[[Aktivierung von Natural Scrolling]]

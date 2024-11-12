@@ -16,9 +16,9 @@
 5. Festplatte mit `lsblk` identifizieren
 6. Formatiere die Festplatte:
 	`sudo mkfs.exfat /dev/sdX1`
-7. Mount die Festplatte und überprüfe die Funktionalität:
-	`sudo mount /dev/sdX1 /mnt`
-	`ls /mnt`
-	`sudo umount /mnt`
-
+== Mounten von ExFat Laufwerken ==
+8. Mount die Festplatte und überprüfe die Funktionalität:
+```
+sudo mount -t exfat -o rw,uid=$(id -u),gid=$(id -g),umask=0000 /dev/sdX1 /mnt/usb
+```
 Mit diesen Schritten kannst du sicherstellen, dass deine Festplatte plattformübergreifend nutzbar ist.

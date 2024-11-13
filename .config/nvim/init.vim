@@ -24,6 +24,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
+Plug 'mechatroner/rainbow_csv'
 call plug#end()
 
 " voreingestelltes Farbschema

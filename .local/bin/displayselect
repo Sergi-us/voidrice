@@ -4,6 +4,27 @@
 # Prüft mit xrandr verbundene Bildschirme und lässt den Benutzer einen zur Verwendung auswählen.
 # Der Benutzer kann auch "manuelle Auswahl" wählen, was arandr öffnet.
 
+# Funktion zum Abrufen aller verfügbaren Auflösungen für einen Bildschirm
+get_resolutions() {
+    xrandr --query | grep -A 20 "^$1 connected" | grep -E "^   [0-9]" | cut -d' ' -f4 | sort -nr
+}
+
+onescreen() { # Wenn nur ein Ausgang verfügbar oder ausgewählt ist
+    # Hole verfügbare Auflösungen für den ausgewählten Bildschirm
+    resolutions=$(get_resolutions "$1")
+
+    # Lasse den Benutzer eine Auflösung auswählen
+    chosen_res=$(echo "$resolutions" | dmenu -i -p "Wählen Sie die Auflösung für $1:")
+
+    if [ -n "$chosen_res" ]; then
+        # Setze die gewählte Auflösung
+        xrandr --output "$1" --mode "$chosen_res" --scale 1.0x1.0 $(echo "$allposs" | grep -v "\b$1" | awk '{print "--output", $1, "--off"}' | paste -sd ' ' -)
+    else
+        # Fallback auf Auto-Modus wenn keine Auflösung gewählt wurde
+        xrandr --output "$1" --auto --scale 1.0x1.0 $(echo "$allposs" | grep -v "\b$1" | awk '{print "--output", $1, "--off"}' | paste -sd ' ' -)
+    fi
+}
+
 twoscreen() { # If multi-monitor is selected and there are two screens.
 
     mirror=$(printf "no\\nyes" | dmenu -i -p "Mirror displays?")
@@ -51,10 +72,6 @@ multimon() { # Multi-monitor handler.
 		2) twoscreen ;;
 		*) morescreen ;;
 	esac ;}
-
-onescreen() { # If only one output available or chosen.
-	xrandr --output "$1" --auto --scale 1.0x1.0 $(echo "$allposs" | grep -v "\b$1" | awk '{print "--output", $1, "--off"}' | paste -sd ' ' -)
-	}
 
 postrun() { # Stuff to run to clean up.
 	setbg		# Fix background if screen size/arangement has changed.

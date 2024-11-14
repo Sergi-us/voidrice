@@ -1,13 +1,13 @@
 #!/bin/bash
 #
 # Abhängigkeiten:
-#   Arch-Repositories: dmenu, bluez-utils (enthält bluetoothctl)
+# Arch-Repositories: dmenu, bluez-utils (enthält bluetoothctl)
 
 # Konstanten
 trennlinie="---------"
 zurueck="Zurück"
 beenden="Beenden"
-verbunden_symbol=""
+verbunden_symbol=""
 
 # Überprüft, ob der Bluetooth-Controller eingeschaltet ist
 strom_an() {
@@ -35,10 +35,10 @@ strom_umschalten() {
 # Überprüft, ob der Controller nach neuen Geräten sucht
 suche_an() {
     if bluetoothctl show | grep -F -q "Discovering: yes"; then
-        echo "Suche: an"
+        echo "Scan: an"
         return 0
     else
-        echo "Suche: aus"
+        echo "Scan: aus"
         return 1
     fi
 }
@@ -51,7 +51,7 @@ suche_umschalten() {
         menue_anzeigen
     else
         bluetoothctl scan on &
-        echo "Suche läuft..."
+        echo "Scan läuft..."
         sleep 5
         menue_anzeigen
     fi

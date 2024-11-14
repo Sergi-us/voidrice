@@ -1,16 +1,15 @@
 #!/bin/bash
-# Sergi Webcam-Script
-# TODO Experementel
-# 2024-07-29
+# Sergi Webcam-Script mit dmenu-Abfrage
+# 2024-11-13
 
-# Funktion zum Finden des ersten verfügbaren Videogeräts
-find_video_device() {
-    v4l2-ctl --list-devices | grep -oP '/dev/video\d+' | head -n 1
+# Funktion zum Auflisten aller verfügbaren Videogeräte
+list_video_devices() {
+    v4l2-ctl --list-devices | grep -oP '/dev/video\d+'
 }
 
 # Funktion zum Überprüfen, ob ein Gerät eine Android Webcam ist
 is_android_webcam() {
-    v4l2-ctl --list-devices | grep -q "Android Webcam"
+    v4l2-ctl --device="$1" --all 2>/dev/null | grep -q "Android Webcam"
 }
 
 # Konfigurationsvariablen
@@ -18,20 +17,22 @@ ANDROID_RESOLUTION="1920x1080"
 STANDARD_RESOLUTION="1280x720"
 PIXELFORMAT="MJPG"
 MPV_BASE_OPTIONS="--untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title=webcam"
-ANDROID_FILTERS="hue=s=0,crop=1080:1080,scale=1080:1080"
+ANDROID_FILTERS="hue=s=0,crop=1500:1080,hflip,vflip"
+# ANDROID_FILTERS="hue=s=0,crop=1920:1080,vflip"
 STANDARD_FILTERS="hue=s=0,crop=720:720,scale=720:720"
 ANDROID_ROTATION="--video-rotate=90"
 
-# Finde das erste verfügbare Videogerät
-DEVICE=$(find_video_device)
+# Alle verfügbaren Videogeräte auflisten und mit dmenu auswählen
+DEVICE=$(list_video_devices | dmenu -p "Wähle Webcam:")
 
+# Überprüfen, ob ein Gerät ausgewählt wurde
 if [ -z "$DEVICE" ]; then
-    echo "Kein Videogerät gefunden."
+    echo "Kein Videogerät ausgewählt."
     exit 1
 fi
 
 # Konfiguriere das Gerät basierend auf dem Typ
-if is_android_webcam; then
+if is_android_webcam "$DEVICE"; then
     RESOLUTION=$ANDROID_RESOLUTION
     FILTERS=$ANDROID_FILTERS
     ROTATION=$ANDROID_ROTATION
@@ -48,16 +49,3 @@ v4l2-ctl --set-fmt-video=width=$WIDTH,height=$HEIGHT,pixelformat=$PIXELFORMAT --
 
 # Starte MPV mit den konfigurierten Optionen
 mpv $MPV_BASE_OPTIONS $ROTATION --vf="$FILTERS" $DEVICE
-
-
-# Weitere mpv Filter
-# --vf='hue=s=0,crop=720:720,scale=720:720' \
-# --vf='crop=1080:1080,scale=1080:1080,hue=s=0' \
-# -video-rotate=90 $DEVICE
-# vflip         Spiegelt das Video vertikal
-# hflip         Spiegelt das Video horizontal
-# rotate=PI/2   Dreht das Video um 90 Grad im Uhrzeigersinn
-# transpose=1   Dreht das Video um 90 Grad gegen den Uhrzeigersinn
-# crop=w:h:x:y  Schneidet das Video zu
-# scale=w:h     Skaliert das Video
-# flip          Spiegelt das Video sowohl horizontal als auch vertikal

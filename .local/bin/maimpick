@@ -5,15 +5,15 @@
 # zum Kopieren hervorzuheben. Scrot-Nutzer sind jetzt wohl deprimiert.
 
 # Variablen
-pic_dir="$HOME/Bilder/scr"
-output="~/Bilder/scr/$(date '+%y%m%d-%H%M-%S').png"
+pic_dir="$HOME/Bilder/screenshots"
+output="$(date '+%y%m%d-%H%M-%S').png"
 xclip_cmd="xclip -sel clip -t image/png"
 ocr_cmd="xclip -sel clip"
 
 case "$(printf "einen ausgewählten Bereich\\naktuelles Fenster\\nVollbildschirm\\neinen ausgewählten Bereich (kopieren)\\naktuelles Fenster (kopieren)\\nVollbildschirm (kopieren)\\nOCR einen ausgewählten Bereich (kopieren)" | dmenu -l 7 -i -p "Screenshot welches Gebiet?")" in
-    "einen ausgewählten Bereich") maim -u -s pic-selected-"${pic_dir}/pic-ausgewählt-${output}" ;;
-    "aktuelles Fenster") maim -B -q -d 0.2 -i "$(xdotool getactivewindow)" pic-window-"${pic_dir}/pic-fenster-${output}" ;;
-    "Vollbildschirm") maim -q -d 0.2 pic-full-"${pic_dir}/pic-vollbild-${output}" ;;
+    "einen ausgewählten Bereich") maim -u -s "${pic_dir}/pic-ausgewählt-${output}" ;;
+    "aktuelles Fenster") maim -B -q -d 0.2 -i "$(xdotool getactivewindow)" "${pic_dir}/pic-fenster-${output}" ;;
+    "Vollbildschirm") maim -q -d 0.2 "${pic_dir}/pic-vollbild-${output}" ;;
     "einen ausgewählten Bereich (kopieren)") maim -u -s | ${xclip_cmd} ;;
     "aktuelles Fenster (kopieren)") maim -q -d 0.2 -i "$(xdotool getactivewindow)" | ${xclip_cmd} ;;
     "Vollbildschirm (kopieren)") maim -q -d 0.2 | ${xclip_cmd} ;;

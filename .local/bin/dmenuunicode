@@ -3,11 +3,10 @@
 # Das berühmte Skript "Ein Menü von Emojis zum Kopieren anzeigen".
 
 # Benutzerwahl über dmenu aus einer Emoji-Datei treffen.
-chosen=$(cut -d ';' -f1 ~/.local/share/larbs/chars/* | dmenu -i -l 30 | sed "s/ .*//")
+chosen=$(cut -d ';' -f1 ~/.local/share/larbs/chars/* | dmenu -i -l 25 | sed 's/^\([^ ]*\).*/\1/')
 
 # Beenden, wenn keine Auswahl getroffen wurde.
 [ -z "$chosen" ] && exit
-
 # Wenn dieses Skript mit einem Argument ausgeführt wird, wird das Zeichen automatisch eingefügt.
 # Andernfalls wird eine Nachricht angezeigt, dass das Emoji in die Zwischenablage kopiert wurde.
 if [ -n "$1" ]; then

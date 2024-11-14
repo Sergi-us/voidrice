@@ -58,7 +58,7 @@ setopt interactive_comments
 # Verlauf im Cache-Verzeichnis speichern
 HISTSIZE=10000000
 SAVEHIST=10000000
-HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
+HISTFILE="${XDG_CACHE_HOME:-$HOME/}/zsh/history"
 setopt inc_append_history
 
 # Alias und Verknüpfungen laden, falls vorhanden

@@ -1,0 +1,29 @@
+ = SARBS =
+[[https://sarbs.sergius.xyz/bilder/sarbs-screenshot-1.png|Screenshot]]
+== Suckless Auto-Rice Bootstrapping Scripts ==
+----
+*SARBS* ist ein effizientes Shell-Skript, das ein _voll funktionsfähiges_, auf einem Autotiling Fenstemanager basierendes System auf jedem Arch- oder Artix-Linux-System installiert, ohne die Routine manueller Nachinstallationsprozesse und Konfigurationen.
+== Zwei Typen von SARBS Nutzern ==
+----
+Ist SARBS etwas für dich? Wahrscheinlich ja. Egal wie du diese Webseite gefunden hast. Diese Skriptsammlung ist für zwei Nutzergruppen:
+1. Menschen, die Linux bereits kennen und einfach nur die Installation eines Systems automatisieren wollen, ohne die langweiligen Dinge, die sie schon eine Million Mal gemacht haben.
+2. Anfänger, die ein Hackerman-Computer-Setup nutzen und lernen möchten, es steht für Effizienz und vermittelt die Kernphilosophie von Arch und GNU/Linux.
+Das Ziel des Systems für Anfänger ist es, Dir zu helfen zu verstehen, wie ein gutes Unix-System funktioniert und wie es modifiziert wird. Ich biete dafür eine umfangreiche Dokumentation und Tutorials an, aber dies ist keine Distribution, die einem die Hand hält und alles automatisch für einen erledigt. Stattdessen wirst du feststellen, wie einfach es ist, dein System selbst einzurichten.
+== Installation ==
+----
+Auf einer frischen Arch Installation folgenden Befehl ausführen:
+{{{class="brush: bash"
+curl -LO sarbs.sergius.xyz/sarbs.sh
+sh sarbs.sh
+}}}
+Beachte, dass SARBS-Skripte einen Benutzer/in erstellt oder den bestehenden überschreibt und ein sauberes Home-Verzeichnis anlegen mit den typischen Standardverzeichnissen. Es überschreibt alle bereits existierenden Konfigurationsdateien und Standard Verzeichnisse. [[Installation von SARBS|Weitergehende Installationsanleitung...]]
+== Handbuch ==
+[[SARBS-Handbuch]]
+[[Installation von SARBS|Installation]] im Detail
+[[Einstellungen]] Linux, Laufwerke, Bluetooth
+[[Benutzeroberflächen und deren anpassungen]]
+[[Programme in SARBS|Anwendungen]]
+[[Virtualisierung]]
+[[VimwikiAll2HTML Syntax|Syntax]]
+[[hilfe|Hilfe]]
+[[index]]

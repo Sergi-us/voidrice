@@ -33,7 +33,8 @@ alias \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner" \
 	neofetch="fastfetch --load-config examples/2.jsonc" \
-	neo="neo-matrix -D -a -b 0 -m SARBS"
+	neo="neo-matrix -D -a -b 0 -m SARBS" \
+	surf="surf -z 1.5"
 
 # Colorize commands when possible.
 alias \
@@ -56,13 +57,12 @@ alias \
 	xi="sudo xbps-install" \
 	xr="sudo xbps-remove -R" \
 	xq="xbps-query" \
-	z="zathura"
+	z="zathura" \
+	wm="wikiman"
 
 alias \
+	vm-sarbs='virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux'
 	lf="lfub" \
 	magit="nvim -c MagitOnly" \
 	ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" \
 	weath="less -S ${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport" \
-
-# alias	davinci="/opt/resolve/bin/resolve"
-alias	usenext="python /usr/lib/sabnzbd/SABnzbd.py"

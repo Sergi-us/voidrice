@@ -1,0 +1,4 @@
+ = ffmpeg Promt's =
+
+2 Videos verbinden
+`ffmpeg -i "concat:1.avi|2.avi" -c copy 1und2.avi`

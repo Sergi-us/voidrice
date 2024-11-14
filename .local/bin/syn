@@ -1,6 +1,8 @@
 #!/bin/sh
-# SARBS Backup Script 0.3
-# Backup-Skript für die Synchronisation von Verzeichnissen auf einen USB-Stick und Wiederherstellung ins Home-Verzeichnis
+# 2024.11.07
+# SARBS Backup Script
+# Backup-Skript für die Synchronisation von Verzeichnissen auf einen USB-Stick
+# und Wiederherstellung ins Home-Verzeichnis
 
 # Automatisch den Benutzernamen und die Gruppe ermitteln
 CLIENT_USER=$(whoami)
@@ -16,39 +18,72 @@ USB_BACKUP_DIR="$USB_MOUNT_POINT/BACKUP"
 DIR_LIST=(
     "Bilder/"
     "Bücher/"
+    "Davinci/"
     "Dokumente/"
     "Downloads/"
+    "dwm-6.5/"
     "Filme/"
+    "GitHub/"
     "Handy/"
     "Magazine/"
+    "memes/"
     "Musik/"
+    "Musika/"
+    "Podcast/"
     "Serien/"
+    "usenet/"
     "Videos/"
+    "vm/"
+    "www/"
+    "vosk-model-de/"
     ".ssh/"
+    ".gnupg/"
+    ".local/share/password-store/"
+    ".local/share/mail"
     ".abook/"
     ".local/share/nvim/"
     ".local/share/calcurse/"
-    ".android/"
+    ".config/shell/"
 )
 
 FILE_LIST=(
     ".config/newsboat/urls"
     ".config/zsh/history"
     ".gitconfig"
-    ".local/share/larbs/snippets"
+    ".local/share/sarbs/snippets"
+    ".config/zsh/.zshrc"
+    ".config/nvim/init.vim"
+    ".local/bin/syn"
+    ".local/bin/syn-handy"
+    ".local/bin/dmenurecord"
+    ".local/bin/push-www"
+    ".local/bin/cam"
+    ".local/bin/cam.py"
+    ".local/bin/ttf-zu-unicode"
+    ".local/bin/ttf-zu-unicode-mit-glyphen"
+    ".local/bin/ttf-zu-unicode-mit-glyphen-uebersetzt"
+    ".local/bin/tutorialvids"
+    ".local/bin/*.bac*"
     "~"
 )
 
 # Funktion zum Löschen leerer Verzeichnisse auf dem USB-Stick
 delete_empty_directories() {
     echo "Lösche leere Verzeichnisse auf dem USB-Stick..."
+    # Erst die normalen leeren Verzeichnisse
     find "$USB_BACKUP_DIR" -depth -type d -empty -exec rmdir {} \;
+
+    # Dann speziell nach den Base64-artigen Verzeichnissen suchen
+    find "$USB_MOUNT_POINT" -maxdepth 1 -type d -name "BACKUP=*" -exec rmdir {} \;
+    find "$USB_MOUNT_POINT" -maxdepth 1 -type d -name "BACKUPz*" -exec rmdir {} \;
+
     echo "Leere Verzeichnisse gelöscht."
 }
 
 # Funktion zum Erstellen der Verzeichnisstruktur auf dem USB-Stick
 create_directories() {
     echo "Erstelle Verzeichnisstruktur auf dem USB-Stick..."
+    # Verzeichnisse aus DIR_LIST erstellen
     for item in "${DIR_LIST[@]}"; do
         source_dir="/home/$CLIENT_USER/$item"
         if [ -d "$source_dir" ]; then
@@ -60,10 +95,17 @@ create_directories() {
         fi
     done
 
+    # Verzeichnisse für FILE_LIST erstellen
     for item in "${FILE_LIST[@]}"; do
-        target_dir="$USB_BACKUP_DIR/$(dirname "$item")"
-        mkdir -p "$target_dir"
-        echo "Verzeichnis erstellt: $target_dir"
+        if [ "$item" = "~" ]; then
+            # Für Home-Dateien ein separates Verzeichnis erstellen
+            mkdir -p "$USB_BACKUP_DIR/home_files"
+            echo "Verzeichnis erstellt: $USB_BACKUP_DIR/home_files"
+        else
+            target_dir="$USB_BACKUP_DIR/$(dirname "$item")"
+            mkdir -p "$target_dir"
+            echo "Verzeichnis erstellt: $target_dir"
+        fi
     done
 
     echo "Verzeichnisstruktur erstellt."
@@ -171,7 +213,7 @@ case $1 in
             perform_restore
         fi ;;
     --all)
-        check_mount && delete_empty_directories && create_directories && perform_backup ;;
+        check_mount && create_directories && perform_backup && delete_empty_directories ;;
     *)
         echo "Usage: $0 {--delete|--create|--backup|--restore|--all}"
         echo "  --delete   Löscht leere Verzeichnisse auf dem USB-Stick"

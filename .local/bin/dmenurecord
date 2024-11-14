@@ -1,34 +1,17 @@
 #!/bin/bash
-# SARBS 2024.10.29 Aufnahmeskript für h264 mit Vaapi Hardware Encoding
-# zusätzlich benötigt:
-# sudo pacman -S intel-media-driver libva libva-utils (für vaapi Hardwareencoding)
-
-# Video-Codec Optionen:
-# - h264_vaapi    : Intel/AMD GPU über VAAPI (empfohlen für Intel)
-# - h264_qsv      : Intel QuickSync
-# - h264_nvenc    : NVIDIA GPUs
-# - h264_amf      : AMD GPUs
-# - h264/libx264  : Software-Encoding (CPU)
+# 13.11.2024
 
 # Konfigurationsvariablen
 VIDEO_OUTPUT_DIR="$HOME/Videos/scr"
 AUDIO_OUTPUT_DIR="$HOME/Musik"
 FRAMERATE=30
 OUTPUT_FRAMERATE=30
-CRF=30
-PRESET="medium"            		# h264-Preset: ultrafast superfast veryfast faster fast medium slow slower veryslow
-AUDIO_CODEC="aac"	  		# pcm_s16le AAC libvorbis flac libopus libmp3lame
-VIDEO_CODEC="h264_vaapi"		# libvpx-vp9 h264
+CRF=23
+PRESET="medium"
+AUDIO_CODEC="aac"
 AUDIO_BITRATE="128k"
 OUTPUT_FORMAT="mp4"
-
-# Webcam-Konfigurationsvariablen
-WEBCAM_DEVICE="/dev/video2"       	# Hier dein Webcam-Gerät eintragen
-WEBCAM_RESOLUTION="1920x1080"     	# Hier die native Auflösung deiner Webcam eintragen
-
-# VAAPI-spezifische Einstellungen
-VAAPI_DEVICE="/dev/dri/renderD128"	# Standard VAAPI Device
-QUALITY=7
+VIDEO_CODEC="libx264"  # Standard-Codec, wird später ggf. auf VAAPI umgestellt
 
 # Icon-Aktualisierung
 updateicon() {
@@ -40,22 +23,15 @@ updateicon() {
 killrecording() {
     if [ -f /tmp/recordingpid ]; then
         local pid=$(cat /tmp/recordingpid)
-
-        # Sende SIGTERM Signal an ffmpeg
         kill -SIGTERM "$pid" 2>/dev/null
-
-        # Warte bis zu 5 Sekunden auf Beendigung
         local count=0
         while kill -0 "$pid" 2>/dev/null && [ $count -lt 5 ]; do
             sleep 1
             ((count++))
         done
-
-        # Wenn der Prozess immer noch läuft, SIGKILL senden
         if kill -0 "$pid" 2>/dev/null; then
             kill -9 "$pid" 2>/dev/null
         fi
-
         rm -f /tmp/recordingpid
     fi
     updateicon ""
@@ -72,162 +48,104 @@ select_monitor() {
     monitor_info=$(xrandr --query | grep -A1 "^$selected_monitor connected")
     resolution=$(echo "$monitor_info" | grep -oP '\d+x\d+' | head -n1)
     offset=$(echo "$monitor_info" | grep -oP '(?<=\+)\d+\+\d+' | head -n1)
-    offset="+$offset"
+    if [ -n "$offset" ]; then
+        offset="+$offset"
+    else
+        offset="+0+0"
+    fi
+}
+
+# Bildschirmaufnahme (ganzer Bildschirm)
+screencast() {
+    # Versuche die Bildschirmauflösung über xrandr zu bekommen
+    resolution=$(xrandr --current | grep '*' | uniq | awk '{print $1}')
+
+    # Wenn keine Auflösung gefunden wurde, versuche es mit einer alternativen Methode
+    if [ -z "$resolution" ]; then
+        resolution=$(xrandr | grep ' connected' | grep -o '[0-9]*x[0-9]*' | head -n 1)
+    fi
+
+    # Überprüfe ob wir eine Auflösung haben
+    if [ -z "$resolution" ]; then
+        echo "Fehler: Konnte Bildschirmauflösung nicht ermitteln"
+        exit 1
+    fi
+
+    # Debug-Ausgabe
+    echo "Erkannte Auflösung: $resolution"
+
+    local output_file="${VIDEO_OUTPUT_DIR}/screencast-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
+
+    # Erstelle Ausgabeverzeichnis falls es nicht existiert
+    mkdir -p "$VIDEO_OUTPUT_DIR"
+
+    ffmpeg -y \
+        -f x11grab -framerate $FRAMERATE -video_size "$resolution" -i $DISPLAY \
+        -f pulse -channels 2 -i default \
+        -c:v $VIDEO_CODEC -crf $CRF -preset $PRESET \
+        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE \
+        -pix_fmt yuv420p \
+        "$output_file" &
+
+    echo $! > /tmp/recordingpid
+    updateicon "󰻃󰍮"
 }
 
 # Bildschirmaufnahme (ausgewählten Monitor aufnehmen)
 screencast_monitor() {
     select_monitor
+    if [ -z "$resolution" ]; then
+        echo "Fehler: Konnte Monitor-Auflösung nicht ermitteln"
+        exit 1
+    fi
+
     local output_file="${VIDEO_OUTPUT_DIR}/screencast-${selected_monitor}-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
+
+    # Erstelle Ausgabeverzeichnis falls es nicht existiert
+    mkdir -p "$VIDEO_OUTPUT_DIR"
+
     ffmpeg -y \
         -f x11grab -framerate $FRAMERATE -video_size "$resolution" -i "$DISPLAY$offset" \
         -f pulse -channels 2 -i default \
-        -init_hw_device vaapi=intel:/dev/dri/renderD128 \
-        -filter_complex "hwupload,scale_vaapi=format=nv12" \
-        -c:v $VIDEO_CODEC -qp $QUALITY \
-        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE -r $OUTPUT_FRAMERATE \
-        -movflags +faststart \
-        "$output_file" &
-    echo $! > /tmp/recordingpid
-    updateicon "󰻃󰍮"
-}
-
-# Bildschirmaufnahme (ganzer Bildschirm)
-screencast() {
-    local resolution=$(xdpyinfo | grep dimensions | awk '{print $2}')
-    local output_file="${VIDEO_OUTPUT_DIR}/screencast-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-    ffmpeg -y \
-        -f x11grab -framerate $FRAMERATE -video_size "$resolution" -i "$DISPLAY" \
-        -f pulse -channels 2 -i default \
-        -init_hw_device vaapi=intel:/dev/dri/renderD128 \
-        -filter_complex "hwupload,scale_vaapi=format=nv12" \
-        -c:v $VIDEO_CODEC -qp $QUALITY \
-        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE -r $OUTPUT_FRAMERATE \
-        -movflags +faststart \
-        "$output_file" &
-    echo $! > /tmp/recordingpid
-    updateicon "󰻃󰍮"
-}
-
-# Video-Aufnahme (ganzer Bildschirm) mit Ton
-video() {
-    local output_file="${VIDEO_OUTPUT_DIR}/video-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-    local resolution=$(xdpyinfo | grep dimensions | awk '{print $2}')
-
-    ffmpeg -y \
-        -f x11grab -framerate $FRAMERATE -video_size "$resolution" -i "$DISPLAY" \
-        -f pulse -channels 2 -i default \
-        -c:v $VIDEO_CODEC -crf $CRF -b:v 0 -preset $PRESET -pix_fmt yuv420p \
+        -c:v $VIDEO_CODEC -crf $CRF -preset $PRESET \
         -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE \
-        -movflags +faststart \
+        -pix_fmt yuv420p \
         "$output_file" &
+
     echo $! > /tmp/recordingpid
     updateicon "󰻃󰍮"
-}
-
-# Video-Aufnahme (Bildschirmbereich auswählen) mit Ton
-videoselected() {
-    local geometry=$(slop -f "%x,%y %w,%h")
-    local offset=$(echo $geometry | awk '{print $1}')
-    local size=$(echo $geometry | awk '{print $2}')
-    local output_file="${VIDEO_OUTPUT_DIR}/video-selected-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-
-    ffmpeg -y \
-        -f x11grab -framerate $FRAMERATE -video_size "$size" -i "$DISPLAY+$offset" \
-        -f pulse -channels 2 -i default \
-        -c:v $VIDEO_CODEC -crf $CRF -b:v 0 -preset $PRESET -pix_fmt yuv420p \
-        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE \
-        -movflags +faststart \
-        "$output_file" &
-    echo $! > /tmp/recordingpid
-}
-
-# Video-Aufnahme (ganzer Bildschirm) mit Ton
-video() {
-    local output_file="${VIDEO_OUTPUT_DIR}/video-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-    local resolution=$(xdpyinfo | grep dimensions | awk '{print $2}')
-    ffmpeg -f x11grab -framerate $FRAMERATE -s "$resolution" -i $DISPLAY \
-        -f pulse -channels 2 -i default \
-	-c:v $VIDEO_CODEC -crf $CRF -b:v 0 -preset $PRESET \
-        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE \
-        "$output_file" &
-    echo $! > /tmp/recordingpid
-    updateicon "󰻃󰍮"
-}
-
-# Webcam-Aufnahme in nativer Auflösung
-webcam() {
-    local output_file="${VIDEO_OUTPUT_DIR}/webcam-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-
-    ffmpeg -y \
-        -f v4l2 -i "$WEBCAM_DEVICE" -video_size "$WEBCAM_RESOLUTION" \
-        -c:v $VIDEO_CODEC -crf $CRF -preset $PRESET -pix_fmt yuv420p \
-        -movflags +faststart \
-        "$output_file" &
-    echo $! > /tmp/recordingpid
-    updateicon "󰍮"
 }
 
 # Audio-Aufnahme
 audio() {
+    mkdir -p "$AUDIO_OUTPUT_DIR"
     local output_file="${AUDIO_OUTPUT_DIR}/audio-$(date '+%y%m%d-%H%M-%S').flac"
     ffmpeg -f pulse -i default -c:a flac "$output_file" &
     echo $! > /tmp/recordingpid
     updateicon "󰍮"
 }
 
-# Reaktionsaufnahme (Mikrofon und Systemaudio)
-reaction_record() {
-    # Monitor auswählen
-    select_monitor
-    local output_file="${VIDEO_OUTPUT_DIR}/reaction-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
-
-    # Nur System-Audio-Quelle definieren, Mikrofon nutzt default
-    local system_audio="alsa_output.pci-0000_00_1f.3.analog-stereo.monitor"
-
+# Webcam-Aufnahme
+webcam() {
+    mkdir -p "$VIDEO_OUTPUT_DIR"
+    local output_file="${VIDEO_OUTPUT_DIR}/webcam-$(date '+%y%m%d-%H%M-%S').${OUTPUT_FORMAT}"
     ffmpeg -y \
-        -init_hw_device vaapi=intel:/dev/dri/renderD128 \
-        -hwaccel vaapi \
-        -hwaccel_device /dev/dri/renderD128 \
-        -f x11grab -framerate $FRAMERATE -video_size "$resolution" -i "$DISPLAY$offset" \
-        -f pulse -i default \
-        -f pulse -i "$system_audio" \
-        -filter_complex "\
-            [0:v]format=nv12,hwupload[vaapi_in]; \
-            [1:a]aformat=sample_fmts=fltp:channel_layouts=stereo,volume=1.5[a1]; \
-            [2:a]aformat=sample_fmts=fltp:channel_layouts=stereo,volume=1.0[a2]; \
-            [a1][a2]amix=inputs=2:duration=first[aout]" \
-        -map "[vaapi_in]" \
-        -map "[aout]" \
-        -c:v $VIDEO_CODEC -qp $QUALITY \
-        -c:a $AUDIO_CODEC -b:a $AUDIO_BITRATE \
-        -movflags +faststart \
+        -f v4l2 -i "/dev/video0" \
+        -c:v $VIDEO_CODEC -crf $CRF -preset $PRESET \
+        -pix_fmt yuv420p \
         "$output_file" &
-
     echo $! > /tmp/recordingpid
-    updateicon "󰍮󰍮󰻃"
-}
-
-# Funktion zum Auflisten der Audiogeräte
-list_audio_devices() {
-    echo "Verfügbare Audio-Eingabegeräte:"
-    pactl list sources short
-
-    echo -e "\nVerfügbare Audio-Ausgabegeräte:"
-    pactl list sinks short
+    updateicon "󰍮"
 }
 
 # Aufnahmeart wählen
 askrecording() {
-    choice=$(printf "Bildschirmaufnahme\\nBildschirmaufnahme (Monitor auswählen)\\nVideo\\nVideo ausgewählt\\nAudio\\nWebcam\\nReaktionsaufnahme" | dmenu -i -p "Aufnahmestil auswählen:")
+    choice=$(printf "Bildschirmaufnahme\\nBildschirmaufnahme (Monitor auswählen)\\nAudio\\nWebcam" | dmenu -i -p "Aufnahmestil auswählen:")
     case "$choice" in
         Bildschirmaufnahme) screencast ;;
         "Bildschirmaufnahme (Monitor auswählen)") screencast_monitor ;;
         Audio) audio ;;
-        Video) video ;;
-        "Video ausgewählt") videoselected ;;
         Webcam) webcam ;;
-        "Reaktionsaufnahme") reaction_record ;;
     esac
 }
 
@@ -242,10 +160,7 @@ case "$1" in
     screencast) screencast ;;
     screencast_monitor) screencast_monitor ;;
     audio) audio ;;
-    video) video ;;
-    videoselected) videoselected ;;
     webcam) webcam ;;
-    reaction_record) reaction_record ;;
     kill) killrecording ;;
     *) ([ -f /tmp/recordingpid ] && asktoend && exit) || askrecording ;;
 esac

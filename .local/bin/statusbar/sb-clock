@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # SARBS 07.07.2024
 
 clock=$(date '+%I')

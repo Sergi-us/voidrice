@@ -61,7 +61,7 @@ alias \
 	wm="wikiman"
 
 alias \
-	vm-sarbs='virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux'
+	vm-sarbs='virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux' \
 	lf="lfub" \
 	magit="nvim -c MagitOnly" \
 	ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" \

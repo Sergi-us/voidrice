@@ -33,8 +33,7 @@ alias \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner" \
 	neofetch="fastfetch --load-config examples/2.jsonc" \
-	neo="neo-matrix -D -a -b 0 -m SARBS" \
-	surf="surf -z 1.5"
+	neo="neo-matrix -D -a -b 0 -m SARBS"
 
 # Colorize commands when possible.
 alias \

@@ -13,7 +13,7 @@ unsetopt PROMPT_SP 2>/dev/null
 export EDITOR="nvim"
 export TERMINAL="st"
 export TERMINAL_PROG="st"
-export BROWSER="surf"
+export BROWSER="librewolf"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 

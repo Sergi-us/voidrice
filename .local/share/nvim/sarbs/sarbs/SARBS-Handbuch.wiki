@@ -3,7 +3,7 @@
 *Autor: Luke Smith*
 *Übersetzung: Sergius*
 
-Verwende die Vim-Tasten (`h/j/k/l`), um dieses Dokument zu navigieren. Durch Drücken von `s` wird es an die Fensterbreite angepasst (`a` zum Zurücksetzen). `K` und `J` zoomen hinein und heraus. mit `i` kannst du es invertieren. `Super+f` zum Umschalten in den Vollbildmodus. `q` zum Beenden. `/` um nach Text zu suchen. (Diese sind allgemeine _Key-binding's_ für *zathura*, den PDF-Reader.)
+Verwende die Vim-Tasten (`←h`/`↑j`/`k→`/`l↓`), um zu navigieren. Durch Drücken von `s` wird es an die Fensterbreite angepasst (`a` zum Zurücksetzen). `K` und `J` zoomen hinein und heraus. mit `i` kannst du es invertieren. `Super+f` zum Umschalten in den Vollbildmodus. `q` zum Beenden. `/` um nach Text zu suchen. (Diese sind allgemeine _Key-binding's_ für *zathura*, den PDF-Reader.)
 
 * `Mod+F1` zeigt dieses Dokument jederzeit an.
 * Mit `Mod` meine ich die Super-Taste, die normalerweise als "Windows-Taste" bekannt ist.

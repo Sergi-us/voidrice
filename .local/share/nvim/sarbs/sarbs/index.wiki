@@ -17,6 +17,7 @@ curl -LO sarbs.sergius.xyz/sarbs.sh
 sh sarbs.sh
 }}}
 Beachte, dass SARBS-Skripte einen Benutzer/in erstellt oder den bestehenden überschreibt und ein sauberes Home-Verzeichnis anlegen mit den typischen Standardverzeichnissen. Es überschreibt alle bereits existierenden Konfigurationsdateien und Standard Verzeichnisse. [[Installation von SARBS|Weitergehende Installationsanleitung...]]
+
 == Handbuch ==
 [[SARBS-Handbuch]]
 [[Installation von SARBS|Installation]] im Detail

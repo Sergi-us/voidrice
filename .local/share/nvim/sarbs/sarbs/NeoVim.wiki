@@ -5,10 +5,19 @@ https://www.nerdbude.com/m_vim.html
 == Vim mini Funktionen ==
 	- Ctrl+P/N	Autoverfollständigung
 
-== Vim Magik ==
-	`:%s/\<altes-wort\>/neues-wort/g`	Tastenkonbi `Shift+S`
-	`:sort u` Sortiert alpabetisch und entfernt doppelte einträge
+== Vim-Magic ==
+=== EX-Kommandos ===
+* `Substitude`
+* Wort-ersetzung Tastenkonbi `Shift+S`
+{{{class="brush: bash"
+%s/\<altes-wort\>/neues-wort/g
+}}}
+* Jahreszahl nach vorne Kopieren
+{{{class="brush: bash"
+%s/\(.*\) (\(\d\d\d\d\))\(\..*\)$/\2 \1\3/
+}}}
 
+	`:sort u` Sortiert alpabetisch und entfernt doppelte einträge
 == Instalierte Plugin's in SARBS ==
 	Vim selbst hat 35,4K sternebewertung auf Github
 
@@ -77,8 +86,8 @@ https://www.nerdbude.com/m_vim.html
 
 
 == Beenden: ==
-	- :q | :q! | ZQ	Beendet Vim ohne zu speichern
-	- :x | :wq | ZZ	Beendet Vim mit Speichern
+	- :q | :q! | <leader>ZQ	Beendet Vim ohne zu speichern
+	- :x | :wq | <leader>ZZ	Beendet Vim mit Speichern
 
 == Insert Mode ==
 	- i	wechsel in den insert mode (mit 'ESC' in Normal mode)

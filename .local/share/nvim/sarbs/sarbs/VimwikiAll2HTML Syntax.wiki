@@ -59,9 +59,10 @@ Zweiter Begriff::
 == Definitionen ==
 Begriff :eins: Definition
 Zweiter Begriff :zwei: Weitere Definition
-   Mehrzeilig :mzl: Diese Definition
-					geht über mehrere
-					Zeilen
+Mehrzeilig :mzl:
+    Diese Definition
+    geht über mehrere
+    Zeilen
 
 == Links ==
 [[Interner Link]]
@@ -91,7 +92,6 @@ def hello_world():
 ----
 
 == Bilder ==
-{{./bilder/logo.png}}
 [[Sergius Logo|{{https://sarbs.sergius.xyz/bilder/logo.png}}]]
 
 == Fußnoten ==
@@ -104,48 +104,46 @@ Hier ist Text mit einer Fußnote[1] und noch einer[2].
 :tags: wiki, dokumentation, beispiel:
 
 == Mathematische Formeln ==
-{{{ math
+{{{math
 f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(a)}{n!} (x-a)^n
 }}}
 
 %% Dies ist ein Kommentar der nicht im HTML erscheint
 
 == HTML einbetten ==
-{{{html
+{{{class="brush: html"
 <div style="color: red;">
     Dieser Text wird rot dargestellt
 </div>
 }}}
 
 == Tastenkombinationen ==
-Drücke {{ctrl}}+{{alt}}+{{del}}
+Drücke `strl`+`alt`+`entf`
 
-== Textfarben ==
-{{{red text|Dieser Text ist rot}}}
-
-{{{class="brush: "
+{{{class="brush: bash"
 let g:vimwiki_list = [
-    \ {'path': '~/vimwiki/',
-    \  'path_html': '~/www/sarbs/',
-    \  'custom_wiki2html': '',
-    \  'html_filename_parameterization': 1,
-    \  'automatic_nested_syntaxes': 1,
-    \  'nested_syntaxes': {'python': 'python', 'c++': 'cpp'},
-    \  'custom_wiki2html_args': '--toc --css style.css',
-    \  'html_header': '~/vimwiki/template/header.tpl',
-    \  'html_footer': '~/vimwiki/template/footer.tpl',
-    \  'auto_export': 1,
-    \  'auto_toc': 1,
-    \  'auto_tags': 1,
-    \  'auto_generate_links': 1,
-    \  'auto_generate_tags': 1,
-    \  'auto_diary_index': 1,
-    \  'diary_rel_path': 'diary/',
-    \  'diary_index': 'diary',
-    \  'diary_header': 'Diary',
-    \  'template_path': '~/vimwiki/templates/',
-    \  'template_default': 'default',
-    \  'template_ext': '.tpl'}
-    \ ]
+	\ {'path': '~/vimwiki/',
+	\  'path_html': '~/www/sarbs/',
+	\  'custom_wiki2html': '',
+	\  'html_filename_parameterization': 1,
+	\  'automatic_nested_syntaxes': 1,
+	\  'nested_syntaxes': {'python': 'python', 'c++': 'cpp'},
+	\  'custom_wiki2html_args': '--toc --css style.css',
+	\  'html_header': '~/vimwiki/template/header.tpl',
+	\  'html_footer': '~/vimwiki/template/footer.tpl',
+	\  'auto_export': 1,
+	\  'auto_toc': 1,
+	\  'auto_tags': 1,
+	\  'auto_generate_links': 1,
+	\  'auto_generate_tags': 1,
+	\  'auto_diary_index': 1,
+	\  'diary_rel_path': 'diary/',
+	\  'diary_index': 'diary',
+	\  'diary_header': 'Diary',
+	\  'template_path': '~/vimwiki/templates/',
+	\  'template_default': 'default',
+	\  'template_ext': '.tpl'}
+	\ ]
 }}}
+
 [[index]] [[mailto:sergius@posteo.de|mail]]

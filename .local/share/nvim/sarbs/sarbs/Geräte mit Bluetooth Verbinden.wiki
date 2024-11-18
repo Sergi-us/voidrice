@@ -1,4 +1,6 @@
 = Geräte mit Bluetooth Verbinden =
+[[https://www.youtube.com/watch?v=y-jRFcNRr0M|YouTube: Geräte in Linux mit Bluetooth verbinden]]
+
 Notwendige Packete (in SARBS bereits instaliert)
 {{{
 pacman -S bluez bluez-utils pulseaudio-bluetooth
@@ -44,9 +46,9 @@ weitere Befehle in `bluetoothctl`
 `info <Mac-Adresse>`    zeigt infos über das Gerät
 `help`                  hilfe
 
-TODO blue neu Integrieren
-TODO blue in Kombination mit D-Menu
-TODO `dmenu-bluetooth` D-Menu Shell-promt auf GitHub oder vergleichbare tools
+%% TODO blue neu Integrieren
+%% TODO blue in Kombination mit D-Menu
+%% TODO `dmenu-bluetooth` D-Menu Shell-promt auf GitHub oder vergleichbare tools
 
 # Fehlersuche und sonstiges
 neustarten des Dienstes

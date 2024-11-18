@@ -148,6 +148,9 @@ Das "default" Netzwerk bietet:
   * Internetzugriff für VMs
   * Automatische IP-Vergabe (DHCP)
 
+ == UFW auf dem Host konfigurieren ==
+[[UWF-auf-den-Host-einrichten]]
+
 ==== Befehle ====
 Netzwerk starten:
 {{{

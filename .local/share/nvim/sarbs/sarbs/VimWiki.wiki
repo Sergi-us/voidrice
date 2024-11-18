@@ -1,4 +1,5 @@
 = VimWiki =
+[[https://www.nerdbude.com/vimwiki.html|Wimviki Artikel von Nerdbude]]
 
 == Grundlegendes ==
   * <leader> ist definiert als `','` (Komma)

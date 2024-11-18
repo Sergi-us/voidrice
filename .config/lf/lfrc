@@ -78,6 +78,7 @@ cmd extract ${{
 			*.Z)         uncompress $fx  ;;
 			*.7z)        7z x $fx        ;;
 			*.tar.xz)    tar xf $fx      ;;
+			*.img.xz)    xz -d $fx       ;;
 		esac
 	}
 }}
@@ -218,8 +219,6 @@ map <gt> $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/piped.video\/watch?v=/' 
 map T $nsxiv -t "$(pwd)" 	# öffnet den Thumbnailmodus
 # Ctrl+l 	Hebt die Auswahl aller ausgewählten Dateien auf
 map <c-l> unselect
-
-
 
 # Lesezeichen einbinden
 source "~/.config/lf/shortcutrc"

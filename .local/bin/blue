@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Abhängigkeiten:
 # Arch-Repositories: dmenu, bluez-utils (enthält bluetoothctl)

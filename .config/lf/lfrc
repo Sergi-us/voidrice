@@ -150,7 +150,7 @@ cmd adbpull ${{
 
 # Tastenbelegungen
 # Ctrl+f	Öffnet fzf (fuzzy finder) und wählt die ausgewählte Datei in lf aus.
-map <c-f> $lf -remote "send $id select \"$(fzf)\""
+map <c-f> $lf -remote "send $id select \"$(fzf --height=-3)\""
 # J		Öffnet fzf mit einer Liste von Lesezeichen-Verzeichnissen und wechselt zum ausgewählten Verzeichnis.
 map J $lf -remote "send $id cd $(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
 map H cd ~	#Springt zum Home-Verzeichniss
@@ -202,7 +202,7 @@ map <c-x> $for f in $fx; do chmod +x "$f"; done && lf -remote "send $id reload" 
 # Ctrl+y	Bewegt den Cursor eine Zeile nach oben
 # map <c-y> up
 # V Öffnet den Texteditor nvim (Neovim) im aktuellen Verzeichnis
-# map V push :!nvim<space>
+map V push :!nvim<space>
 
 # W		Öffnet ein neues Terminal-Fenster im aktuellen Verzeichnis
 map W $setsid -f $TERMINAL >/dev/null 2>&1

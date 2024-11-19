@@ -963,8 +963,8 @@
   debug-stop; EAD7
   debug; EAD8
   device-camera-video; EAD9
-  device-camera; EADA
-  device-mobile; EADB
+  sarbs-device-camera; EADA
+  sarbs-device-mobile; EADB
   diff-added; EADC
   diff-ignored; EADD
   diff-modified; EADE
@@ -2898,7 +2898,7 @@
   file-zip#1; F410
   archive#1; F411
   tag#2; F412
-  file-directory; F413
+  sarbs-file-directory; F413
   file-submodule#1; F414
   person#2; F415
   arrow-both#1; F416
@@ -3008,7 +3008,7 @@
   triangle-up#1; F47E
   git-compare#1; F47F
   logo-gist; F480
-  file-symlink-file#1; F481
+  sarbs-file-symlink-file#1; F481
   file-symlink-directory#1; F482
   squirrel#1; F483
   globe#2; F484

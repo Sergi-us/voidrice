@@ -19,12 +19,15 @@ sh sarbs.sh
 Beachte, dass SARBS-Skripte einen Benutzer/in erstellt oder den bestehenden überschreibt und ein sauberes Home-Verzeichnis anlegen mit den typischen Standardverzeichnissen. Es überschreibt alle bereits existierenden Konfigurationsdateien und Standard Verzeichnisse. [[Installation von SARBS|Weitergehende Installationsanleitung...]]
 
 == Handbuch ==
+[[Pi-Hole]]
 [[SARBS-Handbuch]]
 [[Installation von SARBS|Installation]] im Detail
 [[Einstellungen]] Linux, Laufwerke, Bluetooth
+[[Wartung]]
 [[Benutzeroberflächen und deren anpassungen]]
 [[Programme in SARBS|Anwendungen]]
 [[Virtualisierung]]
+[[Raspberry-Pi]]
 [[VimwikiAll2HTML Syntax|Syntax]]
 [[hilfe|Hilfe]]
 [[index]]

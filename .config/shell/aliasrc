@@ -37,11 +37,14 @@ alias \
 
 # Colorize commands when possible.
 alias \
-	ls="ls -hN --color=auto --group-directories-first" \
+	ls="lsd --color=auto --group-directories-first" \
+	fzf="fzf --height=-3" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
 	ccat="highlight --out-format=ansi" \
 	ip="ip -color=auto"
+
+# ls="ls -hN --color=auto --group-directories-first" \
 
 # These common commands are just too long! Abbreviate them.
 alias \

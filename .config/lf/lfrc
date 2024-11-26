@@ -1,5 +1,5 @@
-# Lukes lf-Einstellungen (übersetzt von Sergius)
-
+# SARBS lf-Einstellungen
+# 21.11.2024
 
 # Hinweis zu Bildvorschauen
 # Für diejenigen, die Bildvorschauen wünschen, wie dieses System, gibt es vier Schritte zur
@@ -15,18 +15,24 @@
 #    als Alias gesetzt werden (`alias lf="lfub") oder, wenn er an eine Taste gebunden ist,
 #    sollte er direkt anstelle des normalen lf aufgerufen werden.
 
-# Grundlegende Variablen
-set shellopts '-eu'
-set ifs "\n"
-set scrolloff 10
-set icons
-set period 1
-set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
-set cleaner '~/.config/lf/cleaner'
-set previewer '~/.config/lf/scope'
-set autoquit true
+# ==== Grundlegende Einstellungen ====
+	set shellopts '-eu'		# Shell-Optionen: e=exit on error, u=error on undefined variables
+	set ifs "\n"			# Internal Field Separator auf Newline setzen
+	set scrolloff 10		# 10 Zeilen Abstand beim Scrollen zum Rand beibehalten
+	set icons				# Aktiviert die Anzeige von Icons
+	set period 1			# Aktualisierungsintervall in Sekunden
+	set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+	set cleaner '~/.config/lf/cleaner'
+	set previewer '~/.config/lf/scope'
+	set autoquit true		# Beendet lf automatisch beim Öffnen einer Datei
 
-# Befehle/Funktionen
+# ==== Hauptbefehle/Funktionen ====
+cmd convert_audio ${{
+    ~/.local/bin/ffmpeg-davinci $fs
+    lf -remote "send $id reload"
+}}
+
+# Öffnungsbefehl für verschiedene Dateitypen:
 cmd open ${{
     case $(file --mime-type "$(readlink -f $f)" -b) in
 	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) localc $fx ;;
@@ -56,8 +62,10 @@ cmd open ${{
     esac
 }}
 
+# Verzeichnisse erstellen (mit Unterverzeichnissen)
 cmd mkdir $mkdir -p "$@"
 
+# Archivdateien extrahieren (zip, tar, etc.)
 cmd extract ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -83,6 +91,7 @@ cmd extract ${{
 	}
 }}
 
+# Dateien sicher löschen mit Bestätigungsdialog
 cmd delete ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -92,6 +101,7 @@ cmd delete ${{
 	[ $ans = "y" ] && rm -rf -- $fx
 }}
 
+# Dateien verschieben mit fzf-Zielauswahl
 cmd moveto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -103,6 +113,7 @@ cmd moveto ${{
 	notify-send "🚚 Datei(en) verschoben." "Datei(en) wurden nach $dest verschoben."
 }}
 
+# Dateien kopieren mit fzf-Zielauswahl
 cmd copyto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -116,27 +127,29 @@ cmd copyto ${{
 
 cmd setbg "$1"
 
+# Mehrere Dateien gleichzeitig umbenennen
 cmd bulkrename ${{
-    tmpfile_old="$(mktemp)"
-    tmpfile_new="$(mktemp)"
+	tmpfile_old="$(mktemp)"
+	tmpfile_new="$(mktemp)"
 
-    [ -n "$fs" ] && fs=$(basename -a $fs) || fs=$(ls)
+	[ -n "$fs" ] && fs=$(basename -a $fs) || fs=$(ls)
 
-    echo "$fs" > "$tmpfile_old"
-    echo "$fs" > "$tmpfile_new"
-    $EDITOR "$tmpfile_new"
+	echo "$fs" > "$tmpfile_old"
+	echo "$fs" > "$tmpfile_new"
+	$EDITOR "$tmpfile_new"
 
-    [ "$(wc -l < "$tmpfile_old")" -eq "$(wc -l < "$tmpfile_new")" ] || { rm -f "$tmpfile_old" "$tmpfile_new"; exit 1; }
+	[ "$(wc -l < "$tmpfile_old")" -eq "$(wc -l < "$tmpfile_new")" ] || { rm -f "$tmpfile_old" "$tmpfile_new"; exit 1; }
 
-    paste "$tmpfile_old" "$tmpfile_new" | while IFS="$(printf '\t')" read -r src dst
-    do
-        [ "$src" = "$dst" ] || [ -e "$dst" ] || mv -- "$src" "$dst"
-    done
+	paste "$tmpfile_old" "$tmpfile_new" | while IFS="$(printf '\t')" read -r src dst
+	do
+		[ "$src" = "$dst" ] || [ -e "$dst" ] || mv -- "$src" "$dst"
+	done
 
-    rm -f "$tmpfile_old" "$tmpfile_new"
-    lf -remote "send $id unselect"
+	rm -f "$tmpfile_old" "$tmpfile_new"
+	lf -remote "send $id unselect"
 }}
 
+# Musik auf das Android Handy kopieren
 cmd adbpull ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -144,81 +157,62 @@ cmd adbpull ${{
 	dest="/sdcard/Music"  # Standardzielordner auf dem Handy
 	for x in $fx; do
 		adb push "$x" "$dest" &&
-		notify-send "📱 Datei übertragen." "Datei $x wurde auf das Handy übertragen."
+		notify-send " Datei übertragen." "Datei $x wurde auf das Handy übertragen."
 	done
 }}
 
-# Tastenbelegungen
-# Ctrl+f	Öffnet fzf (fuzzy finder) und wählt die ausgewählte Datei in lf aus.
-map <c-f> $lf -remote "send $id select \"$(fzf --height=-3)\""
-# J		Öffnet fzf mit einer Liste von Lesezeichen-Verzeichnissen und wechselt zum ausgewählten Verzeichnis.
-map J $lf -remote "send $id cd $(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
-map H cd ~	#Springt zum Home-Verzeichniss
-map g top
-map D delete
-map E extract
-map C copyto
-map M moveto
-# Ctrl+n	Startet den Befehl zum Erstellen eines neuen Verzeichnisses.
-map <c-n> push :mkdir<space>""<left>
-# Ctrl+r	Lädt die aktuelle Ansicht neu.
-map <c-r> reload
-# Ctrl+s 	Schaltet die Anzeige versteckter Dateien ein/aus.
-map <c-s> set hidden!
-# Enter 	Öffnet eine Shell im aktuellen Verzeichnis.
-map <enter> shell
-# x 		Führt die ausgewählte Datei als Befehl aus.
-map x $$f
-# X 		Führt die ausgewählte Datei als Befehl aus und wartet auf Beendigung.
-map X !$f
-# o 		Öffnet die Datei mit dem Standard-Programm.
-map o &mimeopen "$f"
-# O 		Fragt, mit welchem Programm die Datei geöffnet werden soll.
-map O $mimeopen --ask "$f"
-# c 		Startet eine neue Umbenennung, löscht den vorhandenen Namen.
-map c push A<c-u>
-# I		Startet die Umbenennung am Anfang des Dateinamens.
-map I :rename; cmd-home
-# i 		Startet die Umbenennung vor der Dateierweiterung.
-map i :rename
-# a		Startet die Umbenennung nach der Dateierweiterung.
-map a :rename; cmd-right
-# A		ADB Puch für Datei und Verzeichniss.
-map A adbpull
-# B 		Startet die Massenumbenennung für mehrere ausgewählte Dateien.
-map B bulkrename
-# b		Setzt die ausgewählte Datei als Hintergrundbild.
-map b $setbg $f
+# ===TASTENBELEGUNGEN ===
+# === Navigieren ===
+	map <c-f> $lf -remote "send $id select \"$(fzf --height=-10)\"" # <Strg+f> Dateisuche mit fzf
+	map J $lf -remote "send $id cd $(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"	# <J> Wechselt zum Lesezeichen aus "bm-dirs"
+	map H cd ~									# <H> Wechselt zum Home-Verzeichniss
+	map g top
 
-# Ausführungsrechte für ausgewählte Dateien entziehen
-map <c-y> $for f in $fx; do chmod -x "$f"; done && lf -remote "send $id reload" && lf -remote "send $id unselect"
+# === Sichtbares menu-s ===
+	map sc clear
+	map sx convert_audio
+	map sx convert_audio_aac
 
-# Ausführungsrechte für ausgewählte Dateien geben
-map <c-x> $for f in $fx; do chmod +x "$f"; done && lf -remote "send $id reload" && lf -remote "send $id unselect"
+# === Dateioperationen ===
+	map D delete								# <D> Löschen                (delete)
+	map E extract								# <E> Archiv extrahieren     (extract)
+	map C copyto								# <C> Kopieren nach...       (copy)
+	map M moveto								# <M> Verschieben nach...    (move)
+	map <c-n> push :mkdir<space>""<left>		# <Strg+n> = Neues Verzeichniss erstellen
+	map <c-r> reload							# <Strg+r> = Reload (Ansicht neu laden)
+	map <c-s> set hidden!						# <Strg+s> = Versteckte Dateien An/Aus-blenden
+	map A adbpull								# <A> = ADB Puch für Datei und Verzeichniss.
+	map B bulkrename							# <B> = Startet die Massenumbenennung für mehrere ausgewählte Dateien.
+	map b $setbg $f								# <b> = Setzt die ausgewählte Immage-Datei als Hintergrundbild.
 
+# === Dateibearbeitung ===
+	map <enter> shell							# <Enter> Shell im aktuellen Verzeichniss öffnen
+	map x $$f									# <x> Führt Datei als Befehl aus.
+	map X !$f									# <X> Führt Datei als Befehl aus und wartet auf Beendigung.
+	map T $nsxiv -t "$(pwd)"					# <T> öffnet den Thumbnailmodus für Bilder
+	map o &mimeopen "$f"						# <o> Öffnet die Datei mit dem Standard-Programm.
+	map O $mimeopen --ask "$f"					# <O> Fragt, mit welchem Programm die Datei geöffnet werden soll.
+	map V push :!nvim<space>					# <V> Öffnet vim im aktuellen Verzeichnis
+	map W $setsid -f $TERMINAL >/dev/null 2>&1	# W = Öffnet ein neues Terminal-Fenster im aktuellen Verzeichnis
+# <Strg+y> Ausführungsrechte für ausgewählte Dateien entziehen
+	map <c-y> $for f in $fx; do chmod -x "$f"; done && lf -remote "send $id reload" && lf -remote "send $id unselect"
+# <Strg+x> Ausführungsrechte für ausgewählte Dateien geben
+	map <c-x> $for f in $fx; do chmod +x "$f"; done && lf -remote "send $id reload" && lf -remote "send $id unselect"
 
-# Ctrl+e	Bewegt den Cursor eine Zeile nach unten
-# map <c-e> down
-# Ctrl+y	Bewegt den Cursor eine Zeile nach oben
-# map <c-y> up
-# V Öffnet den Texteditor nvim (Neovim) im aktuellen Verzeichnis
-map V push :!nvim<space>
+# === Umbenennen ===
+	map c push A<c-u>			# c = Startet eine neue Umbenennung, löscht den vorhandenen Namen.
+	map I :rename; cmd-home		# I = Startet die Umbenennung am Anfang des Dateinamens.
+	map i :rename				# i = Startet die Umbenennung vor der Dateierweiterung.
+	map a :rename; cmd-right	# a = Startet die Umbenennung nach der Dateierweiterung.
 
-# W		Öffnet ein neues Terminal-Fenster im aktuellen Verzeichnis
-map W $setsid -f $TERMINAL >/dev/null 2>&1
-
-# U 		Kopiert den vollständigen Pfad der ausgewählten Datei(en) in die Zwischenablage
-map U $printf "%s" "$fx" | xclip -selection clipboard
-# u 		Kopiert nur den Dateinamen (ohne Pfad) der ausgewählten Datei(en) in die Zwischenablage
-map u $printf "%s" "$fx" | sed 's/.*\///' | xclip -selection clipboard
+# === Zwischenablage ===
+	map U $printf "%s" "$fx" | xclip -selection clipboard	# U: Vollständiger Pfad in Zwischenablage
+	map u $printf "%s" "$fx" | sed 's/.*\///' | xclip -selection clipboard	# u: Nur Dateiname in Zwischenablage
 # . (Punkt) 	Extrahiert eine YouTube-URL aus dem Dateinamen und kopiert sie in die Zwischenablage
-map . $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/www.youtube.com\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
+	map . $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/www.youtube.com\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
 # (Größer-als-Zeichen): Ähnlich wie der vorherige Befehl, aber für Piped (eine alternative YouTube-Frontend) URLs
-map <gt> $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/piped.video\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
-# T 		Öffnet nsxiv (Simple X Image Viewer) im Thumbnail-Modus für das aktuelle Verzeichnis
-map T $nsxiv -t "$(pwd)" 	# öffnet den Thumbnailmodus
-# Ctrl+l 	Hebt die Auswahl aller ausgewählten Dateien auf
-map <c-l> unselect
+	map <gt> $printf "%s" "$fx" | sed -E 's/^.+\[/https:\/\/piped.video\/watch?v=/' | sed -E 's/\]\..+//' | xclip -selection clipboard
+	map <c-l> unselect			# <Ctrl+l> Hebt die Auswahl aller ausgewählten Dateien auf
 
 # Lesezeichen einbinden
 source "~/.config/lf/shortcutrc"

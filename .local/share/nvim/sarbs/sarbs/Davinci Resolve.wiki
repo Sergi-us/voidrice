@@ -8,10 +8,11 @@
    - NVIDIA-Treiber und CUDA für GPU-Beschleunigung
    - Verschiedene Bibliotheken und Frameworks wie GTK2, Qt5, und GStreamer
    - Kompatibilitätsbibliotheken wie libxcrypt-compat und libpng12
+{{{
+pacman -Syu nvidia cuda opencl-nvidia qt5-webengine qt5-websockets  libxcrypt-compat libpng12 clinfo
+}}}
 
-`
 sudo pacman -Syu nvidia cuda opencl-nvidia gstreamer gtk2 libxcrypt-compat ocl-icd qt5-base qt5-svg qt5-webengine qt5-websockets fuse2 glu libpng12
-`
 
 Nach der installation der Treiber solltest du dein System neu starten und die Installation überprüfen:
 
@@ -60,16 +61,6 @@ nvidia              72564736  26 nvidia_uvm,nvidia_modeset
 video                  81920  3 thinkpad_acpi,i915,nvidia_modeset
 ```
 
-3. Überprüfen der OpenGL-Konfiguration:
-```
-glxinfo | grep "OpenGL renderer"
-```
-Dies sollte Ihre NVIDIA-GPU als OpenGL-Renderer anzeigen.
-
-```
-OpenGL renderer string: Mesa Intel(R) UHD Graphics 620 (KBL GT2)
-```
-
 4. Prüfen der CUDA-Installation:
 ```
 nvcc --version
@@ -100,42 +91,50 @@ Dies sollte Ihre NVIDIA-GPU als OpenGL-Renderer anzeigen.
 Falls nicht hier der Workarround:
 
 Installieren Sie den NVIDIA Prime-Unterstützung
-```
+{{{
 sudo pacman -S nvidia-prime
-```
+}}}
 
-Konfigurieren Sie das System, um die NVIDIA-GPU für bestimmte Anwendungen zu verwenden:
-Erstellen oder bearbeiten Sie die Datei:
-```
-sudo nvim /etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
-```
-mit folgendem Inhalt:
-```
-Section "OutputClass"
-    Identifier "intel"
-    MatchDriver "i915"
-    Driver "modesetting"
-EndSection
+== Zerschießt meinen Displayserver ==
+	Konfigurieren Sie das System, um die NVIDIA-GPU für bestimmte Anwendungen zu verwenden:
+	Erstellen oder bearbeiten Sie die Datei:
+		```
+		sudo nvim /etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
+		```
+		mit folgendem Inhalt:
+		```
+		Section "OutputClass"
+			Identifier "intel"
+			MatchDriver "i915"
+			Driver "modesetting"
+		EndSection
 
-Section "OutputClass"
-    Identifier "nvidia"
-    MatchDriver "nvidia-drm"
-    Driver "nvidia"
-    Option "AllowEmptyInitialConfiguration"
-    Option "PrimaryGPU" "yes"
-    ModulePath "/usr/lib/nvidia/xorg"
-    ModulePath "/usr/lib/xorg/modules"
-EndSection
-```
+		Section "OutputClass"
+			Identifier "nvidia"
+			MatchDriver "nvidia-drm"
+			Driver "nvidia"
+			Option "AllowEmptyInitialConfiguration"
+			Option "PrimaryGPU" "yes"
+			ModulePath "/usr/lib/nvidia/xorg"
+			ModulePath "/usr/lib/xorg/modules"
+		EndSection
+		```
 
 Aktualisieren Sie Ihr DaVinci Resolve Startskript
 ```
 #!/bin/bash
 __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia /opt/resolve/bin/resolve
 ```
-
-
-
+	{{{
+	:: Abhängigkeiten nach der Installation entfernen? [j/N] j
+	:: (1/1) SRCINFO geparst: davinci-resolve-studio
+	[sudo] Passwort für sergi:
+	Abhängigkeiten werden aufgelöst …
+	Nach in Konflikt stehenden Paketen wird gesucht …
+	Pakete (2) patchelf-0.18.0-3  xdg-user-dirs-0.18-2
+	Gesamtgröße der installierten Pakete:  0,39 MiB
+	:: Installation fortsetzen? [J/n]
+	}}}
 
 
 
@@ -147,12 +146,18 @@ nvcc --version
 Dies zeigt die CUDA-Compiler-Version an, falls CUDA korrekt installiert ist.
 
 6. DaVinci Resolve installieren:
-```
 yay -S davinci-resolve
-```
 
+{{{
+yay -S davinci-resolve-studio --noconfirm --needed --verbose
+}}}
 
-7. OpenCL-Probleme beheben:
+Licensordner muss für alle nutzer zugängig sein:
+{{{
+sudo chmod 7777 /opt/resolve/.license
+}}}
+
+8. OpenCL-Probleme beheben:
 
 Falls Sie eine Fehlermeldung bezüglich des vollen GPU-Speichers erhalten, installieren Sie die folgenden Pakete:
 ```

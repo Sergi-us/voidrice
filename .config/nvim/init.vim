@@ -5,7 +5,38 @@
 " ====					https://sarbs.sergius.xyz						====
 " ====																	====
 " ====					TODO	umstieg auf lua							====
+" ====					TODO	Gojo fixen								====
 " ==========================================================================
+
+" zum ausführen in nvim :%call PrependIPs()
+function! PrependIPs()
+    let line = getline('.')
+    let ips = []
+    call substitute(line, '\v(\d{1,3}(\.\d{1,3}){3})', '\=add(ips, submatch(0))', 'g')
+    if !empty(ips)
+        call setline('.', join(ips, ' ') . ' ' . line)
+    endif
+endfunction
+
+" zum ausführen in nvim :%call CountIPFrequencies()
+:function! CountIPFrequencies()
+    let ip_counts = {}
+    for line in getline(1, '$')
+        let matches = matchlist(line, '\v(\d{1,3}(\.\d{1,3}){3})')
+        if !empty(matches)
+            let ip = matches[1]
+            if has_key(ip_counts, ip)
+                let ip_counts[ip] += 1
+            else
+                let ip_counts[ip] = 1
+            endif
+        endif
+    endfor
+    call setline(1, [])
+    for [ip, count] in sort(items(ip_counts), {a,b -> b[1] - a[1]})
+        call append('$', printf('%5d %s', count, ip))
+    endfor
+endfunction
 
 " ===== Basis-Einstellungen =====
 	let mapleader =","
@@ -85,27 +116,56 @@
 			\ 'auto_tags': 1,
 			\ 'auto_generate_links': 1,
 			\ 'auto_generate_tags': 1},
-		\ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
-		\ {'path': '~/.local/share/nvim/Cyberwars', 'syntax': 'markdown', 'ext': '.md'},
-		\ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},
-		\ {'path': '~/.local/share/nvim/Server', 'syntax': 'default', 'ext': '.wiki'},
-		\ {'path': '~/.local/share/nvim/memes', 'syntax': 'default', 'ext': '.wiki'},
-		\ {'path': '~/.local/share/nvim/Schaal', 'syntax': 'default', 'ext': '.wiki'},
 		\ ]
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 	let g:vimwiki_text_ignore_newline = 0
 
 	" NERDTree
 	let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
-
+	" Basis Airline Einstellungen
+	set laststatus=2
+	set noshowmode
+	set t_Co=256
 	" vim-airline
-	if !exists('g:airline_symbols')
-		let g:airline_symbols = {}
-	endif
-	let g:airline_symbols.colnr = ' C:'
-	let g:airline_symbols.linenr = ' L:'
-	let g:airline_symbols.maxlinenr = '☰ '
-	let g:airline_powerline_fonts = 1
+		let g:airline#extensions#tabline#enabled = 1
+		" Aktiviere powerline Symbole und Nerd Fonts
+		let g:airline_powerline_fonts = 1
+		let g:airline_theme='deus'
+
+		" Git Integration mit vimagit
+		let g:airline#extensions#branch#enabled = 1
+		let g:airline#extensions#hunks#enabled = 1
+
+		" Separatoren (wichtig für das Layout)
+		let g:airline_left_sep = ''
+		let g:airline_left_alt_sep = ''
+		let g:airline_right_sep = ''
+		let g:airline_right_alt_sep = ''
+
+		" Moderne Nerd Font Symbole
+		if !exists('g:airline_symbols')
+		    let g:airline_symbols = {}
+		endif
+		" Symbol Definitionen
+		let g:airline_symbols.branch = ''       " Git branch
+		let g:airline_symbols.readonly = ''    " Readonly marker
+"		let g:airline_symbols.linenr = ' L:'      " Line number
+		let g:airline_symbols.maxlinenr = ''   " Maximum line
+		let g:airline_symbols.colnr = ' C:'       " Column number
+		let g:airline_symbols.dirty = '⚡'       " Git dirty marker
+
+		" Integration mit NERDTree
+		let g:airline#extensions#nerdtree_statusline = 1
+
+		" Integration mit Goyo
+		let g:airline#extensions#goyo#enabled = 1
+
+		" Git Status Anzeige aktivieren
+		let g:airline#extensions#branch#format = 1
+		let g:airline#extensions#hunks#non_zero_only = 1  " Nur Änderungen anzeigen
+"	let g:airline_symbols.colnr = ' C:'
+"	let g:airline_symbols.linenr = ' L:'
+"	let g:airline_symbols.maxlinenr = '☰ '
 
 " ===== Tastenkombinationen =====
 	" Platzhalter-Navigation

@@ -6,7 +6,7 @@
 *.alpha: 0.8
 
 !! Standard-Schriftart und -größe:
-*.font: monospace:size=12
+*.font: JetBrainsMono Nerd Font Mono:style=Thin:pixelsize=24:antialias=true:autohint=true
 
 /* Farbindex-Erklärung für das 16-Farben-Schema:
    Name     Dunkel  Hell

@@ -4,10 +4,8 @@ Fi		$HOME/Filme
 Se		$HOME/Serien
 Bü		$HOME/Bücher
 Ma		$HOME/Magazine
-MS		$HOME/Magazine/Adult
 pp		${XDG_PICTURES_DIR:-$HOME/Bilder}
 d		${XDG_DOCUMENTS_DIR:-$HOME/Dokumente}
-A		$HOME/Dokumente/Archiv
 m		${XDG_MUSIC_DIR:-$HOME/Musik}
 vv		${XDG_VIDEOS_DIR:-$HOME/Videos}
 cac		${XDG_CACHE_HOME:-$HOME/.cache}
@@ -19,7 +17,3 @@ mn		/mnt
 St		/mnt/stick
 sc		$HOME/.local/bin
 src		$HOME/.local/src
-vm		$HOME/vm
-meme	$HOME/memes
-Podcast	$HOME/Podcast
-Davinci	$HOME/Davinci

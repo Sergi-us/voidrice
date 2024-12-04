@@ -1,12 +1,12 @@
 /* DPI-Einstellungen für die Bildschirmauflösung */
-/* Xft.dpi: 138 */
+/* Xft.dpi: 120 */
 /* janus.fractionalDpi: 1.38 */
 
 !! Transparenz-Einstellung (Wert zwischen 0-1):
 *.alpha: 0.8
 
 !! Standard-Schriftart und -größe:
-*.font: JetBrainsMono Nerd Font Mono:style=Thin:pixelsize=24:antialias=true:autohint=true
+*.font: JetBrainsMono Nerd Font Mono:style=Thin:pixelsize=16:antialias=true:autohint=true
 
 /* Farbindex-Erklärung für das 16-Farben-Schema:
    Name     Dunkel  Hell

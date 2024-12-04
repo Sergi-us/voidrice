@@ -4,33 +4,21 @@
 # Sitzung einloggt. Wenn Sie startx/xinit wie ein Profi verwenden, wird diese
 # Datei ebenfalls geladen.
 
-# xrandr Einstellungen (nur ein promt möglich)
-# xrandr --listmonitors
-xrandr --dpi 92
+# === DPI Einstellungen ===
+xrandr --dpi 96
 
-# vom Screen-Layout-Editor (mein Dualscreen setup)
-# xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --mode 1920x1080 --pos 1920x0 --rotate normal
-
-# For QT Themes
+# === Themes und GUI ===
+# export QT_QPA_PLATFORMTHEME="gtk2"
+# export GTK_SCALE=1.4
 # export QT_QPA_PLATFORMTHEME=qt5ct
+# export GDK_SCALE=2
+# export GDK_DPI_SCALE=0.5
 
 # Don't Randomly Turn off
 # TODO Testen...
 # xset s off
 # xset -dpms
 # xset s noblank
-
-# export GDK_SCALE=2
-# export GDK_DPI_SCALE=0.5
-
-# Ermitteln Sie zunächst die Namen Ihrer Displays
-# xrandr --output eDP-1 --dpi 160 /
-#        --output HDMI-2 --dpi 92
-# xrandr --output HDMI-2 --scale 1.5x1.5
-
-# Skalierungs einstellungen test
-# export GDK_SCALE=2
-# export GTK_SCALE=1.4
 
 # Hide mouse when typing
 # xbanish &
@@ -41,10 +29,11 @@ setbg &
 # Lädt Xresources Farben/Einstellungen beim Start
 # TODO Trennen von Skalierung und Farben
 # wenn xrdb aktiviert, dann "~/.config/x11/xresources" beachten
-xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!
+# xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!
 
-# Liste der automatisch zu startenden Programme
+# === Liste der automatisch zu startenden Programme ===
 autostart="mpd xcompmgr dunst unclutter pipewire remapd"
+
 for program in $autostart; do
 	pidof -sx "$program" || "$program" &
 done >/dev/null 2>&1
@@ -54,31 +43,3 @@ done >/dev/null 2>&1
 
 # Stellt sicher, dass xrdb fertig ist, bevor der Window Manager / Desktop Environment gestartet wird
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
-
-# Testeinstellungen von cris@machine
-# TODO Testen...
-# Status Bar
-# dwmblocks &
-
-# Network Manager Applet
-# nm-applet --indicator &
-
-# Speedy keys
-# xset r rate 210 40
-
-# Compositor
-# picom -b
-
-# Bluetooth systray icon
-# blueman-applet &
-
-# helps with puls audio
-# pasystray &
-
-# Easy file sharing
-# pcloudcc -u chris.machine@pm.me -m ~/Cloud -d
-
-# remap caps to escape
-# setxkbmap -option caps:escape
-# swap escape and caps
-# setxkbmap -option caps:swapescape

@@ -1,13 +1,15 @@
 #!/bin/sh
-# Use neovim for vim if present.
+# SARBS 23.11.2024
+
+# === Standard-Programm Überschreibungen ===
+# Nutze neovim statt vim, falls vorhanden
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
 # Use $XINITRC variable if file exists.
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
-
 [ -f "$MBSYNCRC" ] && alias mbsync="mbsync -c $MBSYNCRC"
 
-# sudo not required for some system commands
+# Systembefehle (mit sudo)
 for command in mount umount sv pacman updatedb su shutdown poweroff reboot ; do
 	alias $command="sudo $command"
 done; unset command
@@ -17,23 +19,29 @@ se() {
 	[ -f "$HOME/.local/bin/$choice" ] && $EDITOR "$HOME/.local/bin/$choice"
 	;}
 
-# Verbosity and settings that you pretty much just always are going to want.
+# Editor-Verknüpfungen
 alias \
-	gk="getkeys"
+	e="$EDITOR" \
+	v="$EDITOR" \
+	magit="nvim -c MagitOnly"
+
+# Verbosität und Einstellungen, die man so ziemlich immer will.
+alias \
 	cp="cp -iv" \
 	mv="mv -iv" \
 	rm="rm -vI" \
+	mkd="mkdir -pv" \
 	bc="bc -ql" \
 	df="df -h" \
-	free="free -m" \
-	rsync="rsync -vrPlu" \
-	mkd="mkdir -pv" \
+	free="free -h" \
 	yt="yt-dlp --embed-metadata -i" \
 	yta="yt -x -f bestaudio/best" \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner" \
 	neofetch="fastfetch --load-config examples/2.jsonc" \
 	neo="neo-matrix -D -a -b 0 -m SARBS"
+#	rsync="rsync -vrPlu" \
+#	free="free -m" \
 
 # Colorize commands when possible.
 alias \
@@ -44,17 +52,17 @@ alias \
 	ccat="highlight --out-format=ansi" \
 	ip="ip -color=auto"
 
-# ls="ls -hN --color=auto --group-directories-first" \
+#	ls="ls -hN --color=auto --group-directories-first" \
 
 # These common commands are just too long! Abbreviate them.
 alias \
+	dx="distrobox" \
 	ka="killall" \
+	gk="getkeys" \
 	g="git" \
 	trem="transmission-remote" \
 	YT="youtube-viewer" \
 	sdn="shutdown -h now" \
-	e="$EDITOR" \
-	v="$EDITOR" \
 	p="pacman" \
 	xi="sudo xbps-install" \
 	xr="sudo xbps-remove -R" \
@@ -63,8 +71,7 @@ alias \
 	wm="wikiman"
 
 alias \
-	vm-sarbs='virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux' \
+	vm-sarbs="virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux" \
 	lf="lfub" \
-	magit="nvim -c MagitOnly" \
 	ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" \
 	weath="less -S ${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport" \

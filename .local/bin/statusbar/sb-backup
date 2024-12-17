@@ -11,7 +11,7 @@ esac
 
 # Überprüfe, ob der USB-Stick gemountet ist
 if mount | grep -q "/mnt/usb"; then
-    STATUS="󱊟"
+    STATUS="󰁯"
 else
     STATUS=""
 fi

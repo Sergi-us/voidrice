@@ -79,9 +79,9 @@
 	highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
 
 " ===== Einrückungseinstellungen =====
-	set tabstop=4                 " Tab = 4 Spaces
-	set shiftwidth=4              " Einrücktiefe
-	set softtabstop=4            " Backspace löscht 4 Spaces
+	set tabstop=8                 " Tab = 4 Spaces
+	set shiftwidth=8              " Einrücktiefe
+	set softtabstop=8            " Backspace löscht 4 Spaces
 
 " ===== Plugin-Konfigurationen =====
 	" VimWiki

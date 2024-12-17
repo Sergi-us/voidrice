@@ -1,4 +1,6 @@
 " Dateien die automatisch in mein Github verzeichniss kopiert werden
+" sarbs.sh von Github Arbeitsverzeichniss in mein www/sarbs verzeichnis
+autocmd BufWritePost ~/Sergi-us/SARBS/sarbs.sh silent !cp % ~/www/sarbs/%:t
 " ~/.local/bin/
 autocmd BufWritePost ~/.local/bin/cron/checkup silent !cp % ~/Sergi-us/voidrice/.local/bin/cron/%:t
 autocmd BufWritePost ~/.local/bin/cron/crontog silent !cp % ~/Sergi-us/voidrice/.local/bin/cron/%:t
@@ -134,6 +136,7 @@ autocmd BufWritePost ~/.config/fontconfig/fonts.conf silent !cp % ~/Sergi-us/voi
 " ~/.config/gtk-2.0/ und gtk-3.0 (immer gemeinsam anpassen)
 autocmd BufWritePost ~/.config/gtk-2.0/gtkrc-2.0 silent !cp % ~/Sergi-us/voidrice/.config/gtk-2.0/%:t
 autocmd BufWritePost ~/.config/gtk-3.0/settings.ini silent !cp % ~/Sergi-us/voidrice/.config/gtk-3.0/%:t
+autocmd BufWritePost ~/.config/gtk-4.0/settings.ini silent !cp % ~/Sergi-us/voidrice/.config/gtk-4.0/%:t
 " ~/.config/keepassxc/
 autocmd BufWritePost ~/.config/keepassxc/keepassxc.ini silent !cp % ~/Sergi-us/voidrice/.config/keepassxc/%:t
 " ~/.config/lf/
@@ -163,7 +166,7 @@ autocmd BufWritePost ~/.config/python/pythonrc silent !cp % ~/Sergi-us/voidrice/
 " ~/.config/shell/
 autocmd BufWritePost ~/.config/shell/aliasrc silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
 "autocmd BufWritePost ~/.config/shell/bm-dirs silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
-"autocmd BufWritePost ~/.config/shell/bm-files silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
+autocmd BufWritePost ~/.config/shell/bm-files silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
 autocmd BufWritePost ~/.config/shell/inputrc silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
 autocmd BufWritePost ~/.config/shell/profile silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
 " ~/.config/sxiv/exec/
@@ -174,6 +177,8 @@ autocmd BufWritePost ~/.config/wal/templates/zathurarc silent !cp % ~/Sergi-us/v
 autocmd BufWritePost ~/.config/wal/postrun silent !cp % ~/Sergi-us/voidrice/.config/wal/%:t
 " ~/.config/wget/
 autocmd BufWritePost ~/.config/wget/wgetrc silent !cp % ~/Sergi-us/voidrice/.config/wget/%:t
+" ~/.config/wikiman/
+autocmd BufWritePost ~/.config/wikiman/wikiman.conf silent !cp % ~/Sergi-us/voidrice/.config/wikiman/%:t
 " ~/.config/x11/
 autocmd BufWritePost ~/.config/x11/xinitrc silent !cp % ~/Sergi-us/voidrice/.config/x11/%:t
 autocmd BufWritePost ~/.config/x11/xprofile silent !cp % ~/Sergi-us/voidrice/.config/x11/%:t

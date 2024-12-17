@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # X11-spezifische Umgebungsvariablen und Konfigurationen.
 # Wirkt nur in grafischen X11-Sitzungen.
 # Spezifisch für grafische Programme unter X11.

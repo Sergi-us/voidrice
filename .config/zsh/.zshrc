@@ -1,4 +1,5 @@
-# SARBS 25.07.2024
+# SARBS
+#
 # TODO Zinit testen https://github.com/zdharma-continuum/zinit
 # TODO Plugin's Testen
 
@@ -11,6 +12,11 @@ function zsh_add_file() {
     else
         return 1
     fi
+}
+
+# Funktion für Container-Check
+function container_status() {
+    [ -f /run/.containerenv ] && echo "🐋 "
 }
 
 # Farben einschalten und Eingabeaufforderung ändern
@@ -38,14 +44,20 @@ precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
 
 # Einzeileger Prompt-Konfiguration
-PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] [%{$fg[cyan]%}%~%{$reset_color%}]"
-RPROMPT='$vcs_info_msg_0_ %B%F{cyan}[%*]%b%f'
+# PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] [%{$fg[cyan]%}%~%{$reset_color%}]"
+# RPROMPT='$vcs_info_msg_0_ %B%F{cyan}[%*]%b%f'
 
 # Zweizeiliger Promt
 # PROMPT='%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] %{$fg[cyan]%}%~%{$reset_color%} '
 # PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] %{$fg[yellow]%}%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$fg[cyan]%}%c%{$reset_color%} ➜ "
 # RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
+# PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] $(container_status)%{$fg[yellow]%}%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$fg[cyan]%}%c%{$reset_color%} ➜ "
+# RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
+# PROMPT="%B%{$fg[magenta]%}%n@%m%{$reset_color%} %(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}✗) $(container_status)%{$fg[cyan]%}%c%{$reset_color%} "
+# RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
 
+PROMPT="%B%{$fg[magenta]%}%n@%m%{$reset_color%} %(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}✗) %{$fg[cyan]%}%c%{$reset_color%} "
+RPROMPT='$(container_status)$vcs_info_msg_0_%B%F{cyan}[%*]%b%f'
 # Automatisches Wechseln in Verzeichnisse bei Eingabe
 setopt autocd
 
@@ -58,7 +70,7 @@ setopt interactive_comments
 # Verlauf im Cache-Verzeichnis speichern
 HISTSIZE=10000000
 SAVEHIST=10000000
-HISTFILE="${XDG_CACHE_HOME:-$HOME/}/zsh/history"
+HISTFILE="${XDG_CONFIG_HOME:-$HOME/}/zsh/history"
 setopt inc_append_history
 
 # Alias und Verknüpfungen laden, falls vorhanden

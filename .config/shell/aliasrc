@@ -1,11 +1,12 @@
 #!/bin/sh
-# SARBS 23.11.2024
+# SARBS 17.12.2024
 
 # === Standard-Programm Überschreibungen ===
+
 # Nutze neovim statt vim, falls vorhanden
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
-# Use $XINITRC variable if file exists.
+# Nutze $XINITRC Variable falls Datei existiert
 [ -f "$XINITRC" ] && alias startx="startx $XINITRC"
 [ -f "$MBSYNCRC" ] && alias mbsync="mbsync -c $MBSYNCRC"
 
@@ -14,10 +15,11 @@ for command in mount umount sv pacman updatedb su shutdown poweroff reboot ; do
 	alias $command="sudo $command"
 done; unset command
 
+# Benutzerdefinierte Funktionen
 se() {
 	choice="$(find ~/.local/bin -mindepth 1 -printf '%P\n' | fzf)"
 	[ -f "$HOME/.local/bin/$choice" ] && $EDITOR "$HOME/.local/bin/$choice"
-	;}
+}
 
 # Editor-Verknüpfungen
 alias \
@@ -30,20 +32,38 @@ alias \
 	cp="cp -iv" \
 	mv="mv -iv" \
 	rm="rm -vI" \
-	mkd="mkdir -pv" \
+	mkd="mkdir -pv"
+
+# === Git ===
+alias git clone"git clone --depth 1"
+
+# Systemwerkzeuge
+alias \
+	p="pacman" \
 	bc="bc -ql" \
 	df="df -h" \
+	lf="lfub" \
 	free="free -h" \
-	yt="yt-dlp --embed-metadata -i" \
-	yta="yt -x -f bestaudio/best" \
-	ytt="yt --skip-download --write-thumbnail" \
-	ffmpeg="ffmpeg -hide_banner" \
+	ka="killall" \
 	neofetch="fastfetch --load-config examples/2.jsonc" \
 	neo="neo-matrix -D -a -b 0 -m SARBS"
 #	rsync="rsync -vrPlu" \
 #	free="free -m" \
 
-# Colorize commands when possible.
+# Alpine Linux
+alias \
+	xi="sudo xbps-install" \
+	xr="sudo xbps-remove -R" \
+	xq="xbps-query"
+
+# Medien und Dokumente
+alias \
+	yt="yt-dlp --embed-metadata -i" \
+	yta="yt -x -f bestaudio/best" \
+	ytt="yt --skip-download --write-thumbnail" \
+	ffmpeg="ffmpeg -hide_banner"
+
+# Befehle mit Farbausgabe (wenn möglich)
 alias \
 	ls="lsd --color=auto --group-directories-first" \
 	fzf="fzf --height=-3" \
@@ -57,21 +77,18 @@ alias \
 # These common commands are just too long! Abbreviate them.
 alias \
 	dx="distrobox" \
-	ka="killall" \
 	gk="getkeys" \
 	g="git" \
 	trem="transmission-remote" \
 	YT="youtube-viewer" \
 	sdn="shutdown -h now" \
-	p="pacman" \
-	xi="sudo xbps-install" \
-	xr="sudo xbps-remove -R" \
-	xq="xbps-query" \
 	z="zathura" \
 	wm="wikiman"
 
-alias \
-	vm-sarbs="virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux" \
-	lf="lfub" \
-	ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" \
-	weath="less -S ${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport" \
+
+alias vm-sarbs="virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux"
+
+
+alias ref="shortcuts >/dev/null; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc ; source ${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc"
+
+alias wetter="less -S ${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport" \

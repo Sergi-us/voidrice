@@ -163,6 +163,8 @@ autocmd BufWritePost ~/.config/nvim/plugin/voidrice.vim silent !cp % ~/Sergi-us/
 autocmd BufWritePost ~/.config/pinentry/preexec silent !cp % ~/Sergi-us/voidrice/.config/pinentry/%:t
 " ~/.config/python/
 autocmd BufWritePost ~/.config/python/pythonrc silent !cp % ~/Sergi-us/voidrice/.config/python/%:t
+" ~/.config/qt5ct/
+autocmd BufWritePost ~/.config/qt5ct/qt5ct.conf silent !cp % ~/Sergi-us/voidrice/.config/qt5ct/%:t
 " ~/.config/shell/
 autocmd BufWritePost ~/.config/shell/aliasrc silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t
 "autocmd BufWritePost ~/.config/shell/bm-dirs silent !cp % ~/Sergi-us/voidrice/.config/shell/%:t

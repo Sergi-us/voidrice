@@ -93,7 +93,6 @@
 			\ 'auto_tags': 1,
 			\ 'auto_generate_links': 1,
 			\ 'auto_generate_tags': 1},
-		\ {'path': '~/.local/share/nvim/YouTube', 'syntax': 'markdown', 'ext': '.md'},
 		\ {'path': '~/.local/share/nvim/YouTube-wiki', 'syntax': 'default', 'ext': '.wiki'},
 		\ {'path': '~/.local/share/nvim/SARBS', 'syntax': 'default', 'ext': '.wiki'},
 		\ {'path': '~/.local/share/nvim/Graphene', 'syntax': 'default', 'ext': '.wiki'},

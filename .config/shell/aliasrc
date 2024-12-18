@@ -65,13 +65,14 @@ alias \
 
 # Befehle mit Farbausgabe (wenn möglich)
 alias \
-	ls="lsd --color=auto --group-directories-first" \
-	fzf="fzf --height=-3" \
+	ls="lsd -a --color=auto --group-directories-first" \
+	fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
 	ccat="highlight --out-format=ansi" \
 	ip="ip -color=auto"
 
+#	fzf="fzf --height=-3" \
 #	ls="ls -hN --color=auto --group-directories-first" \
 
 # These common commands are just too long! Abbreviate them.

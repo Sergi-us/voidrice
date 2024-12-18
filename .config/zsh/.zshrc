@@ -48,16 +48,9 @@ setopt prompt_subst
 # RPROMPT='$vcs_info_msg_0_ %B%F{cyan}[%*]%b%f'
 
 # Zweizeiliger Promt
-# PROMPT='%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] %{$fg[cyan]%}%~%{$reset_color%} '
-# PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] %{$fg[yellow]%}%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$fg[cyan]%}%c%{$reset_color%} ➜ "
-# RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
-# PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] $(container_status)%{$fg[yellow]%}%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )%{$fg[cyan]%}%c%{$reset_color%} ➜ "
-# RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
-# PROMPT="%B%{$fg[magenta]%}%n@%m%{$reset_color%} %(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}✗) $(container_status)%{$fg[cyan]%}%c%{$reset_color%} "
-# RPROMPT='%B%F{cyan}[%*]%b%f $vcs_info_msg_0_'
-
 PROMPT="%B%{$fg[magenta]%}%n@%m%{$reset_color%} %(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}✗) %{$fg[cyan]%}%c%{$reset_color%} "
 RPROMPT='$(container_status)$vcs_info_msg_0_%B%F{cyan}[%*]%b%f'
+
 # Automatisches Wechseln in Verzeichnisse bei Eingabe
 setopt autocd
 

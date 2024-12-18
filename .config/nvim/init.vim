@@ -57,7 +57,7 @@
 	set bg=dark
 
 	" Cursor und Linien-Highlights
-	set colorcolumn=80
+	set colorcolumn=80,120
 	set cursorline
 	set cursorcolumn
 	highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline

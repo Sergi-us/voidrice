@@ -1,12 +1,12 @@
 " ==========================================================================
-" ====																	====
-" ====					SARBS Neovim-Konfiguration						====
-" ====					Letzte Änderung: 13.11.2024						====
-" ====					https://sarbs.sergius.xyz						====
-" ====																	====
-" ====					TODO	umstieg auf lua							====
-" ====					TODO	Gojo fixen								====
-" ====					TODO	automatisierung testen					====
+" ====                                                                  ====
+" ====                  SARBS Neovim-Konfiguration                      ====
+" ====                  Letzte Änderung: 13.11.2024                     ====
+" ====                  https://sarbs.sergius.xyz                       ====
+" ====                                                                  ====
+" ====                  TODO    umstieg auf lua                         ====
+" ====                  TODO    Gojo fixen                              ====
+" ====                  TODO    automatisierung testen                  ====
 " ==========================================================================
 
 
@@ -28,60 +28,64 @@
 	nnoremap YQ ZQ
 	nnoremap - /
 
-" ===== Plugin Management =====
-	" Automatische vim-plug Installation
-	if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
-		echo "Downloading junegunn/vim-plug to manage plugins..."
-		silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
-		silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
-		autocmd VimEnter * PlugInstall
-	endif
+" ===== Tabs =====
+    nnoremap <leader>tn :tabnew<CR>
 
-	" Plugin-Liste
-	call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
-		Plug 'tpope/vim-surround'				" Umgebende Zeichen bearbeiten
-		Plug 'preservim/nerdtree'				" Dateiexplorer
-		Plug 'junegunn/goyo.vim'				" Fokussierter Schreibmodus
-		Plug 'jreybert/vimagit'					" Git Integration
-		Plug 'vimwiki/vimwiki'					" Persönliches Wiki
-		Plug 'vim-airline/vim-airline'			" Statusleiste
-		Plug 'vim-airline/vim-airline-themes'	" Airline Themes
-		Plug 'tpope/vim-commentary'				" Kommentarfunktionen
-		Plug 'ap/vim-css-color'					" Farb-Previews
-		Plug 'mechatroner/rainbow_csv'			" CSV-Datei Highlighting
-	call plug#end()
+" ===== Plugin Management =====
+    " Automatische vim-plug Installation
+    if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
+        echo "Downloading junegunn/vim-plug to manage plugins..."
+        silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
+        silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
+        autocmd VimEnter * PlugInstall
+    endif
+
+    " Plugin-Liste
+    call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
+        Plug 'tpope/vim-surround'				" Umgebende Zeichen bearbeiten
+        Plug 'preservim/nerdtree'				" Dateiexplorer
+        Plug 'junegunn/goyo.vim'				" Fokussierter Schreibmodus
+        Plug 'jreybert/vimagit'					" Git Integration
+        Plug 'vimwiki/vimwiki'					" Persönliches Wiki
+        Plug 'vim-airline/vim-airline'			" Statusleiste
+        Plug 'vim-airline/vim-airline-themes'	" Airline Themes
+        Plug 'tpope/vim-commentary'				" Kommentarfunktionen
+        Plug 'ap/vim-css-color'					" Farb-Previews
+        Plug 'mechatroner/rainbow_csv'			" CSV-Datei Highlighting
+    call plug#end()
 
 " ===== Visuelle Einstellungen =====
-	" Farbschema
-	colorscheme vim
-	set bg=dark
+    " Farbschema
+    colorscheme vim
+    set bg=dark
 
-	" Cursor und Linien-Highlights
-	set colorcolumn=80,120
-	set cursorline
-	set cursorcolumn
-	highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
-	highlight CursorLine ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
-	highlight CursorColumn ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
+    " Cursor und Linien-Highlights
+    set colorcolumn=40,80,120
+    set cursorline
+    set cursorcolumn
+    highlight ColorColumn ctermbg=NONE guibg=NONE guifg=#FF0000 gui=underline cterm=underline
+    highlight CursorLine ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
+    highlight CursorColumn ctermbg=234 guibg=#1c1c1c cterm=NONE gui=NONE
 
-	" Unsichtbare Zeichen
-	set list
-	set listchars=tab:›\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:␣
+    " Unsichtbare Zeichen
+    set list
+    set listchars=tab:›\ ,lead:·,trail:·,extends:→,precedes:←,nbsp:␣
 
 " ===== Faltungseinstellungen =====
-	set foldmethod=indent          " Faltung basierend auf Einrückung
-	set foldnestmax=10            " Maximale Verschachtelungstiefe
-	set foldenable                " Aktiviert Faltungen
-	set foldminlines=2            " Minimale Zeilenanzahl für Faltung
+    set foldmethod=indent		" Faltung basierend auf Einrückung
+    set foldnestmax=10            " Maximale Verschachtelungstiefe
+    set foldenable                " Aktiviert Faltungen
+    set foldminlines=2            " Minimale Zeilenanzahl für Faltung
 
-	" Faltungshervorhebung
-	highlight Folded guifg=#BBC2C9 guibg=#262B31 gui=NONE ctermbg=235 ctermfg=250 cterm=NONE
-	highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
+  " Faltungshervorhebung
+  highlight Folded guifg=#BBC2C9 guibg=#262B31 gui=NONE ctermbg=235 ctermfg=250 cterm=NONE
+  highlight FoldColumn guifg=#9EA7B3 guibg=#2D333B gui=NONE ctermbg=236 ctermfg=248 cterm=NONE
 
 " ===== Einrückungseinstellungen =====
-	set tabstop=8                 " Tab = 4 Spaces
-	set shiftwidth=8              " Einrücktiefe
-	set softtabstop=8            " Backspace löscht 4 Spaces
+  set expandtab
+  set tabstop=4           " Tab = 4 Spaces
+  set shiftwidth=4        " Einrücktiefe
+  set softtabstop=4       " Backspace löscht 4 Spaces
 
 " ===== Plugin-Konfigurationen =====
 	" VimWiki

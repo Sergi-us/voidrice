@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cat "${XDG_DATA_HOME:-$HOME/.local/share}"/larbs/getkeys/"$1" 2>/dev/null && exit
+cat "${XDG_DATA_HOME:-$HOME/.local/share}"/sarbs/getkeys/"$1" 2>/dev/null && exit
 echo "Führe den Befehl mit einem der folgenden Argumente aus, um Informationen über dieses Programm zu erhalten:"
-ls "${XDG_DATA_HOME:-$HOME/.local/share}"/larbs/getkeys
+ls "${XDG_DATA_HOME:-$HOME/.local/share}"/sarbs/getkeys

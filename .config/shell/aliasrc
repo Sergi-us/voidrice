@@ -21,7 +21,7 @@ se() {
 	[ -f "$HOME/.local/bin/$choice" ] && $EDITOR "$HOME/.local/bin/$choice"
 }
 
-# Editor-Verknüpfungen
+# === Editor-Verknüpfungen ===
 alias \
 	e="$EDITOR" \
 	v="$EDITOR" \
@@ -46,6 +46,7 @@ alias \
 	free="free -h" \
 	ka="killall" \
 	neofetch="fastfetch --load-config examples/2.jsonc" \
+    sys="systemctl" \
 	neo="neo-matrix -D -a -b 0 -m SARBS"
 #	rsync="rsync -vrPlu" \
 #	free="free -m" \
@@ -65,7 +66,8 @@ alias \
 
 # Befehle mit Farbausgabe (wenn möglich)
 alias \
-	ls="lsd -a --color=auto --group-directories-first" \
+    ls="ls --color=auto --group-directories-first" \
+	lsd="lsd -a --color=auto --group-directories-first" \
 	fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \

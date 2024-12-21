@@ -28,6 +28,7 @@ case $BLOCK_BUTTON in
 esac
 
 # Unterschiedliche Darstellung
-# date "+|KW%V (%a) %d%b.%Y %H:%M|"
+# date "+KW%V (%a) %d%b.%Y %H:%M"
 # date "+(%a) %d.%b.%Y [%V] $icon %H:%M"
-date "+(%a) %d.%b [%V] %H:%M"
+# date "+(%a) %d.%b [%V] %H:%M"
+date "+%d.%b $icon %H:%M"

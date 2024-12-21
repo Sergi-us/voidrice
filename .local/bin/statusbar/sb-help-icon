@@ -14,4 +14,4 @@ case $BLOCK_BUTTON in
 	3) notify-send " Hilfe Modul" "\- Links-click für SARBS hilfe.
 - Mittel-click um DWM zu aktualisieren" ;;
 	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
-esac; echo "󱍋"
+esac; echo " 󰺴 "

@@ -11,7 +11,7 @@ esac
 
 # Überprüfen, ob ADB-Gerät verbunden ist
 if adb devices | grep -w "device" > /dev/null; then
-    STATUS=""
+    STATUS=""
 else
     STATUS=""
 fi

@@ -8,6 +8,7 @@ In diesem Repo sind die Konfigurations und Skriptdateien die in [SARBS](https://
 - Nützliche Skripte in `~/.local/bin/`
 - Einstellungen für:
 	- vim/nvim (text Editor)
+	- mutt (Mail-Client)
 	- zsh (shell)
 	- lf (Datei Manager)
 	- mpd/ncmpcpp (Musik)

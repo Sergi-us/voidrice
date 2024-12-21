@@ -1,34 +1,35 @@
-                 _   _
- _ __ ___  _   _| |_| |_
-| '_ ` _ \| | | | __| __|
+                 _   _		NeoMutt ist in SARBS vollständig integriert und die Mailacount's (bis 9st.)
+ _ __ ___  _   _| |_| |_	werden mit dem Mutt-Wizzard ~mw automatisch eingerichtet. Vorher muss 'Pass' und 'gpg'
+| '_ ` _ \| | | | __| __|	eingerichtet sein. Ist im Handbuch beschrieben...
 | | | | | | |_| | |_| |_
 |_| |_| |_|\__,_|\__|\__|
 
-mutt is the email client.
-	j/k - Move down/up
-	d/u - Move down/up half page
-	gg - Move to top
-	v - View/download attachments
-	G - Move to last message
-	r - Reply
-	R - Reply all
-	S - Sync/save mailbox changes
-	D - Mark message for deletion
-	U - Unmark message for deletion
-	ctrl-u - Seek urls
-	,, - Seek urls
-	ctrl-f - Search mail indexed with notmuch
-	ctrl-r - Mark all as read
-	l - Limit mail
-	o - Run quick sync with offlineimap
-	O - Run full sync with offlineimap
-	C - Copy a message to another mailbox
-	M - Move a message to another mailbox
-	B - Hide/reveal sidebar
-	ctrl-j/k - Move down/up on sidebar
-	ctrl-o - Open box selected in sidebar
-	gi - Go to inbox
-	gs - Go to sent mail
-	gd - Go to drafts
-	gS - Go to spam
-	i# - Go to a different account (# is the number of the account)
+Mutt ist das E-Mailprogramm
+== Hauptseite ==
+j/k	↓ ↑
+d/u	↓ ↑ halbe Seite
+gg	ganz hoch (go top)
+G	ganz runder
+v	View/download Anhänge
+r	antworten
+R	Allen antworten
+S	Sync/save Mailbox änderungen
+D	Markieren (for deletion))
+U	Unmark message for deletion
+ctrl-u	Seek urls (funktioniert nicht)
+,,	Seek urls (ohne funktion)
+ctrl-f	Suche mit notmuch
+ctrl-r	als Gelesen markieren
+l	Limit mail
+o	Run quick sync with offlineimap
+O	Run full sync with offlineimap
+C	Copy a message to another mailbox
+M	Move a message to another mailbox
+B	Hide/reveal sidebar
+ctrl-j/k	Move down/up on sidebar
+ctrl-o	Open box selected in sidebar
+gi - Go to inbox
+gs - Go to sent mail
+gd - Go to drafts
+gS - Go to spam
+i# - Go to a different account (# is the number of the account)

@@ -11,7 +11,6 @@ xrandr --dpi 96
 # export GDK_SCALE=2							# Für GTK-Anwendungen
 # export GDK_DPI_SCALE=0.5					# Korrigiert die Schriftgrößen bei GDK_SCALE=2
 
-
 # === Themes und GUI ===
 export GTK_THEME=Arc-Dark
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc-3.0"	# ok GTK2-Konfigurationsdatei

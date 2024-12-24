@@ -199,7 +199,7 @@ cmd Handy-Downloads ${{
 # === Sichtbares menu-s (Selektion) ===
 	map sc clear
 	map sx convert_audio
-	map sx convert_audio_aac
+# 	map sx convert_audio_aac
 
 # === Dateioperationen ===
 	map D delete				# <D> Löschen                (delete)

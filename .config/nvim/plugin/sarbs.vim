@@ -9,7 +9,7 @@ function! Wiki2CSV()
 	let csv_lines = []
 
 	" Zeitstempel hinzufügen
-	call add(csv_lines, '#,' . strftime('"%Y-%m-%d %H:%M:%S"'))
+	call add(csv_lines, '#,SARBS-Tools,' . strftime('"%Y-%m-%d %H:%M:%S"'))
 
 	" Zeilen verarbeiten
 	for line in lines
@@ -21,7 +21,6 @@ function! Wiki2CSV()
 			call add(csv_lines, cleaned)
 		endif
 	endfor
-
 
 	" In CSV-Datei schreiben
 	call writefile(csv_lines, csv_file)

@@ -47,6 +47,9 @@ autocmd BufWritePost ~/.local/bin/dmenu_cliphist silent !cp % ~/Sergi-us/voidric
 autocmd BufWritePost ~/.local/bin/dmenuhandler silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
 autocmd BufWritePost ~/.local/bin/dmenumountcifs silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
 autocmd BufWritePost ~/.local/bin/dmenupass silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
+autocmd BufWritePost ~/.local/bin/ffmpeg-convert-mkv silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
+autocmd BufWritePost ~/.local/bin/ffmpeg-davinci silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
+autocmd BufWritePost ~/.local/bin/ffmpeg-verkleinern silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
 autocmd BufWritePost ~/.local/bin/dmenurecord silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
 autocmd BufWritePost ~/.local/bin/dmenuunicode silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t
 autocmd BufWritePost ~/.local/bin/getbib silent !cp % ~/Sergi-us/voidrice/.local/bin/%:t

@@ -66,8 +66,7 @@ alias \
 
 # Befehle mit Farbausgabe (wenn möglich)
 alias \
-    ls="ls --color=auto --group-directories-first" \
-	lsd="lsd -a --color=auto --group-directories-first" \
+	ls="lsd -a --color=auto --group-directories-first" \
 	fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \

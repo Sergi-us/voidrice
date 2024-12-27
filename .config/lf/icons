@@ -3,22 +3,6 @@
 # These examples require Nerd Fonts or a compatible font to be used.
 # See https://www.nerdfonts.com for more information.
 
-# default values from lf (with matching order)
-# ln      l       # LINK
-# or      l       # ORPHAN
-# tw      t       # STICKY_OTHER_WRITABLE
-# ow      d       # OTHER_WRITABLE
-# st      t       # STICKY
-# di      d       # DIR
-# pi      p       # FIFO
-# so      s       # SOCK
-# bd      b       # BLK
-# cd      c       # CHR
-# su      u       # SETUID
-# sg      g       # SETGID
-# ex      x       # EXEC
-# fi      -       # FILE
-
 # file types (with matching order)
 ln             # LINK
 or             # ORPHAN
@@ -51,22 +35,6 @@ fi             # FILE
 # ex              # EXEC
 # fi             # FILE
 
-# file extensions (vim-devicons)
-*.styl              00;38;2;141;193;73
-*.sass              00;38;2;245;83;133
-*.scss              00;38;2;245;83;133
-*.htm               00;38;2;227;76;38
-*.html              00;38;2;227;76;38
-*.slim              00;38;2;227;76;38
-*.haml              00;38;2;234;234;225
-*.ejs               00;38;2;203;203;65
-*.css               00;38;2;86;61;124
-*.less              00;38;2;86;61;124
-*.md                00;38;2;81;154;186
-*.mdx               00;38;2;81;154;186
-*.markdown          00;38;2;81;154;186
-*.rmd               00;38;2;81;154;186
-*.json              00;38;2;149;157;165
 *.webmanifest       00;38;2;241;224;90
 *.js                00;38;2;203;203;65
 *.mjs               00;38;2;241;224;90
@@ -192,7 +160,7 @@ fi             # FILE
 *.zshrc                     00;38;2;137;224;81
 *.zshenv                    00;38;2;137;224;81
 *.zprofile                  00;38;2;137;224;81
-*.vimrc                     00;38;2;1;152;51
+*.vimrc                     00;38;2;1;152;51
 *.gvimrc                    00;38;2;1;152;51
 *_vimrc                     00;38;2;1;152;51
 *_gvimrc                    00;38;2;1;152;51
@@ -223,7 +191,9 @@ fi             # FILE
 *Gulpfile.ls                00;38;2;204;62;68
 *Dropbox                    00;38;2;0;97;254
 *.DS_Store                  00;38;2;193;241;46
+*config                     00;38;2;193;241;46
 *LICENSE                    00;38;2;203;203;65
+*adbkey                     00;38;2;203;203;65
 *React.jsx                  00;38;2;81;154;186
 *Procfile                   00;38;2;160;116;196
 *Dockerfile                 00;38;2;81;154;186
@@ -232,6 +202,7 @@ fi             # FILE
 *Rakefile                   00;38;2;112;21;22
 *Gemfile                    00;38;2;112;21;22
 *Makefile                   00;38;2;109;128;134
+*config                     00;38;2;109;128;134
 *CMakeLists.txt             00;38;2;109;128;134
 
 # file patterns (vim-devicons) (patterns not supported in lf)
@@ -305,17 +276,17 @@ Vagrantfile                 00;38;2;21;99;255
 *.esd   
 
 # image formats (extensions from dircolors defaults)
-*.jpg   
-*.jpeg  
-*.mjpg  
-*.mjpeg 
-*.gif   
-*.bmp   
-*.pbm   
-*.pgm   
-*.ppm   
-*.tga   
-*.xbm   
+*.jpg   
+*.jpeg  
+*.mjpg  
+*.mjpeg 
+*.gif   󰵸
+*.bmp   
+*.pbm   
+*.pgm   
+*.ppm   
+*.tga   
+*.xbm   
 *.xpm   
 *.tif   
 *.tiff  
@@ -331,10 +302,10 @@ Vagrantfile                 00;38;2;21;99;255
 *.mkv   
 *.webm  
 *.ogm   
-*.mp4   
-*.m4v   
-*.mp4v  
-*.vob   
+*.mp4   
+*.m4v   
+*.mp4v  
+*.vob   
 *.qt    
 *.nuv   
 *.wmv   
@@ -355,23 +326,27 @@ Vagrantfile                 00;38;2;21;99;255
 *.ogv   
 *.ogx   
 
-# audio formats (extensions from dircolors defaults)
-*.aac   
-*.au    
-*.flac  
-*.m4a   
-*.mid   
-*.midi  
-*.mka   
-*.mp3   
-*.mpc   
-*.ogg   
-*.ra    
-*.wav   
-*.oga   
-*.opus  
-*.spx   
-*.xspf  
+# === Audio ===
+*.aac   󰸪
+*.au    
+*.flac  󰸪
+*.m4a   
+*.mid   
+*.midi  
+*.mka   
+*.mp3   󰸪
+*.mpc   
+*.ogg   
+*.ra    
+*.wav   
+*.oga   
+*.opus  󰸪
+*.spx   
+*.xspf  
 
-# other formats
+# === Andere Formate ===
 *.pdf        00;38;2;179;11;0
+*.txt   
+*.gpg   󱆅
+*.csv   
+*.pub   󱆄

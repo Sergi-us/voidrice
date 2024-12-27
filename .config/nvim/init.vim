@@ -1,16 +1,14 @@
-" ==========================================================================
-" ====                                                                  ====
-" ====                  SARBS Neovim-Konfiguration                      ====
-" ====                  Letzte Änderung: 13.11.2024                     ====
-" ====                  https://sarbs.sergius.xyz                       ====
-" ====                                                                  ====
-" ====                  TODO    umstieg auf lua                         ====
-" ====                  TODO    Gojo fixen                              ====
-" ====                  TODO    automatisierung testen                  ====
-" ==========================================================================
+" === === === === === === === === === ~~~ === === === === === === === === ===
+" ===                                                                     ===
+" ===                  SARBS Neovim-Konfiguration                         ===
+" ===                  Letzte Änderung: 27.12.2024                        ===
+" ===                  https://sarbs.sergius.xyz                          ===
+" ===                                                                     ===
+" ===                  TODO    umstieg auf lua                            ===
+" ===                  TODO    Gojo fixen                                 ===
+" === === === === === === === === === ~~~ === === === === === === === === ===
 
-
-" ===== Basis-Einstellungen =====
+" === Basis-Einstellungen ===
 	let mapleader =","
 	set encoding=utf-8
 	set mouse=a						" Mausunterstützung in allen Modi
@@ -23,15 +21,15 @@
 	set number relativenumber		" Relative + absolute Zeilennummern
 	set wildmode=longest,list,full	" Verbesserte Befehlszeilen-Vervollständigung
 
-" ===== zusätzliche Bindings in Normal-mode =====
+" === zusätzliche Bindings in Normal-mode ===
 	nnoremap YY ZZ
 	nnoremap YQ ZQ
 	nnoremap - /
 
-" ===== Tabs =====
+" === Tabs ===
     nnoremap <leader>tn :tabnew<CR>
 
-" ===== Plugin Management =====
+" === Plugin Management ===
     " Automatische vim-plug Installation
     if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
         echo "Downloading junegunn/vim-plug to manage plugins..."
@@ -52,7 +50,22 @@
         Plug 'tpope/vim-commentary'				" Kommentarfunktionen
         Plug 'ap/vim-css-color'					" Farb-Previews
         Plug 'mechatroner/rainbow_csv'			" CSV-Datei Highlighting
+        Plug 'ryanoasis/vim-devicons'           " Entwickler Icons in Vim
     call plug#end()
+
+" Plugin Konfiguration
+    let NERDTreeShowHidden = 1
+    let g:airline_powerline_fonts = 1
+    "let g:airline#extensions#tabline#enabled = 'unique_tail'
+    "let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#show_tabs = 1   " Nur Tabs anzeigen, keine Buffers
+    let g:airline#extensions#tabline#formatter = 'default'  " Einfache Tab-Anzeige
+    "let g:airline_theme = 'dark'
+    " Tabline für VimWiki ausblenden
+    "autocmd FileType vimwiki let g:airline#extensions#tabline#enabled = 0
+    "autocmd FileType vimwiki let g:airline_powerline_fonts = 0
+
+
 
 " ===== Visuelle Einstellungen =====
     " Farbschema

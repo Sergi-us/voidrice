@@ -34,21 +34,35 @@ killrecording() {
 ####    updateicon "  "
 ####}
 
-# Version für Hardware Encoding mit h264_vaapi
+##### Version für Hardware Encoding mit h264_vaapi
 screencast() {
     local out="$HOME/Videos/scr/screencast-$(date '+%y%m%d-%H%M-%S').mp4"
     ffmpeg -y \
         -vaapi_device /dev/dri/renderD128 \
-        -f x11grab -framerate 30 -video_size 2560x1440 -i "$DISPLAY" \
+        -f x11grab -framerate 24 -video_size 2560x1440 -i "$DISPLAY" \
         -f pulse -channels 2 -i default \
         -vf 'format=nv12,hwupload' \
-        -c:v h264_vaapi -qp 23 \
+        -c:v h264_vaapi -qp 25 \
         -c:a aac -b:a 128k \
         "$out" &
     echo $! > /tmp/recordingpid
     notify "Screencast gestartet"
     updateicon "  "
 }
+
+##### Version für Hardware Encoding mit hevc_nvenc
+####screencast() {
+####    local out="$HOME/Videos/scr/screencast-$(date '+%y%m%d-%H%M-%S').mp4"
+####    ffmpeg -y \
+####        -f x11grab -framerate 30 -video_size 2560x1440 -i "$DISPLAY" \
+####        -f pulse -channels 2 -i default \
+####        -c:v hevc_nvenc -preset p5 -qp 18 \
+####        -c:a aac -b:a 128k \
+####        "$out" &
+####    echo $! > /tmp/recordingpid
+####    notify "Screencast gestartet"
+####    updateicon "  "
+####}
 
 screencast_monitor() {
     # Monitor-Auswahl ohne Fehlermeldungen

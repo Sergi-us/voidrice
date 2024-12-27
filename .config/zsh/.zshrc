@@ -3,6 +3,14 @@
 # TODO Zinit testen https://github.com/zdharma-continuum/zinit
 # TODO Plugin's Testen
 
+# === Grundeinstellungen ===
+bindkey -v          # Vim Bearbeitungsmodus
+# Verlauf einstellungen
+HISTFILE="${XDG_CONFIG_HOME:-$HOME/}/zsh/history"
+HISTSIZE=10000000           # Verlauf der aktiven Sitzung
+SAVEHIST=10000000           # Verlauf der history
+setopt inc_append_history   # sofort in die HISTFILE schreiben
+
 # Hilfsfunktion zum Hinzufügen einer Datei zur Zsh-Konfiguration
 function zsh_add_file() {
     local FILE_PATH="$ZDOTDIR/$1"
@@ -14,14 +22,12 @@ function zsh_add_file() {
     fi
 }
 
-# Funktion für Container-Check
-function container_status() {
-    [ -f /run/.containerenv ] && echo "🐋 "
-}
-
 # Farben einschalten und Eingabeaufforderung ändern
 autoload -U colors && colors
+
+# === Versionskontrolle (vcs) ===
 autoload -Uz vcs_info
+
 
 # Funktion zum Hinzufügen eines Symbols für ungetrackte Dateien
 vi-git-untracked() {
@@ -36,12 +42,15 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:git:*' formats "%{$fg[red]%}[%u %{$fg[magenta]%}%b%{$fg[red]%}]"
-##zstyle ':vcs_info:git:*' formats " %{$fg[blue]%}(%{$fg[red]%}%m%{$fg[red]%}(%u)%c%{$fg[magenta]%} %b%{$fg[blue]%})%{$reset_color%}"
+# zstyle ':vcs_info:git:*' formats " %{$fg[blue]%}(%{$fg[red]%}%m%{$fg[red]%}(%u)%c%{$fg[magenta]%} %b%{$fg[blue]%})%{$reset_color%}"
 
 # Funktion zum Initialisieren von vcs_info vor jedem Prompt
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
+
+# PROMPT="%n in ${PWD/#$HOME/~} >"
+
 
 # Einzeileger Prompt-Konfiguration
 # PROMPT="%B[%{$fg[magenta]%}%n@%m%{$reset_color%}] [%{$fg[cyan]%}%~%{$reset_color%}]"
@@ -49,7 +58,7 @@ setopt prompt_subst
 
 # Zweizeiliger Promt
 PROMPT="%B%{$fg[magenta]%}%n@%m%{$reset_color%} %(?:%{$fg_bold[green]%}➜:%{$fg_bold[red]%}✗) %{$fg[cyan]%}%c%{$reset_color%} "
-RPROMPT='$(container_status)$vcs_info_msg_0_%B%F{cyan}[%*]%b%f'
+RPROMPT="$vcs_info_msg_0_%B%F{cyan}[%*]%b%f"
 
 # Automatisches Wechseln in Verzeichnisse bei Eingabe
 setopt autocd
@@ -60,11 +69,6 @@ stty stop undef
 # Erlaube Kommentare in interaktiven Shells
 setopt interactive_comments
 
-# Verlauf im Cache-Verzeichnis speichern
-HISTSIZE=10000000
-SAVEHIST=10000000
-HISTFILE="${XDG_CONFIG_HOME:-$HOME/}/zsh/history"
-setopt inc_append_history
 
 # Alias und Verknüpfungen laden, falls vorhanden
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc"
@@ -82,7 +86,6 @@ zstyle ':completion:*' list-prompt ''
 zstyle ':completion:*' list-max 0
 
 # vi Modus mit Tastenbelegungen und unterschiedlichen Cursern
-bindkey -v
 export KEYTIMEOUT=1
 
 # Vim Tasten in Tab Completion Menu
@@ -194,5 +197,5 @@ function zsh_add_plugin() {
 
 # Laden von Plugins aus verschiedenen Repositories
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
-zsh_add_plugin "zsh-users/zsh-autosuggestions"
+# zsh_add_plugin "zsh-users/zsh-autosuggestions"
 # zsh_add_plugin "zdharma-continuum/zinit"

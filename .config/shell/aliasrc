@@ -35,7 +35,7 @@ alias \
 	mkd="mkdir -pv"
 
 # === Git ===
-alias git clone"git clone --depth 1"
+alias gc"git clone --depth 1"
 
 # Systemwerkzeuge
 alias \

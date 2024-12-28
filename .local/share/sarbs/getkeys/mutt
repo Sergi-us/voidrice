@@ -6,14 +6,14 @@
 
 Mutt ist das E-Mailprogramm
 == Hauptseite ==
-j/k     ↓ ↑                             gi          Go to inbox
-d/u     ↓ ↑ halbe Seite                 gs          Go to sent mail
-gg      ganz hoch (go top)              gd          Go to drafts
-G       ganz runder                     gS          Go to spam
-v       View/download Anhänge           ctrl-j/k    Move down/up on sidebar
-r       antworten                       ctrl-o      Open box selected in sidebar
-R       Allen antworten                 i#          Go to a different account (# is the number of the account)
-S       Sync/save Mailbox änderungen
+j/k     ↓ ↑                             gi      Go to inbox
+d/u     ↓ ↑ halbe Seite                 gs      Go to sent mail
+gg      ganz hoch (go top)              gd      Go to drafts
+G       ganz runder                     gS      Go to spam
+v       View/download Anhänge           ctrl-j/kMove down/up on sidebar
+r       antworten                       ctrl-o  Open box selected in sidebar
+R       Allen antworten                 i#      Go to a different account (# is the number of the account)
+S       Sync/save Mailbox änderungen    a       Mailadresse zum Abook hizufügen
 D       Markieren (for deletion))
 U       Unmark message for deletion
 ctrl-u  Seek urls (funktioniert nicht)

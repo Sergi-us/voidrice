@@ -24,8 +24,7 @@ se() {
 # === Editor-Verknüpfungen ===
 alias \
 	e="$EDITOR" \
-	v="$EDITOR" \
-	magit="nvim -c MagitOnly"
+	v="$EDITOR"
 
 # Verbosität und Einstellungen, die man so ziemlich immer will.
 alias \
@@ -36,6 +35,7 @@ alias \
 
 # === Git ===
 alias gc"git clone --depth 1"
+alias magit="nvim -c MagitOnly"
 
 # Systemwerkzeuge
 alias \
@@ -51,11 +51,10 @@ alias \
 #	rsync="rsync -vrPlu" \
 #	free="free -m" \
 
-# Alpine Linux
-alias \
-	xi="sudo xbps-install" \
-	xr="sudo xbps-remove -R" \
-	xq="xbps-query"
+# === Alpine Linux ===
+    alias xi="sudo xbps-install"
+    alias xr="sudo xbps-remove -R"
+    alias xq="xbps-query"
 
 # Medien und Dokumente
 alias \
@@ -64,28 +63,37 @@ alias \
 	ytt="yt --skip-download --write-thumbnail" \
 	ffmpeg="ffmpeg -hide_banner"
 
+# List Befehle
+#   alias ls='lsd'
+#    alias l='ls -l'
+#    alias la='ls -a'
+#    alias lla='ls -la'
+#    alias lt='ls --tree'
+   alias ls="ls -hN --color=auto --group-directories-first"
+#   alias lsd="lsd -a --color=auto --group-directories-first"
+
+
 # Befehle mit Farbausgabe (wenn möglich)
-alias \
-	ls="lsd -a --color=auto --group-directories-first" \
-	fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
-	grep="grep --color=auto" \
-	diff="diff --color=auto" \
-	ccat="highlight --out-format=ansi" \
-	ip="ip -color=auto"
+
+    alias fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+    alias grep="grep --color=auto"
+    alias diff="diff --color=auto"
+    alias ccat="highlight --out-format=ansi"
+    alias ip="ip -color=auto"
 
 #	fzf="fzf --height=-3" \
 #	ls="ls -hN --color=auto --group-directories-first" \
 
 # These common commands are just too long! Abbreviate them.
 alias \
-	dx="distrobox" \
-	gk="getkeys" \
-	g="git" \
-	trem="transmission-remote" \
-	YT="youtube-viewer" \
-	sdn="shutdown -h now" \
-	z="zathura" \
-	wm="wikiman"
+    dx="distrobox" \
+    gk="getkeys" \
+    g="git" \
+    trem="transmission-remote" \
+    YT="youtube-viewer" \
+    sdn="shutdown -h now" \
+    z="zathura" \
+    wm="wikiman"
 
 
 alias vm-sarbs="virsh -c qemu:///system start archlinux && virt-viewer --attach --connect qemu:///system archlinux"

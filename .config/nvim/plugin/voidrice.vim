@@ -147,6 +147,8 @@ autocmd BufWritePost ~/.config/lf/cleaner silent !cp % ~/Sergi-us/voidrice/.conf
 autocmd BufWritePost ~/.config/lf/icons silent !cp % ~/Sergi-us/voidrice/.config/lf/%:t
 autocmd BufWritePost ~/.config/lf/lfrc silent !cp % ~/Sergi-us/voidrice/.config/lf/%:t
 autocmd BufWritePost ~/.config/lf/scope silent !cp % ~/Sergi-us/voidrice/.config/lf/%:t
+" ~/.config/lsd/
+autocmd BufWritePost ~/.config/lsd/config.yaml silent !cp % ~/Sergi-us/voidrice/.config/lsd/%:t
 " ~/.config/mpd/
 autocmd BufWritePost ~/.config/mpd/mpd.conf silent !cp % ~/Sergi-us/voidrice/.config/mpd/%:t
 " ~/.config/mpv/

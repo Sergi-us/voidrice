@@ -3,8 +3,8 @@
     follow = keyboard
     width = 500
     height = (0, 300)
-    offset = (10, 50)		#Abstand vom oberen und linken Rand
-    padding = 3			# Innerer Abstand in der Benachrichtigung
+    offset = (10, 50)       # Abstand vom oberen und linken Rand
+    padding = 3             # Innerer Abstand in der Benachrichtigung
     horizontal_padding = 5
     transparency = 10
     notification_limit = 20
